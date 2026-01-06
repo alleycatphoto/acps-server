@@ -4,7 +4,7 @@
     "hawksnest": {
       "name": "Hawks Nest Server (North Carolina)",
       "host": "hawksnest.local",
-      "user": "Conphoserv",
+      "user": "Owner",
       "path": "C:/UniServerZ/vhosts/acps",
       "method": "ssh-trigger",
       "notes": "Pulls from alleycatphoto/acps-server"
@@ -12,7 +12,7 @@
     "hawkmoon": {
       "name": "Hawk Moon Server",
       "host": "hawkmoon.local",
-      "user": "Conphoserv",
+      "user": "Owner",
       "path": "C:/UniServerZ/vhosts/acps",
       "method": "ssh-trigger",
       "notes": "Pulls from alleycatphoto/acps-server"
@@ -20,7 +20,7 @@
     "zip": {
       "name": "Zip Server",
       "host": "zip.local",
-      "user": "Conphoserv",
+      "user": "Owner",
       "path": "C:/UniServerZ/vhosts/acps",
       "method": "ssh-trigger",
       "notes": "Pulls from alleycatphoto/acps-server"
@@ -32,6 +32,6 @@
     "MOON_HOST (Hawk Moon IP or hostname)",
     "ZIP_HOST (Zip server IP or hostname)",
     "SERVER_PATH (C:/UniServerZ/vhosts/acps - same for all 3 servers)",
-    "CONPHOSERV_SSH_KEY (single SSH private key for user Conphoserv on all 3 servers)"
+    "CONPHOSERV_SSH_KEY (single SSH private key for user Owner on all 3 servers)"
   ]
 }
