@@ -30,7 +30,7 @@ Add-Content C:\Users\Conphoserv\.ssh\authorized_keys "ssh-ed25519 AAAAC3Nza... (
 ```powershell
 # Replace HAWK_IP with actual IP/hostname
 $publicKey = Get-Content conphoserv_key.pub
-ssh Conphoserv@HAWK_IP "mkdir C:\Users\Conphoserv\.ssh -ErrorAction SilentlyContinue; Add-Content C:\Users\Conphoserv\.ssh\authorized_keys '$publicKey'"
+ssh Owner@HAWK_IP "mkdir C:\Users\Owner\.ssh -ErrorAction SilentlyContinue; Add-Content C:\Users\Owner\.ssh\authorized_keys '$publicKey'"
 ```
 
 ---
@@ -59,9 +59,9 @@ New-NetFirewallRule -Name sshd -DisplayName 'OpenSSH Server (sshd)' -Enabled Tru
 
 ```powershell
 # Test connection to each server
-ssh -i conphoserv_key Conphoserv@HAWK_IP
-ssh -i conphoserv_key Conphoserv@MOON_IP
-ssh -i conphoserv_key Conphoserv@ZIP_IP
+ssh -i conphoserv_key Owner@HAWK_IP
+ssh -i conphoserv_key Owner@MOON_IP
+ssh -i conphoserv_key Owner@ZIP_IP
 ```
 
 **Should connect without password prompt.**
@@ -104,8 +104,8 @@ Get-Content conphoserv_key | clip
 ## 7. Troubleshooting
 
 ### Permission Denied (publickey)
-- Check public key is in `C:\Users\Conphoserv\.ssh\authorized_keys`
-- Check file permissions: `icacls C:\Users\Conphoserv\.ssh\authorized_keys`
+- Check public key is in `C:\Users\Owner\.ssh\authorized_keys`
+- Check file permissions: `icacls C:\Users\Owner\.ssh\authorized_keys`
 - Verify SSH service is running: `Get-Service sshd`
 
 ### Connection Refused
@@ -114,7 +114,7 @@ Get-Content conphoserv_key | clip
 - Check SSH service: `Get-Service sshd`
 
 ### Host Key Verification Failed
-- Accept host key manually first: `ssh Conphoserv@HAWK_IP` (type "yes")
+- Accept host key manually first: `ssh Owner@HAWK_IP` (type "yes")
 - Or use `-o StrictHostKeyChecking=no` (GitHub Actions does this)
 
 ---
@@ -123,7 +123,7 @@ Get-Content conphoserv_key | clip
 
 - **Private key** (`conphoserv_key`): Never commit to git, only store in GitHub Secrets
 - **Public key** (`conphoserv_key.pub`): Safe to share, copy to all 3 servers
-- **authorized_keys**: Only Conphoserv user should have read/write access
+- **authorized_keys**: Only Owner user should have read/write access
 - **Backup**: Save private key securely (password manager, encrypted backup)
 
 ---

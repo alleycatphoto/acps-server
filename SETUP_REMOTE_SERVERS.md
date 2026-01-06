@@ -8,9 +8,9 @@
 **When you push to built-responsive/ACPS-8.0:**
 1. GitHub Actions mirrors changes to alleycatphoto/acps-server
 2. 3 remote servers auto-pull from alleycatphoto/acps-server:
-   - **Hawks Nest** - `C:\UniserverZ\vhosts\acps` (user: Conphoserv)
-   - **Hawk Moon** - `C:\UniserverZ\vhosts\acps` (user: Conphoserv)
-   - **Zip** - `C:\UniserverZ\vhosts\acps` (user: Conphoserv)
+   - **Hawks Nest** - `C:/UniServerZ/vhosts/acps` (user: Owner)
+   - **Hawk Moon** - `C:/UniServerZ/vhosts/acps` (user: Owner)
+   - **Zip** - `C:/UniServerZ/vhosts/acps` (user: Owner)
 
 ---
 
@@ -43,9 +43,9 @@ ssh-keygen -t ed25519 -C "conphoserv-servers" -f conphoserv_key
 
 Copy the **public key** to all 3 servers:
 ```powershell
-# On each server (Hawks Nest, Hawk Moon, Zip), logged in as Conphoserv:
-mkdir C:\Users\Conphoserv\.ssh -ErrorAction SilentlyContinue
-Add-Content C:\Users\Conphoserv\.ssh\authorized_keys (Get-Content conphoserv_key.pub)
+# On each server (Hawks Nest, Hawk Moon, Zip), logged in as Owner:
+mkdir C:\Users\Owner\.ssh -ErrorAction SilentlyContinue
+Add-Content C:\Users\Owner\.ssh\authorized_keys (Get-Content conphoserv_key.pub)
 ```
 
 ---
@@ -82,7 +82,7 @@ built-responsive/ACPS-8.0/settings/secrets/actions
    - **Step 1:** Mirrors code to **alleycatphoto/acps-server**
    - **Step 2:** SSH's into Hawks Nest, Hawk Moon, Zip
    - **Step 3:** Each server runs: `git pull origin main` (from alleycatphoto/acps-server)
-3. All 3 servers update automatically as user **Conphoserv**
+3. All 3 servers update automatically as user **Owner**
 .\deploy.ps1 all on servers:
 ```powershell
 # Trigger all 3 servers to pull
@@ -125,7 +125,7 @@ Edit `deploy.config.json` to update server details:
 ## Troubleshooting
 
 ### Server Won't Pull
-2. Verify SSH access: `ssh Conphoserv@hawksnest.local`
+2. Verify SSH access: `ssh Owner@hawksnest.local`
 3. Check GitHub Actions logs: https://github.com/built-responsive/ACPS-8.0/actions
 4. Verify alleycatphoto fork is synced: https://github.com/alleycatphoto/acps-server
 3. Check GitHub Actions logs: https://github.com/alleycatphoto/acps-server/actions
@@ -165,7 +165,7 @@ git push origin main
 
 # Check GitHub Actions: https://github.com/built-responsive/ACPS-8.0/actions
 # Verify mirror: https://github.com/alleycatphoto/acps-server (should have test commit)
-# SSH into Hawks Nest and verify: ssh Conphoserv@hawksnest.local "cd C:/UniServerZ/vhosts/acps && git log"
+# SSH into Hawks Nest and verify: ssh Owner@hawksnest.local "cd C:/UniServerZ/vhosts/acps && git log"
 # Check GitHub Actions: https://github.com/alleycatphoto/acps-server/actions
 # SSH into Hawks Nest and verify: cd C:\UniserverZ\vhosts\acps && git log
 ```
@@ -181,7 +181,7 @@ git push origin main
    - Hawks Nest pulls latest
    - Hawk Moon pulls latest
    - Zip pulls latest
-5. All 3 servers running as user **Conphoserv**
+5. All 3 servers running as user **Owner**
 
 *No manual FTP. No zip files. Just code and deploy
 

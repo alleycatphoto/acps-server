@@ -8,7 +8,7 @@ on:
 
 jobs:
   mirror-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted  # Runs on your local machine, can reach LAN servers
     
     steps:
       - name: Checkout code
