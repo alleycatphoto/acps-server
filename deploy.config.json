@@ -28,9 +28,9 @@
   },
   "github_secrets_needed": [
     "ALLEYCATPHOTO_TOKEN (Personal Access Token for push to alleycatphoto/acps-server)",
-    "HAWKSNEST_HOST (e.g., hawksnest.local or IP)",
-    "HAWKMOON_HOST (e.g., hawkmoon.local or IP)",
-    "ZIP_HOST (e.g., zip.local or IP)",
+    "HAWK_HOST (Hawks Nest IP or hostname)",
+    "MOON_HOST (Hawk Moon IP or hostname)",
+    "ZIP_HOST (Zip server IP or hostname)",
     "SERVER_PATH (C:\\\\UniserverZ\\\\vhosts\\\\acps - same for all 3 servers)",
     "CONPHOSERV_SSH_KEY (single SSH private key for user Conphoserv on all 3 servers)"
   ]

@@ -28,7 +28,7 @@ jobs:
       
       - name: Update Hawks Nest Server
         env:
-          SERVER_HOST: ${{ secrets.HAWKSNEST_HOST }}
+          SERVER_HOST: ${{ secrets.HAWK_HOST }}
           SERVER_PATH: ${{ secrets.SERVER_PATH }}
           SSH_KEY: ${{ secrets.CONPHOSERV_SSH_KEY }}
         run: |
@@ -41,7 +41,7 @@ jobs:
       
       - name: Update Hawk Moon Server
         env:
-          SERVER_HOST: ${{ secrets.HAWKMOON_HOST }}
+          SERVER_HOST: ${{ secrets.MOON_HOST }}
           SERVER_PATH: ${{ secrets.SERVER_PATH }}
           SSH_KEY: ${{ secrets.CONPHOSERV_SSH_KEY }}
         run: |

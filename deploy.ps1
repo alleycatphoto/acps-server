@@ -89,12 +89,13 @@ function Trigger-Location3 {
 # Main deployment logic
 Write-Status "🚀 ACPS v3.5.0 Remote Git Pull Trigger" "Magenta"
 Write-Status "Target: $Target" "Cyan"
+Write-Status "Servers pull from: alleycatphoto/acps-server" "DarkGray"
 Write-Status ""
 
 switch ($Target) {
     "hawksnest" { Trigger-HawksNest }
-    "location2" { Trigger-Location2 }
-    "location3" { Trigger-Location3 }
+    "hawkmoon" { Trigger-Location2 }
+    "zip" { Trigger-Location3 }
     "all" {
         Trigger-HawksNest
         Write-Status ""
@@ -106,4 +107,4 @@ switch ($Target) {
 
 Write-Status ""
 Write-Status "🎉 Git pull trigger complete!" "Green"
-Write-Status "NOTE: GitHub Actions will auto-trigger these on push to main" "Cyan"
+Write-Status "NOTE: GitHub Actions auto-triggers these on push to built-responsive/ACPS-8.0 main" "Cyan"
