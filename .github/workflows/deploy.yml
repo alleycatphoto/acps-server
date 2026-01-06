@@ -35,7 +35,7 @@ jobs:
           SERVER_PATH: ${{ secrets.SERVER_PATH }}
           SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
         run: |
-          plink -batch -pw "$env:SSH_PASSWORD" -P $env:SERVER_PORT alleycat@$env:SERVER_HOST "cd $env:SERVER_PATH && git pull origin main && composer install --no-dev --optimize-autoloader"
+          echo y | plink -pw "$env:SSH_PASSWORD" -P $env:SERVER_PORT alleycat@$env:SERVER_HOST "cd $env:SERVER_PATH && git pull origin main && composer install --no-dev --optimize-autoloader"
       
       - name: Update Hawk Moon Server
         env:
@@ -44,7 +44,7 @@ jobs:
           SERVER_PATH: ${{ secrets.SERVER_PATH }}
           SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
         run: |
-          plink -batch -pw "$env:SSH_PASSWORD" -P $env:SERVER_PORT alleycat@$env:SERVER_HOST "cd $env:SERVER_PATH && git pull origin main && composer install --no-dev --optimize-autoloader"
+          echo y | plink -pw "$env:SSH_PASSWORD" -P $env:SERVER_PORT alleycat@$env:SERVER_HOST "cd $env:SERVER_PATH && git pull origin main && composer install --no-dev --optimize-autoloader"
       
       - name: Update Zip Server
         env:
@@ -53,7 +53,7 @@ jobs:
           SERVER_PATH: ${{ secrets.SERVER_PATH }}
           SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
         run: |
-          plink -batch -pw "$env:SSH_PASSWORD" -P $env:SERVER_PORT alleycat@$env:SERVER_HOST "cd $env:SERVER_PATH && git pull origin main && composer install --no-dev --optimize-autoloader"
+          echo y | plink -pw "$env:SSH_PASSWORD" -P $env:SERVER_PORT alleycat@$env:SERVER_HOST "cd $env:SERVER_PATH && git pull origin main && composer install --no-dev --optimize-autoloader"
       
       - name: Notify Success
         if: success()
