@@ -34,12 +34,9 @@ jobs:
           SERVER_PATH: ${{ secrets.SERVER_PATH }}
           SSH_KEY: ${{ secrets.CONPHOSERV_SSH_KEY }}
         run: |
-          echo "$SSH_KEY" > deploy_key
-          chmod 600 deploy_key
-          ssh -i deploy_key -o StrictHostKeyChecking=no \
-            Owner@${SERVER_HOST} \
-            "cd ${SERVER_PATH} && git pull origin main && composer install --no-dev --optimize-autoloader"
-          rm -f deploy_key
+          $env:SSH_KEY | Out-File -FilePath deploy_key -Encoding utf8
+          ssh -i deploy_key -o StrictHostKeyChecking=no Owner@$env:SERVER_HOST "cd $env:SERVER_PATH && git pull origin main && composer install --no-dev --optimize-autoloader"
+          Remove-Item deploy_key -ErrorAction SilentlyContinue
       
       - name: Update Hawk Moon Server
         env:
@@ -47,12 +44,9 @@ jobs:
           SERVER_PATH: ${{ secrets.SERVER_PATH }}
           SSH_KEY: ${{ secrets.CONPHOSERV_SSH_KEY }}
         run: |
-          echo "$SSH_KEY" > deploy_key
-          chmod 600 deploy_key
-          ssh -i deploy_key -o StrictHostKeyChecking=no \
-            Owner@${SERVER_HOST} \
-            "cd ${SERVER_PATH} && git pull origin main && composer install --no-dev --optimize-autoloader"
-          rm -f deploy_key
+          $env:SSH_KEY | Out-File -FilePath deploy_key -Encoding utf8
+          ssh -i deploy_key -o StrictHostKeyChecking=no Owner@$env:SERVER_HOST "cd $env:SERVER_PATH && git pull origin main && composer install --no-dev --optimize-autoloader"
+          Remove-Item deploy_key -ErrorAction SilentlyContinue
       
       - name: Update Zip Server
         env:
@@ -60,12 +54,9 @@ jobs:
           SERVER_PATH: ${{ secrets.SERVER_PATH }}
           SSH_KEY: ${{ secrets.CONPHOSERV_SSH_KEY }}
         run: |
-          echo "$SSH_KEY" > deploy_key
-          chmod 600 deploy_key
-          ssh -i deploy_key -o StrictHostKeyChecking=no \
-            Owner@${SERVER_HOST} \
-            "cd ${SERVER_PATH} && git pull origin main && composer install --no-dev --optimize-autoloader"
-          rm -f deploy_key
+          $env:SSH_KEY | Out-File -FilePath deploy_key -Encoding utf8
+          ssh -i deploy_key -o StrictHostKeyChecking=no Owner@$env:SERVER_HOST "cd $env:SERVER_PATH && git pull origin main && composer install --no-dev --optimize-autoloader"
+          Remove-Item deploy_key -ErrorAction SilentlyContinue
       
       - name: Notify Success
         if: success()
