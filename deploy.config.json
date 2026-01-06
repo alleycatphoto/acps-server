@@ -1,43 +1,37 @@
 {
-  "comment": "Remote servers that auto-pull from GitHub when you push",
+  "comment": "Dev repo: built-responsive/ACPS-8.0 | Production fork: alleycatphoto/acps-server",
   "servers": {
     "hawksnest": {
       "name": "Hawks Nest Server (North Carolina)",
       "host": "hawksnest.local",
-      "user": "Administrator",
+      "user": "Conphoserv",
       "path": "C:\\UniserverZ\\vhosts\\acps",
       "method": "ssh-trigger",
-      "notes": "Network server in NC, git cloned already"
+      "notes": "Pulls from alleycatphoto/acps-server"
     },
-    "location2": {
-      "name": "Location 2 Server",
-      "host": "TBD",
-      "user": "Administrator",
+    "hawkmoon": {
+      "name": "Hawk Moon Server",
+      "host": "hawkmoon.local",
+      "user": "Conphoserv",
       "path": "C:\\UniserverZ\\vhosts\\acps",
       "method": "ssh-trigger",
-      "notes": "Update host/user/path when deployed"
+      "notes": "Pulls from alleycatphoto/acps-server"
     },
-    "location3": {
-      "name": "Location 3 Server",
-      "host": "TBD",
-      "user": "Administrator",
+    "zip": {
+      "name": "Zip Server",
+      "host": "zip.local",
+      "user": "Conphoserv",
       "path": "C:\\UniserverZ\\vhosts\\acps",
       "method": "ssh-trigger",
-      "notes": "Update host/user/path when deployed"
+      "notes": "Pulls from alleycatphoto/acps-server"
     }
   },
   "github_secrets_needed": [
-    "HAWKSNEST_HOST",
-    "HAWKSNEST_USER",
-    "HAWKSNEST_PATH (C:\\\\UniserverZ\\\\vhosts\\\\acps)",
-    "HAWKSNEST_SSH_KEY (private key for SSH access)",
-    "LOCATION2_HOST",
-    "LOCATION2_USER",
-    "LOCATION2_PATH (C:\\\\UniserverZ\\\\vhosts\\\\acps)",
-    "LOCATION2_SSH_KEY",
-    "LOCATION3_HOST",
-    "LOCATION3_USER",
-    "LOCATION3_PATH (C:\\\\UniserverZ\\\\vhosts\\\\acps)",
-    "LOCATION3_SSH_KEY"
+    "ALLEYCATPHOTO_TOKEN (Personal Access Token for push to alleycatphoto/acps-server)",
+    "HAWKSNEST_HOST (e.g., hawksnest.local or IP)",
+    "HAWKMOON_HOST (e.g., hawkmoon.local or IP)",
+    "ZIP_HOST (e.g., zip.local or IP)",
+    "SERVER_PATH (C:\\\\UniserverZ\\\\vhosts\\\\acps - same for all 3 servers)",
+    "CONPHOSERV_SSH_KEY (single SSH private key for user Conphoserv on all 3 servers)"
   ]
 }

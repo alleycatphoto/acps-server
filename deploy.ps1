@@ -1,10 +1,10 @@
 # ACPS v3.5.0 Remote Server Git Pull Trigger
-# Usage: .\deploy.ps1 [hawksnest|location2|location3|all]
+# Usage: .\deploy.ps1 [hawksnest|hawkmoon|zip|all]
 # This script SSH's into remote servers and tells them to git pull
 
 param(
     [Parameter(Mandatory=$false)]
-    [ValidateSet("hawksnest","location2","location3","all")]
+    [ValidateSet("hawksnest","hawkmoon","zip","all")]
     [string]$Target = "all"
 )
 
@@ -39,12 +39,12 @@ function Trigger-HawksNest {
 }
 
 function Trigger-Location2 {
-    Write-Status "Triggering git pull on Location 2..." "Yellow"
+    Write-Status "Triggering git pull on Hawk Moon..." "Yellow"
     
-    $server = $config.servers.location2
+    $server = $config.servers.hawkmoon
     
     if ($server.host -eq "TBD") {
-        Write-Status "⚠️  Location 2 not configured yet. Update deploy.config.json" "Yellow"
+        Write-Status "⚠️  Hawk Moon not configured yet. Update deploy.config.json" "Yellow"
         return
     }
     
@@ -56,19 +56,19 @@ function Trigger-Location2 {
     ssh "${user}@${host}" "cd $path; git pull origin main; composer install --no-dev --optimize-autoloader"
     
     if ($LASTEXITCODE -eq 0) {
-        Write-Status "✅ Location 2 pulled latest code successfully" "Green"
+        Write-Status "✅ Hawk Moon pulled latest code successfully" "Green"
     } else {
-        Write-Status "❌ Location 2 git pull failed" "Red"
+        Write-Status "❌ Hawk Moon git pull failed" "Red"
     }
 }
 
 function Trigger-Location3 {
-    Write-Status "Triggering git pull on Location 3..." "Yellow"
+    Write-Status "Triggering git pull on Zip..." "Yellow"
     
-    $server = $config.servers.location3
+    $server = $config.servers.zip
     
     if ($server.host -eq "TBD") {
-        Write-Status "⚠️  Location 3 not configured yet. Update deploy.config.json" "Yellow"
+        Write-Status "⚠️  Zip server not configured yet. Update deploy.config.json" "Yellow"
         return
     }
     
@@ -80,9 +80,9 @@ function Trigger-Location3 {
     ssh "${user}@${host}" "cd $path; git pull origin main; composer install --no-dev --optimize-autoloader"
     
     if ($LASTEXITCODE -eq 0) {
-        Write-Status "✅ Location 3 pulled latest code successfully" "Green"
+        Write-Status "✅ Zip server pulled latest code successfully" "Green"
     } else {
-        Write-Status "❌ Location 3 git pull failed" "Red"
+        Write-Status "❌ Zip server git pull failed" "Red"
     }
 }
 

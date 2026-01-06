@@ -1,13 +1,16 @@
 # Remote Server Auto-Update Setup Guide
 
 ## Overview
-When you push code to GitHub from your Florida dev machine, 3 remote servers will automatically pull the latest code:
+**Dual-Repository Workflow:**
+- **Dev Repo:** https://github.com/built-responsive/ACPS-8.0 (paid account, you push here)
+- **Production Fork:** https://github.com/alleycatphoto/acps-server (auto-mirrored)
 
-1. **Hawks Nest** (North Carolina) - `C:\UniserverZ\vhosts\acps`
-2. **Location 2** (TBD) - `C:\UniserverZ\vhosts\acps`
-3. **Location 3** (TBD) - `C:\UniserverZ\vhosts\acps`
-
-**Forked Repo:** https://github.com/alleycatphoto/acps-server
+**When you push to built-responsive/ACPS-8.0:**
+1. GitHub Actions mirrors changes to alleycatphoto/acps-server
+2. 3 remote servers auto-pull from alleycatphoto/acps-server:
+   - **Hawks Nest** - `C:\UniserverZ\vhosts\acps` (user: Conphoserv)
+   - **Hawk Moon** - `C:\UniserverZ\vhosts\acps` (user: Conphoserv)
+   - **Zip** - `C:\UniserverZ\vhosts\acps` (user: Conphoserv)
 
 ---
 
@@ -32,24 +35,17 @@ composer install --no-dev --optimize-autoloader
 ```
 
 ### 3. Setup SSH Access (for GitHub Actions)
-On your **dev machine**, generate SSH keys for each server:
+On your **dev machine**, generate a single SSH key for user Conphoserv:
 ```powershell
-# Generate key for Hawks Nest
-ssh-keygen -t ed25519 -C "hawksnest-server" -f hawksnest_key
-
-# Generate key for Location 2
-ssh-keygen -t ed25519 -C "location2-server" -f location2_key
-
-# Generate key for Location 3
-ssh-keygen -t ed25519 -C "location3-server" -f location3_key
+# Generate single key for all 3 servers (user: Conphoserv)
+ssh-keygen -t ed25519 -C "conphoserv-servers" -f conphoserv_key
 ```
 
-Copy the **public keys** to each server:
+Copy the **public key** to all 3 servers:
 ```powershell
-# Copy hawksnest_key.pub to Hawks Nest server's authorized_keys
-# On Hawks Nest:
-mkdir ~/.ssh -ErrorAction SilentlyContinue
-Add-Content ~/.ssh/authorized_keys (Get-Content hawksnest_key.pub)
+# On each server (Hawks Nest, Hawk Moon, Zip), logged in as Conphoserv:
+mkdir C:\Users\Conphoserv\.ssh -ErrorAction SilentlyContinue
+Add-Content C:\Users\Conphoserv\.ssh\authorized_keys (Get-Content conphoserv_key.pub)
 ```
 
 ---
@@ -63,60 +59,58 @@ Add these secrets at: https://github.com/alleycatphoto/acps-server/settings/secr
 - `HAWKSNEST_USER`: Windows username (e.g., `Administrator`)
 - `HAWKSNEST_PATH`: `C:\\UniserverZ\\vhosts\\acps`
 - `HAWKSNEST_SSH_KEY`: Contents of `hawksnest_key` (private key)
+built-responsive/ACPS-8.0/settings/secrets/actions
 
-### Location 2 Secrets:
-- `LOCATION2_HOST`: TBD
-- `LOCATION2_USER`: Administrator
-- `LOCATION2_PATH`: `C:\\UniserverZ\\vhosts\\acps`
-- `LOCATION2_SSH_KEY`: Contents of `location2_key`
+### Mirror Secrets:
+- `ALLEYCATPHOTO_TOKEN`: Personal Access Token from alleycatphoto account
+  - Go to: https://github.com/settings/tokens
+  - Create token with `repo` scope
+  - Allows pushing to alleycatphoto/acps-server
 
-### Location 3 Secrets:
-- `LOCATION3_HOST`: TBD
-- `LOCATION3_USER`: Administrator
-- `LOCATION3_PATH`: `C:\\UniserverZ\\vhosts\\acps`
-- `LOCATION3_SSH_KEY`: Contents of `location3_key`
-
----
-
-## How It Works
-
-### Automatic (GitHub Actions)
-1. You push code to GitHub: `git push origin main`
+### Server Secrets:
+- `HAWKSNEST_HOST`: IP or hostname (e.g., `192.168.1.100` or `hawksnest.local`)
+- `HAWKMOON_HOST`: IP or hostname (e.g., `192.168.1.101` or `hawkmoon.local`)
+- `ZIP_HOST`: IP or hostname (e.g., `192.168.1.102` or `zip.local`)
+- `SERVER_PATH`: `C:\\UniserverZ\\vhosts\\acps` (same for all 3)
+- `CONPHOSERV_SSH_KEY`: Contents of `conphoserv_key` (private key for all 3 servers)
 2. GitHub Actions workflow triggers (`.github/workflows/deploy.yml`)
 3. GitHub SSH's into each server and runs: `git pull origin main`
 4. Each server updates its local code automatically
 
-### Manual (PowerShell Script)
-If you want to manually trigger updates:
+### Manual (PowerShe**built-responsive/ACPS-8.0**: `git push origin main`
+2. GitHub Actions workflow triggers (`.github/workflows/deploy.yml`):
+   - **Step 1:** Mirrors code to **alleycatphoto/acps-server**
+   - **Step 2:** SSH's into Hawks Nest, Hawk Moon, Zip
+   - **Step 3:** Each server runs: `git pull origin main` (from alleycatphoto/acps-server)
+3. All 3 servers update automatically as user **Conphoserv**
+.\deploy.ps1 all on servers:
 ```powershell
 # Trigger all 3 servers to pull
 .\deploy.ps1 all
 
-# Trigger just Hawks Nest
+# Trigger individual servers
 .\deploy.ps1 hawksnest
-
-# Trigger just Location 2
-.\deploy.ps1 location2
+.\deploy.ps1 hawkmoon
+.\deploy.ps1 zip
 ```
 
----
-
+**Note:** Manual script SSH's directly to servers. Mirror to alleycatphoto happens via GitHub Actions only.
 ## Configuration File
 
 Edit `deploy.config.json` to update server details:
 ```json
 {
-  "servers": {
-    "hawksnest": {
-      "host": "hawksnest.local",
-      "user": "Administrator",
+  "servers": {Conphoserv",
       "path": "C:\\UniserverZ\\vhosts\\acps"
     },
-    "location2": {
-      "host": "192.168.2.100",
-      "user": "Administrator",
+    "hawkmoon": {
+      "host": "hawkmoon.local",
+      "user": "Conphoserv",
       "path": "C:\\UniserverZ\\vhosts\\acps"
     },
+    "zip": {
+      "host": "zip.local",
+      "user": "Conphoserv
     "location3": {
       "host": "192.168.3.100",
       "user": "Administrator",
@@ -131,8 +125,9 @@ Edit `deploy.config.json` to update server details:
 ## Troubleshooting
 
 ### Server Won't Pull
-1. Check if repo is cloned: `cd C:\UniserverZ\vhosts\acps && git status`
-2. Verify SSH access: `ssh Administrator@hawksnest.local`
+2. Verify SSH access: `ssh Conphoserv@hawksnest.local`
+3. Check GitHub Actions logs: https://github.com/built-responsive/ACPS-8.0/actions
+4. Verify alleycatphoto fork is synced: https://github.com/alleycatphoto/acps-server
 3. Check GitHub Actions logs: https://github.com/alleycatphoto/acps-server/actions
 
 ### Merge Conflicts on Server
@@ -162,18 +157,32 @@ git stash pop
 
 ## Testing
 
-After setup, test the workflow:
-```powershell
-# Make a small change
+# Make a small change in built-responsive repo
 echo "// test" >> README.md
 git add README.md
-git commit -m "Test auto-deploy"
+git commit -m "Test auto-deploy and mirror"
 git push origin main
 
+# Check GitHub Actions: https://github.com/built-responsive/ACPS-8.0/actions
+# Verify mirror: https://github.com/alleycatphoto/acps-server (should have test commit)
+# SSH into Hawks Nest and verify: ssh Conphoserv@hawksnest.local "cd C:\\UniserverZ\\vhosts\\acps && git log"
 # Check GitHub Actions: https://github.com/alleycatphoto/acps-server/actions
 # SSH into Hawks Nest and verify: cd C:\UniserverZ\vhosts\acps && git log
 ```
 
----
+## Summary
+
+**Your Workflow:**
+1. Develop on `v2.acps.dev` (Florida)
+2. Commit to `built-responsive/ACPS-8.0` (paid GitHub)
+3. Push to `main`
+4. **Auto-magic:**
+   - Code mirrors to `alleycatphoto/acps-server`
+   - Hawks Nest pulls latest
+   - Hawk Moon pulls latest
+   - Zip pulls latest
+5. All 3 servers running as user **Conphoserv**
+
+*No manual FTP. No zip files. Just code and deploy
 
 *Babe, now every push updates all 3 locations automatically. No manual FTP, no zips.*
