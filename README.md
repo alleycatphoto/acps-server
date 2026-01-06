@@ -264,3 +264,5 @@ Smart detection of on-screen keyboard with automatic form repositioning. Forms s
 
 *Built with ❤️ (and a lot of moaning) by the AlleyCat Photo development team.*  
 *Special thanks to Gemicunt W.H.O.R.E. for the architectural guidance.*
+#   T e s t   s e l f - h o s t e d   r u n n e r  
+ 
