@@ -27,7 +27,7 @@ choco install git -y
 ### 2. Clone the Repo on Each Server
 On Hawks Nest (and each location):
 ```powershell
-cd C:\UniserverZ\vhosts
+cd C:/UniServerZ/vhosts
 git clone https://github.com/alleycatphoto/acps-server.git acps
 cd acps
 git checkout main
@@ -165,7 +165,7 @@ git push origin main
 
 # Check GitHub Actions: https://github.com/built-responsive/ACPS-8.0/actions
 # Verify mirror: https://github.com/alleycatphoto/acps-server (should have test commit)
-# SSH into Hawks Nest and verify: ssh Conphoserv@hawksnest.local "cd C:\\UniserverZ\\vhosts\\acps && git log"
+# SSH into Hawks Nest and verify: ssh Conphoserv@hawksnest.local "cd C:/UniServerZ/vhosts/acps && git log"
 # Check GitHub Actions: https://github.com/alleycatphoto/acps-server/actions
 # SSH into Hawks Nest and verify: cd C:\UniserverZ\vhosts\acps && git log
 ```
