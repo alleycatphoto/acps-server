@@ -21,7 +21,7 @@ jobs:
           GH_TOKEN: ${{ secrets.ALLEYCATPHOTO_TOKEN }}
         run: |
           git remote remove alleycatphoto 2>$null
-          git remote add alleycatphoto "https://x-access-token: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@github.com/alleycatphoto/acps-server.git"
+          git remote add alleycatphoto "https://x-access-token:$($env:GH_TOKEN)@github.com/alleycatphoto/acps-server.git"
           git push alleycatphoto main --force
       
       - name: Wait for mirror to complete
