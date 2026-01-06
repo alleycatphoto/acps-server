@@ -12,10 +12,23 @@
 
 header('Content-Type: application/json');
 
-// NOTE: Configuration for USPS API must be defined here or included via a config file.
-// Load these constants from a secure location in a production environment.
-define('USPS_CLIENT_ID', 'pKoxCXX03ILVLVvowP1Az7gjnQGuJFwdEAyiXKmVVTAoYvEF');
-define('USPS_CLIENT_SECRET', 'sxHpd0OegYBYjn38JdejsEPF5VdZ3zPAm290TxKtTNueVvhhWy1b58bqtmTGXL2K');
+// Load Composer autoloader and .env
+$vendorAutoload = __DIR__ . '/vendor/autoload.php';
+if (file_exists($vendorAutoload)) {
+    require_once $vendorAutoload;
+    if (class_exists('Dotenv\\Dotenv')) {
+        try {
+            $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+            $dotenv->safeLoad();
+        } catch (Exception $e) {
+            error_log('Failed to load .env: ' . $e->getMessage());
+        }
+    }
+}
+
+// Load USPS credentials from environment
+define('USPS_CLIENT_ID', $_ENV['USPS_CLIENT_ID'] ?? getenv('USPS_CLIENT_ID') ?: '');
+define('USPS_CLIENT_SECRET', $_ENV['USPS_CLIENT_SECRET'] ?? getenv('USPS_CLIENT_SECRET') ?: '');
 define('USPS_TOKEN_URL', 'https://apis.usps.com/oauth2/v3/token');
 define('USPS_VALIDATE_URL', 'https://apis.usps.com/addresses/v3/address');
 

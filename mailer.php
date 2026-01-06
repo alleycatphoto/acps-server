@@ -276,8 +276,8 @@ try {
         $mail->isSMTP();
         $mail->Host       = 'netsol-smtp-oxcs.hostingplatform.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'hawksnest@alleycatphoto.net';
-        $mail->Password   = 'Mlk561863245';
+        $mail->Username   = $locationEmail;
+        $mail->Password   = $locationEmailPass;
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
 

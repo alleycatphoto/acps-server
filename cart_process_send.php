@@ -100,7 +100,7 @@ if (strtolower($txtEmail) === 'photos@alleycatphoto.net' || $isQrPayment) {
     // --- NORMAL eProcessingNetwork call ---
     $remote_url = 'https://www.eprocessingnetwork.com/cgi-bin/epn/secure/tdbe/transact.pl';
     $post_data = [
-        'ePNAccount' => '0607184',
+        'ePNAccount' => $_ENV['EPN_ACCOUNT'] ?? getenv('EPN_ACCOUNT') ?: '',
         'CardNo' => $txtCardNum,
         'ExpMonth' => $txtExpMonth,
         'ExpYear' => $txtExpYear,
@@ -110,7 +110,7 @@ if (strtolower($txtEmail) === 'photos@alleycatphoto.net' || $isQrPayment) {
         'State' => $txtState,
         'Zip' => $txtZip,
         'HTML' => 'No',
-        'RestrictKey' => 'WKF3WNU6JpfJ8ym',
+        'RestrictKey' => $_ENV['EPN_RESTRICT_KEY'] ?? getenv('EPN_RESTRICT_KEY') ?: '',
         'Description' => $locationName . " ($orderID)",
         'Company' => $locationName,
         'FirstName' => $txtFname,
