@@ -33,33 +33,48 @@ jobs:
           SERVER_HOST: ${{ secrets.HAWK_HOST }}
           SERVER_PORT: ${{ secrets.HAWK_PORT }}
           SERVER_PATH: ${{ secrets.SERVER_PATH }}
-          SSH_KEY: ${{ secrets.CONPHOSERV_SSH_KEY }}
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
         run: |
-          $env:SSH_KEY | Out-File -FilePath deploy_key -Encoding utf8
-          ssh -i deploy_key -o StrictHostKeyChecking=no -p $env:SERVER_PORT alleycat@$env:SERVER_HOST "cd $env:SERVER_PATH && git pull origin main && composer install --no-dev --optimize-autoloader"
-          Remove-Item deploy_key -ErrorAction SilentlyContinue
+          $password = ConvertTo-SecureString $env:SSH_PASSWORD -AsPlainText -Force
+          $cred = New-Object System.Management.Automation.PSCredential ("alleycat", $password)
+          Invoke-Command -ComputerName $env:SERVER_HOST -Port $env:SERVER_PORT -Credential $cred -ScriptBlock {
+            param($path)
+            cd $path
+            git pull origin main
+            composer install --no-dev --optimize-autoloader
+          } -ArgumentList $env:SERVER_PATH
       
       - name: Update Hawk Moon Server
         env:
           SERVER_HOST: ${{ secrets.MOON_HOST }}
           SERVER_PORT: ${{ secrets.MOON_PORT }}
           SERVER_PATH: ${{ secrets.SERVER_PATH }}
-          SSH_KEY: ${{ secrets.CONPHOSERV_SSH_KEY }}
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
         run: |
-          $env:SSH_KEY | Out-File -FilePath deploy_key -Encoding utf8
-          ssh -i deploy_key -o StrictHostKeyChecking=no -p $env:SERVER_PORT alleycat@$env:SERVER_HOST "cd $env:SERVER_PATH && git pull origin main && composer install --no-dev --optimize-autoloader"
-          Remove-Item deploy_key -ErrorAction SilentlyContinue
+          $password = ConvertTo-SecureString $env:SSH_PASSWORD -AsPlainText -Force
+          $cred = New-Object System.Management.Automation.PSCredential ("alleycat", $password)
+          Invoke-Command -ComputerName $env:SERVER_HOST -Port $env:SERVER_PORT -Credential $cred -ScriptBlock {
+            param($path)
+            cd $path
+            git pull origin main
+            composer install --no-dev --optimize-autoloader
+          } -ArgumentList $env:SERVER_PATH
       
       - name: Update Zip Server
         env:
           SERVER_HOST: ${{ secrets.ZIP_HOST }}
           SERVER_PORT: ${{ secrets.ZIP_PORT }}
           SERVER_PATH: ${{ secrets.SERVER_PATH }}
-          SSH_KEY: ${{ secrets.CONPHOSERV_SSH_KEY }}
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
         run: |
-          $env:SSH_KEY | Out-File -FilePath deploy_key -Encoding utf8
-          ssh -i deploy_key -o StrictHostKeyChecking=no -p $env:SERVER_PORT alleycat@$env:SERVER_HOST "cd $env:SERVER_PATH && git pull origin main && composer install --no-dev --optimize-autoloader"
-          Remove-Item deploy_key -ErrorAction SilentlyContinue
+          $password = ConvertTo-SecureString $env:SSH_PASSWORD -AsPlainText -Force
+          $cred = New-Object System.Management.Automation.PSCredential ("alleycat", $password)
+          Invoke-Command -ComputerName $env:SERVER_HOST -Port $env:SERVER_PORT -Credential $cred -ScriptBlock {
+            param($path)
+            cd $path
+            git pull origin main
+            composer install --no-dev --optimize-autoloader
+          } -ArgumentList $env:SERVER_PATH
       
       - name: Notify Success
         if: success()
