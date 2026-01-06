@@ -67,11 +67,8 @@ jobs:
       
       - name: Notify Success
         if: success()
-        run: echo "✅ All 3 servers pulled latest code from GitHub"
-      
-      - name: Notify Failure
-        if: failure()Mirrored to alleycatphoto/acps-server and updated Hawks Nest, Hawk Moon, Zip servers"
+        run: echo "✅ Mirrored to alleycatphoto/acps-server and updated Hawks Nest, Hawk Moon, Zip servers"
       
       - name: Notify Failure
         if: failure()
-        run: echo "❌ Mirror or server update failed
+        run: echo "❌ Mirror or server update failed. Check logs."
