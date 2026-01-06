@@ -17,9 +17,11 @@ jobs:
           fetch-depth: 0
       
       - name: Mirror to alleycatphoto/acps-server
+        env:
+          GH_TOKEN: ${{ secrets.ALLEYCATPHOTO_TOKEN }}
         run: |
           git remote remove alleycatphoto 2>$null
-          git remote add alleycatphoto https://x-access-token:${{ secrets.ALLEYCATPHOTO_TOKEN }}@github.com/alleycatphoto/acps-server.git
+          git remote add alleycatphoto "https://x-access-token:$($env:GH_TOKEN)@github.com/alleycatphoto/acps-server.git"
           git push alleycatphoto main --force
       
       - name: Wait for mirror to complete
