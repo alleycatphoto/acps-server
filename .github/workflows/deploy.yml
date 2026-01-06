@@ -20,6 +20,7 @@ jobs:
         env:
           ALLEYCATPHOTO_TOKEN: ${{ secrets.ALLEYCATPHOTO_TOKEN }}
         run: |
+          git remote remove alleycatphoto 2>$null
           git remote add alleycatphoto https://x-access-token:${ALLEYCATPHOTO_TOKEN}@github.com/alleycatphoto/acps-server.git
           git push alleycatphoto main --force
       
