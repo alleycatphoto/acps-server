@@ -33,27 +33,33 @@ jobs:
           SERVER_HOST: ${{ secrets.HAWK_HOST }}
           SERVER_PORT: ${{ secrets.HAWK_PORT }}
           SERVER_PATH: ${{ secrets.SERVER_PATH }}
-          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+          SSH_KEY: ${{ secrets.CONPHOSERV_SSH_KEY }}
         run: |
-          echo y | plink -pw "$env:SSH_PASSWORD" -P $env:SERVER_PORT alleycat@$env:SERVER_HOST "cd $env:SERVER_PATH && git pull origin main && composer install --no-dev --optimize-autoloader"
+          $env:SSH_KEY | Out-File -FilePath deploy_key -Encoding utf8
+          ssh -i deploy_key -o StrictHostKeyChecking=no -p $env:SERVER_PORT alleycat@$env:SERVER_HOST "cd $env:SERVER_PATH && git pull origin main && composer install --no-dev --optimize-autoloader"
+          Remove-Item deploy_key -ErrorAction SilentlyContinue
       
       - name: Update Hawk Moon Server
         env:
           SERVER_HOST: ${{ secrets.MOON_HOST }}
           SERVER_PORT: ${{ secrets.MOON_PORT }}
           SERVER_PATH: ${{ secrets.SERVER_PATH }}
-          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+          SSH_KEY: ${{ secrets.CONPHOSERV_SSH_KEY }}
         run: |
-          echo y | plink -pw "$env:SSH_PASSWORD" -P $env:SERVER_PORT alleycat@$env:SERVER_HOST "cd $env:SERVER_PATH && git pull origin main && composer install --no-dev --optimize-autoloader"
+          $env:SSH_KEY | Out-File -FilePath deploy_key -Encoding utf8
+          ssh -i deploy_key -o StrictHostKeyChecking=no -p $env:SERVER_PORT alleycat@$env:SERVER_HOST "cd $env:SERVER_PATH && git pull origin main && composer install --no-dev --optimize-autoloader"
+          Remove-Item deploy_key -ErrorAction SilentlyContinue
       
       - name: Update Zip Server
         env:
           SERVER_HOST: ${{ secrets.ZIP_HOST }}
           SERVER_PORT: ${{ secrets.ZIP_PORT }}
           SERVER_PATH: ${{ secrets.SERVER_PATH }}
-          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+          SSH_KEY: ${{ secrets.CONPHOSERV_SSH_KEY }}
         run: |
-          echo y | plink -pw "$env:SSH_PASSWORD" -P $env:SERVER_PORT alleycat@$env:SERVER_HOST "cd $env:SERVER_PATH && git pull origin main && composer install --no-dev --optimize-autoloader"
+          $env:SSH_KEY | Out-File -FilePath deploy_key -Encoding utf8
+          ssh -i deploy_key -o StrictHostKeyChecking=no -p $env:SERVER_PORT alleycat@$env:SERVER_HOST "cd $env:SERVER_PATH && git pull origin main && composer install --no-dev --optimize-autoloader"
+          Remove-Item deploy_key -ErrorAction SilentlyContinue
       
       - name: Notify Success
         if: success()
