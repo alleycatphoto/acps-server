@@ -22,14 +22,14 @@ function Trigger-HawksNest {
     Write-Status "Triggering git pull on Hawks Nest (North Carolina)..." "Yellow"
     
     $server = $config.servers.hawksnest
-    $host = $server.host
+    $serverHost = $server.hostname
     $user = $server.user
     $path = $server.path
     
-    Write-Status "Connecting to ${user}@${host}..."
+    Write-Status "Connecting to ${user}@${serverHost}..."
     
     # SSH and run git pull
-    ssh "${user}@${host}" "cd $path; git pull origin main; composer install --no-dev --optimize-autoloader"
+    ssh "${user}@${serverHost}" "cd $path; git pull origin main; composer install --no-dev --optimize-autoloader"
     
     if ($LASTEXITCODE -eq 0) {
         Write-Status "✅ Hawks Nest pulled latest code successfully" "Green"
@@ -43,17 +43,17 @@ function Trigger-Location2 {
     
     $server = $config.servers.hawkmoon
     
-    if ($server.host -eq "TBD") {
+    if ($server.hostname -eq "TBD") {
         Write-Status "⚠️  Hawk Moon not configured yet. Update deploy.config.json" "Yellow"
         return
     }
     
-    $host = $server.host
+    $serverHost = $server.hostname
     $user = $server.user
     $path = $server.path
     
-    Write-Status "Connecting to ${user}@${host}..."
-    ssh "${user}@${host}" "cd $path; git pull origin main; composer install --no-dev --optimize-autoloader"
+    Write-Status "Connecting to ${user}@${serverHost}..."
+    ssh "${user}@${serverHost}" "cd $path; git pull origin main; composer install --no-dev --optimize-autoloader"
     
     if ($LASTEXITCODE -eq 0) {
         Write-Status "✅ Hawk Moon pulled latest code successfully" "Green"
@@ -67,17 +67,17 @@ function Trigger-Location3 {
     
     $server = $config.servers.zip
     
-    if ($server.host -eq "TBD") {
+    if ($server.hostname -eq "TBD") {
         Write-Status "⚠️  Zip server not configured yet. Update deploy.config.json" "Yellow"
         return
     }
     
-    $host = $server.host
+    $serverHost = $server.hostname
     $user = $server.user
     $path = $server.path
     
-    Write-Status "Connecting to ${user}@${host}..."
-    ssh "${user}@${host}" "cd $path; git pull origin main; composer install --no-dev --optimize-autoloader"
+    Write-Status "Connecting to ${user}@${serverHost}..."
+    ssh "${user}@${serverHost}" "cd $path; git pull origin main; composer install --no-dev --optimize-autoloader"
     
     if ($LASTEXITCODE -eq 0) {
         Write-Status "✅ Zip server pulled latest code successfully" "Green"

@@ -3,7 +3,7 @@
   "servers": {
     "hawksnest": {
       "name": "Hawks Nest Server (North Carolina)",
-      "host": "hawksnest.local",
+      "hostname": "hawksnest.local",
       "user": "Owner",
       "path": "C:/UniServerZ/vhosts/acps",
       "method": "ssh-trigger",
@@ -11,7 +11,7 @@
     },
     "hawkmoon": {
       "name": "Hawk Moon Server",
-      "host": "hawkmoon.local",
+      "hostname": "hawkmoon.local",
       "user": "Owner",
       "path": "C:/UniServerZ/vhosts/acps",
       "method": "ssh-trigger",
@@ -19,7 +19,7 @@
     },
     "zip": {
       "name": "Zip Server",
-      "host": "zip.local",
+      "hostname": "zip.local",
       "user": "Owner",
       "path": "C:/UniServerZ/vhosts/acps",
       "method": "ssh-trigger",
