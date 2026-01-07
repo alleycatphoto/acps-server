@@ -19,6 +19,10 @@
   # Route ALL /api requests to VS public API handler
   RewriteRule ^api(/.*)?$ vs/public/index.php [QSA,L]
 
+  # Route /ai requests to Scratching Post
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^ai(/.*)?$ ai/index.php [QSA,L]
+
   # Handle OPTIONS requests immediately (Preflight)
   RewriteCond %{REQUEST_METHOD} OPTIONS
   RewriteRule ^(.*)$ - [R=200,L]
