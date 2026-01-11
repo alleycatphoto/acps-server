@@ -565,177 +565,129 @@ $token = md5('unique_salt' . $timestamp);
 
       </p>
 
-      <div id="cash-orders-widget" class="card text-left">
-        <div class="card-header cash-orders-toggle">
-          <div class="cash-header-bar">
-            <div class="cash-header-left" id="cashHeaderClickRegion">
-              <span class="cash-header-title">💵 Pending Cash Orders</span>
-              <span id="cashOrdersCount" class="cash-count-badge">
-                <?php echo (int)$pendingCashCount; ?>
-              </span>
-              <span id="cashOrdersToggleIcon" class="cash-toggle-icon" aria-hidden="true">+</span>
-            </div>
 
-            <div class="cash-header-actions">
-              <div class="auto-print-wrap">
-                <span class="auto-print-label">Auto Print</span>
-                <button type="button"
-                        id="autoPrintToggle"
-                        class="auto-print-toggle"
-                        aria-pressed="false">
-                  <span class="auto-print-knob"></span>
-                  <span class="auto-print-text">
-                    <span class="auto-print-off">OFF</span>
-                    <span class="auto-print-on">ON</span>
-                  </span>
-                </button>
+      <!-- Tab Navigation -->
+      <ul class="nav nav-tabs" id="adminTabNav" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="uploader-tab" data-toggle="tab" href="#uploader" role="tab" aria-controls="uploader" aria-selected="true">Uploader</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="orders-tab" data-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false">Order Management</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="false">Settings</a>
+        </li>
+      </ul>
+      <div class="tab-content" id="adminTabContent">
+        <div class="tab-pane fade show active" id="uploader" role="tabpanel" aria-labelledby="uploader-tab">
+          <!-- Uploader Panel (existing uploader form) -->
+          <div style="margin-top:20px;">
+            <!-- Processing Modal for Upload Progress -->
+            <div id="process-modal" style="display:none;">
+              <div class="process-container">
+                <h3 style="color:#fff;">Processing Upload...</h3>
+                <div class="progress" style="height:30px;">
+                  <div id="process-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width:0%"></div>
+                </div>
+                <div id="process-text" style="margin-top:10px;color:#fff;font-size:18px;">0%</div>
               </div>
-
-              <div class="refresh-wrap">
-                <button type="button"
-                        id="cashRefreshBtn"
-                        title="Toggle auto refresh">
-                  <span id="refreshCountdown">60</span>
-                </button>
-              </div>
-
-              <button type="button"
-                      id="cashLogBtn"
-                      class="cash-log-btn"
-                      title="View cash order log">
-                <span class="icon">⌘</span>
-                <span>Log</span>
-              </button>
             </div>
-          </div>
-        </div>
-
-        <div id="cashOrdersPanel" style="display:none;">
-          <div class="table-responsive">
-            <table id="cashOrdersTable" class="table table-dark table-striped table-sm mb-0">
-              <thead>
+            <form action="/admin/admin_import_proc.php" method="post" name="frmImport" id="frmImport">
+              <input type="hidden" name="token" id="token" value="<?php echo htmlspecialchars($token); ?>" />
+              <table border="0">
                 <tr>
-                  <th scope="col">Order #</th>
-                  <th scope="col">Name</th>
-                  <th scope="col">Total</th>
-                  <th scope="col">Date</th>
-                  <th scope="col">Type</th>
-                  <th scope="col" style="width: 160px;">Actions</th>
-                </tr>
-              </thead>
-              <tbody id="cashOrdersBody">
-                <tr>
-                  <td colspan="6" class="text-center text-muted">
-                    <?php echo $pendingCashCount ? 'Loading pending cash orders…' : 'No pending cash orders.'; ?>
+                  <td align="center">
+                    <div id="chooser_group"><b>CHOOSE DESTINATION:</b><br />
+                      <select class="chooser" name="custom_target">
+                        <?php foreach ($cat as $key => $value): ?>
+                          <?php if (trim($value) !== ''): ?>
+                            <option value="<?php echo htmlspecialchars($key); ?>">
+                              <?php echo htmlspecialchars($value); ?>
+                            </option>
+                          <?php endif; ?>
+                        <?php endforeach; ?>
+                      </select>
+                    </div>
+                  </td>
+                  <td width="50%" align="center">
+                    <div id="chooser_time">
+                      <strong>CHOOSE TIME:</strong><br />
+                      <select class="chooser" name="selTime" id="selTime">
+                        <option value="8:00:01"  <?php if (date('H:i') >= '08:00' && date('H:i') <= '09:59') echo 'selected'; ?>>08:00AM - 10:00AM</option>
+                        <option value="10:00:01" <?php if (date('H:i') >= '10:00' && date('H:i') <= '11:59') echo 'selected'; ?>>10:00AM - 12:00PM</option>
+                        <option value="12:00:01" <?php if (date('H:i') >= '12:00' && date('H:i') <= '13:59') echo 'selected'; ?>>12:00PM - 02:00PM</option>
+                        <option value="14:00:01" <?php if (date('H:i') >= '14:00' && date('H:i') <= '15:59') echo 'selected'; ?>>02:00PM - 04:00PM</option>
+                        <option value="16:00:01" <?php if (date('H:i') >= '16:00' && date('H:i') <= '17:59') echo 'selected'; ?>>04:00PM - 06:00PM</option>
+                        <option value="18:00:01" <?php if (date('H:i') >= '18:00' && date('H:i') <= '19:59') echo 'selected'; ?>>06:00PM - 08:00PM</option>
+                        <option value="20:00:01" <?php if (date('H:i') >= '20:00' && date('H:i') <= '21:59') echo 'selected'; ?>>08:00PM - 10:00PM</option>
+                      </select>
+                    </div>
                   </td>
                 </tr>
-              </tbody>
-            </table>
-          </div>
-          <div id="cashOrdersPager">
-            <button type="button" id="cashPrevPage">&laquo; Prev</button>
-            <span id="cashOrdersPageLabel">Page 1 / 1</span>
-            <button type="button" id="cashNextPage">Next &raquo;</button>
-          </div>
-          <div id="cashOrdersStatus" aria-live="polite"></div>
-        </div>
-      </div>
-
-      <?php if (!empty($cashScanDebug)): ?>
-      <details style="margin-top:8px;font-size:11px;color:#aaa;background:#111;border-radius:6px;border:1px solid #333;padding:6px 8px;">
-        <summary>Cash scan debug</summary>
-        <pre style="white-space:pre-wrap;margin:6px 0 0;"><?php
-          echo htmlspecialchars(implode("\n", $cashScanDebug), ENT_QUOTES, 'UTF-8');
-        ?></pre>
-      </details>
-      <?php endif; ?>
-
-      Select the destination for your files below and click 'select files' button. <br />
-      Choose the file(s) you wish to import and hit okay to begin the process. <br />
-      <br />
-      <font color="yellow">IMPORT MAY TAKE A FEW MINUTES PLEASE BE PATIENT</font>
-      <form action="/admin/admin_import_proc.php" method="post" name="frmImport" id="frmImport">
-        <input type="hidden" name="token" id="token" value="<?php echo htmlspecialchars($token); ?>" />
-        <table border="0">
-          <tr>
-            <td align="center">
-              <div id="chooser_group"><b>CHOOSE DESTINATION:</b><br />
-                <select class="chooser" name="custom_target">
-                  <?php foreach ($cat as $key => $value): ?>
-                    <?php if (trim($value) !== ''): ?>
-                      <option value="<?php echo htmlspecialchars($key); ?>">
-                        <?php echo htmlspecialchars($value); ?>
-                      </option>
-                    <?php endif; ?>
-                  <?php endforeach; ?>
-                </select>
+              </table>
+            </form>
+            <!-- Drag & Drop Zone and File List -->
+            <div class="row">
+              <div class="col-md-6 col-sm-12">
+                <div id="drag-and-drop-zone" class="dm-uploader p-5">
+                  <h3 class="mb-5 mt-5 text-muted">Drag &amp; drop files here </h3>
+                  <div class="btn btn-primary btn-block mb-5">
+                    <span>OPEN THE FILE BROWSER</span>
+                    <input type="file" title="Click to add Files" />
+                    <input type="hidden" id="token" value="<?php echo htmlspecialchars($token); ?>" />
+                    <input type="hidden" id="timestamp" value="<?php echo htmlspecialchars($timestamp); ?>" />
+                  </div>
+                  <p id="process-finished-text" style="color: green; text-align: center;"></p>
+                </div>
               </div>
-            </td>
-            <td width="50%" align="center">
-              <div id="chooser_time">
-                <strong>CHOOSE TIME:</strong><br />
-                <select class="chooser" name="selTime" id="selTime">
-                  <option value="8:00:01"  <?php if (date('H:i') >= '08:00' && date('H:i') <= '09:59') echo 'selected'; ?>>08:00AM - 10:00AM</option>
-                  <option value="10:00:01" <?php if (date('H:i') >= '10:00' && date('H:i') <= '11:59') echo 'selected'; ?>>10:00AM - 12:00PM</option>
-                  <option value="12:00:01" <?php if (date('H:i') >= '12:00' && date('H:i') <= '13:59') echo 'selected'; ?>>12:00PM - 02:00PM</option>
-                  <option value="14:00:01" <?php if (date('H:i') >= '14:00' && date('H:i') <= '15:59') echo 'selected'; ?>>02:00PM - 04:00PM</option>
-                  <option value="16:00:01" <?php if (date('H:i') >= '16:00' && date('H:i') <= '17:59') echo 'selected'; ?>>04:00PM - 06:00PM</option>
-                  <option value="18:00:01" <?php if (date('H:i') >= '18:00' && date('H:i') <= '19:59') echo 'selected'; ?>>06:00PM - 08:00PM</option>
-                  <option value="20:00:01" <?php if (date('H:i') >= '20:00' && date('H:i') <= '21:59') echo 'selected'; ?>>08:00PM - 10:00PM</option>
-                </select>
+              <div class="col-md-6 col-sm-12">
+                <div class="card h-100">
+                  <div class="card-header">File List</div>
+                  <ul class="list-unstyled p-2 d-flex flex-column col" id="files">
+                    <li class="text-muted text-center empty">No files uploaded.</li>
+                  </ul>
+                </div>
               </div>
-            </td>
-          </tr>
-        </table>
-      </form>
-
-      <div class="row">
-        <div class="col-md-6 col-sm-12">
-
-          <div id="drag-and-drop-zone" class="dm-uploader p-5">
-            <h3 class="mb-5 mt-5 text-muted">Drag &amp; drop files here </h3>
-
-            <div class="btn btn-primary btn-block mb-5">
-              <span>OPEN THE FILE BROWSER</span>
-              <input type="file" title="Click to add Files" />
-              <input type="hidden" id="token" value="<?php echo htmlspecialchars($token); ?>" />
-              <input type="hidden" id="timestamp" value="<?php echo htmlspecialchars($timestamp); ?>" />
             </div>
-            <p id="process-finished-text" style="color: green; text-align: center;"></p>
-          </div></div>
-        <div class="col-md-6 col-sm-12">
-          <div class="card h-100">
-            <div class="card-header">
-              File List
+            <div class="row">
+              <div class="col-12">
+                <div class="card h-100">
+                  <div class="card-header">Debug Messages</div>
+                  <ul class="list-group list-group-flush" id="debug">
+                    <li class="list-group-item text-muted empty">Loading photo importer....</li>
+                  </ul>
+                </div>
+              </div>
             </div>
-
-            <ul class="list-unstyled p-2 d-flex flex-column col" id="files">
-              <li class="text-muted text-center empty">No files uploaded.</li>
-            </ul>
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <div class="card h-100">
-            <div class="card-header">
-              Debug Messages
-            </div>
+        <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+          <!-- Order Management Panel -->
+          <iframe src="/config" style="width:100%;height:600px;border:none;"></iframe>
+        </div>
+        <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+          <!-- Settings Panel: Only show relevant fields -->
+          <div style="margin-top:20px;max-width:500px;margin-left:auto;margin-right:auto;">
+            <form id="envSettingsForm" method="post" action="/admin/update_env.php">
+              <h4>Edit System Settings</h4>
+              <div class="form-group">
+                <label for="env_name">System Name</label>
+                <input type="text" class="form-control" name="env_name" id="env_name" value="" />
+              </div>
+              <div class="form-group">
+                <label for="env_email">Admin Email</label>
+                <input type="email" class="form-control" name="env_email" id="env_email" value="" />
+              </div>
+              <div class="form-group">
+                <label for="env_password">Admin Password</label>
+                <input type="password" class="form-control" name="env_password" id="env_password" value="" />
+              </div>
+              <button type="submit" class="btn btn-success">Save Settings</button>
+            </form>
+            <div id="envSaveStatus"></div>
+          </div>
+        </div>
 
-            <ul class="list-group list-group-flush" id="debug">
-              <li class="list-group-item text-muted empty">Loading photo importer....</li>
-            </ul>
-          </div>
-        </div>
-      </div> <div id="process-modal" style="display:none;">
-        <div class="process-container">
-          <h3 style="color: grey;">Processing...</h3>
-          <div class="process-bar-wrapper">
-            <div class="process-bar" id="process-bar" style="background-color: green;"></div>
-          </div>
-          <p id="process-text" style="color: red; text-align: center;">0%</p>
-        </div>
-      </div>
 
   </main>
   <footer class="text-center">
@@ -754,7 +706,9 @@ $token = md5('unique_salt' . $timestamp);
   <script src="/public/assets/importer/js/jquery.dm-uploader.js"></script>
   <script src="/public/assets/importer/js/main.js"></script>
   <script src="/public/assets/importer/js/ui.js"></script>
+
   <script src="/public/assets/importer/js/conf.js"></script>
+  <script src="/public/assets/importer/js/env_settings.js"></script>
 
   <script type="text/html" id="files-template">
     <li class="media">
