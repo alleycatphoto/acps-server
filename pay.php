@@ -256,7 +256,6 @@ if ($cc_totaltaxed > 0) {
 
     <!-- ================= Step 4: PAYMENT (Swipe/QR) ================= -->
     <div id="view-payment" class="app-view">
-        <h1 class="animation" style="margin-bottom: 10px;"><span class="blinking">Please swipe your card now</span></h1>
         
         <div class="payment-container">
             <!-- Left: QR Code -->
@@ -280,13 +279,17 @@ if ($cc_totaltaxed > 0) {
                     <div class="sub-details">Includes NC Sales Tax  &amp; $<?php echo number_format($surcharge, 2); ?> Transaction Fee</div>
                 </div>
 
-                <button class="btn-choice btn-white" style="margin-bottom: 1rem; border-color: #178a00ff; color: #fff;" onclick="processCash()">
-                    <span class="btn-title" style="font-size: 3rem;">Pay Cash/Card at the Counter</span>
-                </button>
-                
-                <button class="btn-choice btn-white" style="border-color: #770000ff; color: #fff;" onclick="location.reload()">
-                    <span class="btn-title" style="font-size: 3rem;">Cancel Transaction</span>
-                </button>
+                <div class="pay-actions-fullwidth">
+                    <button type="button" class="big-pay-btn" onclick="processCash()">
+                        <div class="big-pay-main"><span class="fa fa-money-bill-wave"></span> PAY AT COUNTER</div>
+                        <div class="big-pay-sub">CASH OR CARD &nbsp; • &nbsp; SCAN QR TO LEFT</div>
+                    </button>
+                    <button type="button" class="big-cancel-btn" onclick="location.reload()">
+                        <div class="big-cancel-main"><span class="fa fa-times-circle"></span> CANCEL</div>
+                    </button>
+                </div>
+<!-- Font Awesome for icons (add to <head> if not present) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 
             </div>

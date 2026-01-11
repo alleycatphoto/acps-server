@@ -153,7 +153,14 @@ if ($responseMode == "approved") {
     $to = $locationEmail;
     $subject = "Alley Cat Photo : " . $locationName . " " . $stationID . " New Order - (" . ($isOnsite == 'yes' ? "Pickup" : "Postal Mail") . "): " . $orderID;
 
-    $message .= "$txtEmail |\r\n";
+    // SQUARE receipt logic
+    if ($isQrPayment) {
+        $message .= "$txtEmail |\r\n";
+        $message .= "SQUARE ORDER: $" . number_format($txtAmt, 2) . " PAID\r\n";
+    } else {
+        $message .= "$txtEmail |\r\n";
+        $message .= "CASH ORDER: $" . number_format($txtAmt, 2) . " DUE\r\n";
+    }
     $message .= "Order #: $orderID - $stationID\r\n";
     $message .= "Order Date: " . date("F j, Y, g:i a") . "\r\n";
     $message .= "Order Total: $" . number_format($txtAmt, 2) . "\r\n";
@@ -203,7 +210,10 @@ if ($responseMode == "approved") {
         $filePath = "photos/" . $date_path . "/emails/" . $txtEmail;
         mkdir($toPath, 0777, true);
         mkdir($filePath, 0777, true);
-        file_put_contents("$toPath/info.txt", $message);
+        // info.txt must always be email|message (first line is email|message)
+        $infoTxt = "$txtEmail|" . ($isQrPayment ? "SQUARE ORDER: $" . number_format($txtAmt, 2) . " PAID" : "CASH ORDER: $" . number_format($txtAmt, 2) . " DUE") . "\r\n";
+        $infoTxt .= $message;
+        file_put_contents("$toPath/info.txt", $infoTxt);
 
         foreach ($Cart->items as $order_code => $quantity) {
             [$prod_code, $photo_id] = explode('-', $order_code);

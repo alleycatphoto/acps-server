@@ -206,6 +206,17 @@ foreach ($files as $image) {
 imagedestroy($stamp);
 
 
+// --- DEBUG LOGGING ---
+$logsDir = __DIR__ . '/logs';
+if (!is_dir($logsDir)) { @mkdir($logsDir, 0777, true); }
+$mailerLog = $logsDir . '/mailer.log';
+function mailer_log($msg) {
+    global $mailerLog;
+    $ts = date('Y-m-d H:i:s');
+    @file_put_contents($mailerLog, "[$ts] $msg\n", FILE_APPEND | LOCK_EX);
+}
+mailer_log('Mailer.php started, cwd: ' . getcwd() . ', _SERVER[PHP_SELF]: ' . ($_SERVER['PHP_SELF'] ?? 'n/a'));
+
 // ---------------------------------------------------------------------
 // PHPMailer config + multi-send
 // ---------------------------------------------------------------------
@@ -238,6 +249,7 @@ try {
     // If we have at least one image, send ONE email per image
     if ($hasFiles) {
         foreach ($files as $imagePath) {
+            mailer_log("Preparing to send email with attachment: $imagePath to $to");
 
             $mail = new PHPMailer(true);
 
@@ -250,6 +262,15 @@ try {
             $mail->Password   = $locationEmailPass;
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port       = 587;
+            // Force CA cert for SSL
+            $mail->SMTPOptions = [
+                'ssl' => [
+                    'verify_peer' => true,
+                    'verify_peer_name' => true,
+                    'allow_self_signed' => true,
+                    'cafile' => realpath(__DIR__ . '/cacert.pem'),
+                ]
+            ];
 
             // Recipients
             $mail->setFrom($fromMail, $fromName);
@@ -265,10 +286,15 @@ try {
             $mail->Subject = $subjectWithImages;
             $mail->Body    = rtrim($user_message) . "\n\n" . $copyrightText;
 
-            $mail->send();
+            try {
+                $mail->send();
+                mailer_log("Email with $imagePath sent to $to successfully.");
+            } catch (Exception $e) {
+                mailer_log("ERROR: Failed to send email with $imagePath to $to: " . $mail->ErrorInfo);
+            }
         }
     } else {
-        // No files: just send the receipt / message once, no attachments
+        mailer_log("No image files found, sending plain receipt to $to");
         $mail = new PHPMailer(true);
 
         // Server settings
@@ -280,6 +306,15 @@ try {
         $mail->Password   = $locationEmailPass;
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
+        // Force CA cert for SSL
+        $mail->SMTPOptions = [
+            'ssl' => [
+                'verify_peer' => true,
+                'verify_peer_name' => true,
+                'allow_self_signed' => true,
+                'cafile' => realpath(__DIR__ . '/cacert.pem'),
+            ]
+        ];
 
         // Recipients
         $mail->setFrom($fromMail, $fromName);
@@ -292,10 +327,16 @@ try {
         $mail->Subject = $subjectNoImages;
         $mail->Body    = rtrim($user_message) . "\n\n" . $copyrightText;
 
-        $mail->send();
+        try {
+            $mail->send();
+            mailer_log("Plain receipt email sent to $to successfully.");
+        } catch (Exception $e) {
+            mailer_log("ERROR: Failed to send plain receipt email to $to: " . $mail->ErrorInfo);
+        }
     }
 
     echo 'Message has been sent';
+    mailer_log("Mailer script completed successfully for $to");
     // AFTER 'Message has been sent':
     if (!empty($order)) {
         acp_log_event($order, "EMAIL_OK"); // Log success
@@ -312,7 +353,6 @@ try {
     }
 
 } catch (Exception $e) {
-    // Note: $mail may not exist if it failed before instantiation in the loop,
-    // but PHPMailer\Exception gives us enough info here.
+    mailer_log("FATAL ERROR: Mailer Exception: " . $e->getMessage());
     echo "Message could not be sent. Mailer Error: {$e->getMessage()}";
 }
