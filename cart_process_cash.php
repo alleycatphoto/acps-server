@@ -52,11 +52,19 @@ if (!file_exists($filename)) {
 $stationID = ($server_addy == '192.168.2.126') ? "FS" : "MS";
 $message = "";
 $total_price = 0;
-$to = $loc_email;
+$to = $locationEmail;
 $subject = "Alley Cat Photo : " . $locationName . " " . $stationID . " New Order - (Cash Due): " . $orderID;
 
+// Detect payment type and Square response/confirmation
+$paymentType = $_REQUEST['payment_type'] ?? (isset($_POST['is_square_payment']) && $_POST['is_square_payment'] == '1' ? 'square' : 'cash');
+$squareResponse = $_REQUEST['square_response'] ?? '';
+$squareOrderId = $_REQUEST['square_order_id'] ?? '';
 $message .= "$txtEmail | \r\n";
-$message .= "CASH ORDER: $" . number_format($txtAmt, 2) . " DUE\r\n";
+if ($paymentType === 'square') {
+    $message .= "SQUARE ORDER: $" . number_format($txtAmt, 2) . " PAID\r\n";
+} else {
+    $message .= "CASH ORDER: $" . number_format($txtAmt, 2) . " DUE\r\n";
+}
 if ($isOnsite == 'yes') {
     $message .= "Delivery: Pickup On Site\r\n";
 } else {
@@ -88,7 +96,18 @@ foreach ($Cart->getItems() as $order_code => $quantity) {
     $message .= "[$quantity] " . $Cart->getItemName($order_code) . " ($imgID)\r\n";
 }
 
-$message .= "-----------------------------\r\nCheck out your pictures later at:\r\nhttp://www.alleycatphoto.net\r\n\r\n";
+
+$message .= "-----------------------------\r\nCheck out your pictures later at:\r\nhttp://www.alleycatphoto.net\r\n";
+// If Square, append confirmation/response at bottom
+if ($paymentType === 'square') {
+    if ($squareOrderId) {
+        $message .= "\r\nSQUARE CONFIRMATION: $squareOrderId\r\n";
+    }
+    if ($squareResponse) {
+        $message .= "SQUARE RESPONSE: $squareResponse\r\n";
+    }
+}
+$message .= "\r\n";
 
 // --- SEND STAFF MAIL ---
 $header = "From: Alley Cat Photo <" . $locationEmail . ">\r\n";
@@ -114,7 +133,18 @@ if ($txtEmail != '') {
     mkdir($toPath, 0777, true);
     mkdir($filePath, 0777, true);
 
-    file_put_contents("$toPath/info.txt", $message);
+    // info.txt must always be email|message (first line is email|message)
+    $infoTxt = "$txtEmail|" . ($paymentType === 'square' ? "SQUARE ORDER: $" . number_format($txtAmt, 2) . " PAID" : "CASH ORDER: $" . number_format($txtAmt, 2) . " DUE");
+    if ($paymentType === 'square') {
+        if ($squareOrderId) {
+            $infoTxt .= "|SQUARE CONFIRMATION: $squareOrderId";
+        }
+        if ($squareResponse) {
+            $infoTxt .= "|SQUARE RESPONSE: $squareResponse";
+        }
+    }
+    $infoTxt .= "\r\n" . $message;
+    file_put_contents("$toPath/info.txt", $infoTxt);
 
     foreach ($Cart->items as $order_code => $quantity) {
         [$prod_code, $photo_id] = explode('-', $order_code);
