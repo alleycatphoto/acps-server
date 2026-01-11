@@ -280,7 +280,7 @@ if ($cc_totaltaxed > 0) {
                 </div>
 
                 <div class="pay-actions-fullwidth">
-                    <button type="button" class="big-pay-btn" onclick="processCash()">
+                    <button type="button" class="big-pay-btn" id="cashPayBtn" onclick="processCash()">
                         <div class="big-pay-main"><span class="fa fa-money-bill-wave"></span> PAY AT COUNTER</div>
                         <div class="big-pay-sub">CASH OR CARD &nbsp; • &nbsp; SCAN QR TO LEFT</div>
                     </button>
@@ -338,43 +338,31 @@ if ($cc_totaltaxed > 0) {
 <script src="/public/assets/js/CardReader.js"></script>
 <script src="/public/assets/js/acps.js"></script> <!-- Master JS -->
 
+
 <script>
 // On-screen keyboard detection for kiosk (PC full-screen)
 (function() {
     let clickedOnKeyboard = false;
-    
-    // Track clicks on keyboard to prevent closing
     document.addEventListener('mousedown', function(e) {
-        // Check if click is on keyboard or its children
         if (e.target.closest('#virtualKeyboard')) {
             clickedOnKeyboard = true;
         } else {
             clickedOnKeyboard = false;
         }
     }, true);
-    
-    // Detect when any input is focused and shift content up
     document.addEventListener('focusin', function(e) {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-            // Add class immediately when input is focused
             document.body.classList.add('keyboard-open');
         }
     });
-    
-    // Detect when input loses focus - close keyboard and shift content back
     document.addEventListener('focusout', function(e) {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
             setTimeout(function() {
-                // Don't close if we clicked on the keyboard
                 if (clickedOnKeyboard) {
                     return;
                 }
-                
-                // Only remove class and close keyboard if no inputs are focused
                 if (!document.querySelector('input:focus, textarea:focus')) {
                     document.body.classList.remove('keyboard-open');
-                    
-                    // Close the modern keyboard using its API
                     if (window.ModernKeyboard && window.ModernKeyboard.hide) {
                         window.ModernKeyboard.hide();
                     }
@@ -383,6 +371,23 @@ if ($cc_totaltaxed > 0) {
         }
     });
 })();
+
+
+// Lock cash/pay button and show spinner, then call real processCash
+var _originalProcessCash = null;
+if (typeof window.processCash === 'function') {
+    _originalProcessCash = window.processCash;
+}
+window.processCash = function() {
+    var btn = document.getElementById('cashPayBtn');
+    if (!btn.disabled) {
+        btn.disabled = true;
+        btn.innerHTML = '<div class="big-pay-main"><span class="fa fa-spinner fa-spin"></span> Processing...</div><div class="big-pay-sub">Please wait</div>';
+        if (typeof _originalProcessCash === 'function') {
+            _originalProcessCash();
+        }
+    }
+};
 </script>
 
 </body>
