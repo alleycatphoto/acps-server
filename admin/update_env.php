@@ -1,7 +1,7 @@
 <?php
 // update_env.php - handles .env file update from admin panel (only whitelisted vars)
 $allowed = ['SYSTEM_NAME', 'ADMIN_EMAIL', 'ADMIN_PASSWORD'];
-$envPath = realpath(__DIR__ . '/../.env');
+$envPath = realpath(__DIR__ . '/../.env.local.');
 
 function get_env_vars($path, $allowed) {
     $vars = array_fill_keys($allowed, '');
