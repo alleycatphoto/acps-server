@@ -281,7 +281,7 @@ if ($cc_totaltaxed > 0) {
                 </div>
 
                 <button class="btn-choice btn-white" style="margin-bottom: 1rem; border-color: #178a00ff; color: #fff;" onclick="processCash()">
-                    <span class="btn-title" style="font-size: 3rem;">Pay With Cash Here ? <br/><span style="font-size: 1.5rem; color:#6F0;">(Save $<?php echo number_format($cc_totaltaxed - $amount_without_tax, 2); ?>)</span></span>
+                    <span class="btn-title" style="font-size: 3rem;">Pay Cash/Card at the Counter</span>
                 </button>
                 
                 <button class="btn-choice btn-white" style="border-color: #770000ff; color: #fff;" onclick="location.reload()">
