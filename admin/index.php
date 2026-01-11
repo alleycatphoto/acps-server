@@ -619,12 +619,13 @@ $token = md5('unique_salt' . $timestamp);
                   <th scope="col">Name</th>
                   <th scope="col">Total</th>
                   <th scope="col">Date</th>
+                  <th scope="col">Type</th>
                   <th scope="col" style="width: 160px;">Actions</th>
                 </tr>
               </thead>
               <tbody id="cashOrdersBody">
                 <tr>
-                  <td colspan="5" class="text-center text-muted">
+                  <td colspan="6" class="text-center text-muted">
                     <?php echo $pendingCashCount ? 'Loading pending cash orders…' : 'No pending cash orders.'; ?>
                   </td>
                 </tr>
@@ -1087,11 +1088,27 @@ $token = md5('unique_salt' . $timestamp);
       slice.forEach(order => {
         const tr = document.createElement('tr');
         tr.setAttribute('data-order-id', order.id);
+        let typeLabel = '';
+        if (order.payment_type === 'square') {
+          typeLabel = '<span style="color:#4cf;">SQUARE</span>';
+        } else {
+          typeLabel = '<span style="color:#8aff8a;">CASH</span>';
+        }
+        let squareInfo = '';
+        if (order.payment_type === 'square') {
+          if (order.square_confirmation) {
+            squareInfo += `<div style='font-size:10px;color:#4cf;'>CONF: ${order.square_confirmation}</div>`;
+          }
+          if (order.square_response) {
+            squareInfo += `<div style='font-size:10px;color:#4cf;'>RESP: ${order.square_response}</div>`;
+          }
+        }
         tr.innerHTML = `
           <td>${order.id}</td>
           <td>${order.name || ''}</td>
           <td>$${Number(order.total || 0).toFixed(2)}</td>
           <td>${order.date || ''}</td>
+          <td>${typeLabel}${squareInfo}</td>
           <td class="cash-order-actions">
             <button type="button" data-action="paid">Paid</button>
             <button type="button" data-action="void">Void</button>

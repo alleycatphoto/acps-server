@@ -1,3 +1,87 @@
+/* Unified Big Action Buttons (matches pickup/mail step) */
+.big-pay-btn {
+    width: 100%;
+    max-width: 700px;
+    background: var(--color-primary);
+    color: #000;
+    border: none;
+    font-family: var(--font-stack);
+    font-size: 2.7rem;
+    font-weight: 900;
+    border-radius: 15px;
+    padding: 2rem 0 1.1rem 0;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 30px rgba(0, 204, 68, 0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+}
+.big-pay-btn:hover {
+    background: #00b33c;
+    transform: scale(1.02);
+    box-shadow: 0 0 40px rgba(0, 204, 68, 0.6);
+}
+.big-pay-main {
+    font-size: 2.7rem;
+    font-weight: 900;
+    letter-spacing: 0.01em;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+}
+.big-pay-main .fa {
+    font-size: 2.2rem;
+    margin-right: 0.7rem;
+}
+.big-pay-sub {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #003311;
+    margin-top: 0.7rem;
+    letter-spacing: 0.01em;
+}
+.big-cancel-btn {
+    width: 100%;
+    max-width: 700px;
+    background: var(--brand-red);
+    color: #fff;
+    border: none;
+    font-family: var(--font-stack);
+    font-size: 2.2rem;
+    font-weight: 900;
+    border-radius: 15px;
+    padding: 1.5rem 0 1.1rem 0;
+    box-shadow: 0 0 24px 0 var(--brand-red-dim);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+}
+.big-cancel-btn:hover {
+    background: #9d0000;
+    transform: scale(1.02);
+    box-shadow: 0 0 32px var(--brand-red-dim);
+}
+.big-cancel-main {
+    font-size: 2.2rem;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+}
+.big-cancel-main .fa {
+    font-size: 1.7rem;
+    margin-right: 0.7rem;
+}
 /* ==========================================================================
    ACPS Master Stylesheet (acps.css)
    Unified styles for AlleyCat PhotoStation Kiosk
