@@ -224,7 +224,7 @@ const App = {
                     ${elapsedHtml}
                 </div>
                 <div class="order-name">${order.name || 'Unknown'}</div>
-                
+                <div class="order-total" style="color: #28a745; font-weight: bold;">$${Number(order.total).toFixed(2)}</div>
                 <div class="order-actions">
                     <div class="${badgeClass}">${badgeText}</div>
                     <button class="btn btn-square action-btn" data-action="square">Square</button>
@@ -232,9 +232,9 @@ const App = {
                     <button class="btn btn-void action-btn" data-action="void">Void</button>
                     <button class="btn btn-receipt view-receipt-btn" data-file="${order.filename}">Receipt</button>
                 </div>
-                
                 <div class="order-details">
                     <p><strong>Total:</strong> $${Number(order.total).toFixed(2)}</p>
+                    <p><strong>Square Total:</strong> $${Number(order.cc_totaltaxed).toFixed(2)}</p>
                     <p><strong>File:</strong> ${order.filename}</p>
                     <p><strong>Preview:</strong> <br> ${order.raw_snippet}</p>
                 </div>
@@ -252,7 +252,7 @@ const App = {
                     const action = btn.dataset.action;
                     if (action === 'cash') this.handleAction('paid', order.id);
                     if (action === 'void') this.handleAction('void', order.id);
-                    if (action === 'square') this.handleSquare(order.id, order.total, btn);
+                    if (action === 'square') this.handleSquare(order.id, order.cc_totaltaxed, btn);
                 });
             });
 
@@ -290,6 +290,7 @@ const App = {
     },
 
     async handleSquare(orderId, amount, btn) {
+        let cancelBtn = null;
         // Pause main refresh
         this.state.autoRefresh = false; 
         this.elements.autoRefreshToggle.checked = false;
@@ -297,7 +298,14 @@ const App = {
 
         const originalText = btn.innerHTML;
         btn.disabled = true;
-        btn.innerHTML = 'Sending...'; 
+        btn.innerHTML = 'Sending...';
+        // Add Cancel button next to Square while polling
+        cancelBtn = document.createElement('button');
+        cancelBtn.className = 'btn btn-void action-btn';
+        cancelBtn.textContent = 'Cancel';
+        cancelBtn.style.marginLeft = '8px';
+        cancelBtn.style.display = 'none';
+        btn.parentNode.appendChild(cancelBtn);
         
         try {
             // Create Checkout
@@ -314,7 +322,18 @@ const App = {
             
             if (data.status === 'success') {
                 const checkoutId = data.checkout_id;
-                this.pollSquare(checkoutId, orderId, btn, originalText);
+                cancelBtn.style.display = '';
+                cancelBtn.onclick = async () => {
+                    cancelBtn.disabled = true;
+                    cancelBtn.textContent = 'Cancelling...';
+                    try {
+                        const formData = new FormData();
+                        formData.append('action', 'cancel');
+                        formData.append('checkout_id', checkoutId);
+                        await fetch('api/terminal.php', { method: 'POST', body: formData });
+                    } catch (e) {}
+                };
+                this.pollSquare(checkoutId, orderId, btn, originalText, cancelBtn);
             } else {
                 alert('Square Error: ' + data.message);
                 btn.disabled = false;
@@ -329,7 +348,7 @@ const App = {
         }
     },
 
-    pollSquare(checkoutId, orderId, btn, originalText) {
+    pollSquare(checkoutId, orderId, btn, originalText, cancelBtn) {
         let attempts = 0;
         const maxAttempts = 100; // ~5 mins at 3s interval
 
@@ -338,6 +357,7 @@ const App = {
             // Update button to show activity
             const dots = '.'.repeat((attempts % 3) + 1);
             btn.innerHTML = `Waiting${dots}`;
+            if (cancelBtn) cancelBtn.style.display = '';
 
             try {
                 const formData = new FormData();
@@ -354,31 +374,29 @@ const App = {
                         clearInterval(interval);
                         btn.innerHTML = 'SUCCESS';
                         btn.className = 'btn btn-cash action-btn'; // Turn green
-                        
+                        if (cancelBtn) cancelBtn.remove();
                         // Mark as paid in system
                         await this.handleAction('paid', orderId);
-                        
                         setTimeout(() => {
                             this.resumeRefresh();
                         }, 1000);
-
                     } else if (status === 'CANCELED' || status === 'FAILED') {
                         clearInterval(interval);
                         btn.innerHTML = 'FAILED';
                         btn.className = 'btn btn-void action-btn'; // Turn red
-                        
+                        if (cancelBtn) cancelBtn.remove();
                         setTimeout(() => { 
                             btn.disabled = false; 
                             btn.innerHTML = originalText; 
                             btn.className = 'btn btn-square action-btn'; // Reset
                             this.resumeRefresh();
                         }, 3000);
-                        
                     } else {
                         // Still PENDING or IN_PROGRESS
                         if (attempts > maxAttempts) {
                             clearInterval(interval);
                             btn.innerHTML = 'TIMEOUT';
+                            if (cancelBtn) cancelBtn.remove();
                             setTimeout(() => {
                                 btn.disabled = false;
                                 btn.innerHTML = originalText;

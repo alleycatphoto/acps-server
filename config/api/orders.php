@@ -53,26 +53,23 @@ try {
             $label = '';
             $items = []; 
 
+
             // Simple parser for cash due
             foreach ($lines as $line) {
                 $lineTrim = trim($line);
-                
                 // Check for Cash Due
                 if (preg_match('/^CASH ORDER:\s*\$([0-9]+(?:\.[0-9]{2})?)\s+DUE\s*$/i', $lineTrim, $m)) {
                     $isCash = true;
                     $amount = (float)$m[1];
                 }
-
                 // Check for Order ID
                 if ($orderId === null && preg_match('/^Order (?:Number|#):\s*(\d+)/i', $lineTrim, $m)) {
                     $orderId = $m[1];
                 }
-
                 // Check for Date
                 if ($orderDate === '' && preg_match('/^Order Date:\s*(.+)$/i', $lineTrim, $m)) {
                     $orderDate = trim($m[1]);
                 }
-
                 // Check for Label
                 if ($label === '') {
                     if (strpos($lineTrim, '|') !== false) {
@@ -83,6 +80,13 @@ try {
                     }
                 }
             }
+
+            // Calculate Square payment amount (cc_totaltaxed) using pay.php logic
+            $amount_with_tax = $amount;
+            $amount_without_tax = $amount_with_tax / 1.0675;
+            $surcharge = $amount_without_tax * 0.035;
+            $cc_total = $amount_without_tax * 1.035;
+            $cc_totaltaxed = $cc_total * 1.0675;
 
             if ($orderId === null) {
                 $orderId = pathinfo($receiptFile, PATHINFO_FILENAME);
@@ -116,7 +120,8 @@ try {
                 $response['orders'][] = [
                     'id'       => (string)$orderId,
                     'name'     => $label,
-                    'total'    => $amount, 
+                    'total'    => $amount,
+                    'cc_totaltaxed' => round($cc_totaltaxed, 2),
                     'date'     => $orderDate, // Keep original date string
                     'timestamp'=> $fileTime,  // Add timestamp
                     'type'     => $type,
