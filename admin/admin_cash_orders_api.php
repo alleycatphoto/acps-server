@@ -41,20 +41,24 @@ try {
 
         $lines = preg_split('/\r\n|\r|\n/', $raw);
 
-        $isCash = false;
+        $paymentType = 'cash';
         $amount = 0.0;
-
-        // 1) Look for a CASH ORDER line that ends with DUE (case-insensitive)
+        $foundOrderType = false;
         foreach ($lines as $line) {
             $lineTrim = trim($line);
             if (preg_match('/^CASH ORDER:\s*\$([0-9]+(?:\.[0-9]{2})?)\s+DUE\s*$/i', $lineTrim, $m)) {
-                $isCash = true;
+                $paymentType = 'cash';
                 $amount = (float)$m[1];
+                $foundOrderType = true;
+                break;
+            } elseif (preg_match('/^SQUARE ORDER:\s*\$([0-9]+(?:\.[0-9]{2})?)\s+PAID\s*$/i', $lineTrim, $m)) {
+                $paymentType = 'square';
+                $amount = (float)$m[1];
+                $foundOrderType = true;
                 break;
             }
         }
-
-        if (!$isCash) {
+        if (!$foundOrderType) {
             continue;
         }
 
@@ -62,33 +66,38 @@ try {
         $orderId   = null;
         $orderDate = '';
         $label     = '';
+        $squareConfirmation = '';
+        $squareResponse = '';
 
         foreach ($lines as $line) {
             $trim = trim($line);
-
             if ($orderId === null && preg_match('/^Order (Number|#):\s*(\d+)/i', $trim, $m)) {
                 $orderId = $m[2];
             }
-
             if ($orderDate === '' && preg_match('/^Order Date:\s*(.+)$/i', $trim, $m)) {
                 $orderDate = trim($m[1]);
             }
-
-            // Find the email/label line (contains '@')
             if ($label === '' && strpos($trim, '@') !== false) {
                 $label = $trim;
             }
+            if ($paymentType === 'square' && $squareConfirmation === '' && stripos($trim, 'SQUARE CONFIRMATION:') === 0) {
+                $squareConfirmation = trim(substr($trim, strlen('SQUARE CONFIRMATION:')));
+            }
+            if ($paymentType === 'square' && $squareResponse === '' && stripos($trim, 'SQUARE RESPONSE:') === 0) {
+                $squareResponse = trim(substr($trim, strlen('SQUARE RESPONSE:')));
+            }
         }
-
         if ($orderId === null) {
             $orderId = pathinfo($receiptFile, PATHINFO_FILENAME);
         }
-
         $pendingCashOrders[] = [
             'id'    => (int)$orderId,
             'name'  => $label,
             'total' => $amount,
             'date'  => $orderDate,
+            'payment_type' => $paymentType,
+            'square_confirmation' => $squareConfirmation,
+            'square_response' => $squareResponse,
         ];
     }
 

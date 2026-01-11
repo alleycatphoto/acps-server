@@ -1,3 +1,180 @@
+/* Fullwidth Payment Actions (like pickup/mail) */
+.pay-actions-fullwidth {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1.5rem;
+}
+/* Nicer Payment Actions Layout */
+.pay-actions-nice {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    margin-top: 2.2rem;
+    margin-bottom: 1.5rem;
+    gap: 1.2rem;
+}
+.pay-cta-desc {
+    text-align: center;
+    margin-bottom: 0.7rem;
+    margin-top: 0.2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.25rem;
+}
+.pay-cta-main {
+    color: #178a00;
+    font-size: 1.45rem;
+    font-weight: bold;
+    margin-bottom: 0.2rem;
+}
+.pay-cta-sub {
+    color: #3c556c;
+    font-size: 1.05rem;
+    margin-top: 0.1rem;
+}
+.btn-nice-green {
+    background: linear-gradient(90deg, #1ec94c 0%, #178a00 100%) !important;
+    color: #fff !important;
+    border: none !important;
+    font-size: 2.3rem;
+    font-weight: bold;
+    padding: 1.3rem 2.5rem;
+    border-radius: 2.5rem;
+    margin-bottom: 0.7rem;
+    box-shadow: 0 2px 12px rgba(23,138,0,0.13);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.btn-nice-green:hover {
+    background: linear-gradient(90deg, #178a00 0%, #1ec94c 100%) !important;
+}
+.btn-nice-red {
+    background: linear-gradient(90deg, #ff5a5a 0%, #d32f2f 100%) !important;
+    color: #fff !important;
+    border: none !important;
+    font-size: 2.1rem;
+    font-weight: bold;
+    padding: 1.1rem 2.5rem;
+    border-radius: 2.5rem;
+    margin-bottom: 0.2rem;
+    box-shadow: 0 2px 12px rgba(211,47,47,0.13);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.btn-nice-red:hover {
+    background: linear-gradient(90deg, #d32f2f 0%, #ff5a5a 100%) !important;
+}
+/* Condensed Payment Actions */
+.pay-actions-condensed {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.1rem;
+    margin-top: 2.2rem;
+    margin-bottom: 1.5rem;
+}
+.btn-pay-cta {
+    background: #178a00ff !important;
+    color: #fff !important;
+    border: none !important;
+    font-size: 2.1rem;
+    font-weight: bold;
+    padding: 1.1rem 1.2rem 0.9rem 1.2rem;
+    border-radius: 13px;
+    box-shadow: 0 2px 8px rgba(23,138,0,0.13);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-align: left;
+    line-height: 1.2;
+    transition: background 0.2s;
+}
+.btn-pay-cta:hover {
+    background: #146f00ff !important;
+}
+.btn-pay-cta .btn-title {
+    display: flex;
+    flex-direction: column;
+    font-size: 2.1rem;
+}
+.btn-pay-cta .btn-sub {
+    font-size: 1.1rem;
+    font-weight: normal;
+    color: #eaffea;
+    margin-top: 0.2rem;
+}
+.btn-cancel-compact {
+    background: #fff !important;
+    color: #d32f2f !important;
+    border: 2px solid #d32f2f !important;
+    font-size: 1.5rem;
+    font-weight: 600;
+    padding: 0.7rem 1.2rem;
+    border-radius: 10px;
+    box-shadow: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+.btn-cancel-compact:hover {
+    background: #ffeaea !important;
+    color: #a31515 !important;
+    border-color: #a31515 !important;
+}
+/* Solid Green Button */
+.btn-solid-green {
+    background: #178a00ff !important;
+    color: #fff !important;
+    border: none !important;
+    font-size: 2.2rem;
+    font-weight: bold;
+    padding: 1.2rem 2.5rem;
+    border-radius: 12px;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 2px 8px rgba(23,138,0,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.btn-solid-green:hover {
+    background: #146f00ff !important;
+}
+
+/* Solid Red Button */
+.btn-solid-red {
+    background: #d32f2f !important;
+    color: #fff !important;
+    border: none !important;
+    font-size: 2.2rem;
+    font-weight: bold;
+    padding: 1.2rem 2.5rem;
+    border-radius: 12px;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 2px 8px rgba(211,47,47,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.btn-solid-red:hover {
+    background: #a31515 !important;
+}
 
 
 /* ==========================================================================
