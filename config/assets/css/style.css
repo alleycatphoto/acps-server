@@ -124,8 +124,8 @@ input:checked + .slider:before { transform: translateX(14px); }
 }
 
 .order-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
+    background: #1a1a1a !important; /* Charcoal Background */
+    border: 1px solid #333;
     border-radius: 6px;
     margin-bottom: 10px;
     padding: 8px 15px;
@@ -138,10 +138,14 @@ input:checked + .slider:before { transform: translateX(14px); }
 }
 
 .order-card:hover {
-    background: var(--bg-hover);
+    background: #222 !important;
     transform: translateY(-1px);
-    border-color: #444;
 }
+
+/* Colored Borders based on Payment Type */
+.order-card.type-paid { border: 2px solid var(--success-color) !important; } /* Square/Paid = Green */
+.order-card.type-cash-pending { border: 2px solid var(--accent-color) !important; } /* Cash = Blue */
+.order-card.type-void { border: 2px solid var(--danger-color) !important; } /* Void = Red */
 
 .order-id { font-family: 'Courier New', monospace; font-weight: bold; color: var(--text-main); font-size: 1rem; width: 110px; white-space: nowrap; }
 .order-time-group { width: 150px; font-size: 0.85rem; color: #eee; white-space: nowrap; }

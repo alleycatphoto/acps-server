@@ -16,6 +16,16 @@
 require_once "admin/config.php";
 if (session_status() === PHP_SESSION_NONE) session_start();
 
+// --- Helper: Get Auto Print Status ---
+function acp_get_autoprint_status(): bool {
+    $statusFilePath = realpath(__DIR__ . "/config/autoprint_status.txt");
+    if ($statusFilePath && file_exists($statusFilePath)) {
+        $content = @file_get_contents($statusFilePath);
+        return trim($content) === '1'; 
+    }
+    return true; 
+}
+
 ignore_user_abort(true);
 ini_set('memory_limit', '-1');
 set_time_limit(0);
@@ -24,14 +34,14 @@ include('shopping_cart.class.php');
 $Cart = new Shopping_Cart('shopping_cart');
 
 // --- GET REQUEST VARS ---
-$txtName   = $_GET['txtName']   ?? '';
-$txtAddr   = $_GET['txtAddr']   ?? '';
-$txtCity   = $_GET['txtCity']   ?? '';
-$txtState  = $_GET['txtState']  ?? '';
-$txtZip    = $_GET['txtZip']    ?? '';
-$txtAmt    = floatval($_GET['txtAmt'] ?? 0);
-$txtEmail  = trim($_GET['txtEmail'] ?? '');
-$isOnsite  = $_GET['isOnsite']  ?? 'no';
+$txtName   = $_REQUEST['txtName']   ?? '';
+$txtAddr   = $_REQUEST['txtAddr']   ?? '';
+$txtCity   = $_REQUEST['txtCity']   ?? '';
+$txtState  = $_REQUEST['txtState']  ?? '';
+$txtZip    = $_REQUEST['txtZip']    ?? '';
+$txtAmt    = floatval($_REQUEST['txtAmt'] ?? 0);
+$txtEmail  = trim($_REQUEST['txtEmail'] ?? '');
+$isOnsite  = $_REQUEST['isOnsite']  ?? 'no';
 
 $dirname   = "photos/";
 $date_path = date('Y/m/d');
@@ -56,7 +66,7 @@ $to = $locationEmail;
 $subject = "Alley Cat Photo : " . $locationName . " " . $stationID . " New Order - (Cash Due): " . $orderID;
 
 // Detect payment type and Square response/confirmation
-$paymentType = $_REQUEST['payment_type'] ?? (isset($_POST['is_square_payment']) && $_POST['is_square_payment'] == '1' ? 'square' : 'cash');
+$paymentType = $_REQUEST['payment_type'] ?? (($_POST['is_square_payment'] ?? '0') == '1' || ($_POST['is_qr_payment'] ?? '0') == '1' ? 'square' : 'cash');
 $squareResponse = $_REQUEST['square_response'] ?? '';
 $squareOrderId = $_REQUEST['square_order_id'] ?? '';
 $message .= "$txtEmail | \r\n";
@@ -156,8 +166,40 @@ if ($txtEmail != '') {
     }
 }
 
+// --- HANDLE AUTO PRINT FOR SQUARE PAYMENTS ---
+if ($paymentType === 'square') {
+    $shouldAutoPrint = acp_get_autoprint_status();
+    if ($shouldAutoPrint) {
+        $orderOutputDir = ($server_addy == '192.168.2.126') ? "R:/orders" : "C:/orders";
+        if (!is_dir($orderOutputDir)) @mkdir($orderOutputDir, 0777, true);
+
+        foreach ($Cart->items as $order_code => $quantity) {
+            [$prod_code, $photo_id] = explode('-', $order_code);
+            if (trim($prod_code) != 'EML' && $quantity > 0) {
+                $sourcefile = "photos/$date_path/raw/$photo_id.jpg";
+                if (file_exists($sourcefile)) {
+                    $imgInfo = @getimagesize($sourcefile);
+                    $orientation = ($imgInfo && $imgInfo[0] > $imgInfo[1]) ? 'H' : 'V';
+
+                    for ($i = 1; $i <= $quantity; $i++) {
+                        $destfile = sprintf("%s/%s-%s-%s%s-%d.jpg", $orderOutputDir, $orderID, $photo_id, $prod_code, $orientation, $i);
+                        @copy($sourcefile, $destfile);
+                    }
+                }
+            }
+        }
+    }
+    // Trigger mailer for digital items immediately if paid
+    if ($txtEmail != '') {
+        exec('start /B php mailer.php');
+    }
+}
+
 // --- CLEAR CART ---
 $Cart->clearCart();
+
+// Determine UI Display
+$isApproved = ($paymentType === 'square');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -175,10 +217,23 @@ $(document).ready(function(){ setTimeout(()=>{location.href="/";},60000); });
 <body link="#cc0000ff" vlink="#ff0000ff" alink="#990000ff">
 <div align="center">
   <p><img src="/public/assets/images/alley_logo_sm.png" alt="Alley Cat Photo" width="223" height="auto"/></p>
-  <span style="font-size: 24px; color:#c81c1c; font-weight:bold;">Payment needed</span><br/><br/>
-  <span style="font-size: 20px; color:#6F0;">Please go to the sales counter now to pay for and pick up your order.</span>
+  
+  <?php if ($isApproved): ?>
+    <h1 style="color:#6F0; font-size: 3rem; margin-bottom: 1rem;">APPROVED</h1>
+    <span style="font-size: 24px; color:#fff; font-weight:bold;">Thank you for your order!</span><br/><br/>
+    <?php if ($isOnsite == 'yes'): ?>
+        <span style="font-size: 20px; color:#6F0;">Your prints will be ready at the sales counter in just a few minutes.</span>
+    <?php else: ?>
+        <span style="font-size: 20px; color:#ccc;">Your order will be processed and mailed shortly.</span>
+    <?php endif; ?>
+  <?php else: ?>
+    <span style="font-size: 24px; color:#c81c1c; font-weight:bold;">Payment needed</span><br/><br/>
+    <span style="font-size: 20px; color:#6F0;">Please go to the sales counter now to pay for and pick up your order.</span>
+  <?php endif; ?>
+
   <br /><br /> <span style="font-size: 20px;">Your Order Number Is:<br /><br /> 
   <span style="font-size: 250px; color:#FF0;"><?php echo $orderID; ?></span><br /><br />
+  
   <div style="text-align:center;margin-top:1.2rem;">
         <a href="/"><button type="button" class="btn">Return to Alley Cat Photo</button></a>
       </div>
