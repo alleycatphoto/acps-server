@@ -24,6 +24,7 @@ use Square\SquareClient;
 use Square\Environments;
 use Square\Terminal\Checkouts\Requests\CreateTerminalCheckoutRequest;
 use Square\Terminal\Checkouts\Requests\GetCheckoutsRequest; // Correct class for Get
+use Square\Terminal\Checkouts\Requests\CancelCheckoutsRequest;
 use Square\Types\TerminalCheckout;
 use Square\Types\Money;
 use Square\Types\Currency;
@@ -122,7 +123,10 @@ try {
         $checkoutId = $_POST['checkout_id'] ?? '';
         if (empty($checkoutId)) throw new Exception("Missing checkout ID.");
 
-        $response = $client->terminal->checkouts->cancel($checkoutId);
+        $request = new CancelCheckoutsRequest([
+            'checkoutId' => $checkoutId,
+        ]);
+        $response = $client->terminal->checkouts->cancel($request);
         // Cancel returns CancelTerminalCheckoutResponse
         
         echo json_encode(['status' => 'success', 'message' => 'Cancellation requested.']);
