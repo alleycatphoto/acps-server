@@ -172,6 +172,12 @@ $token = md5('unique_salt' . $timestamp);
   }
   #openProcessOrderModal:hover { background:#7a7a7a; }
 
+  .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    color: #ffffff;
+    background-color: #2b2b2b;
+    border-color: #636363 #636363 #ef0000;
+  }
+
   .cemodal { position: fixed; inset: 0; display: none; }
   .cemodal.is-open { display: block; }
   .cemodal__backdrop { position:absolute; inset:0; background:rgba(0,0,0,.6); }
@@ -559,27 +565,28 @@ $token = md5('unique_salt' . $timestamp);
   <main role="main" class="container">
 
     <div align="center">
-      <p><img src="/public/assets/images/alley_admin_header.png" width="550" height="169" alt="Administration Header"
-          style="zoom: .70;" /><br />
-        MANUAL IMPORT - <a href="/admin/admin_categories.php">CATEGORY MANAGEMENT</a> <br/> <br/>
-
+      <p><img src="/public/assets/images/alley_logo_sm.png" width="250" alt="Administration Header"/>
       </p>
 
 
       <!-- Tab Navigation -->
       <ul class="nav nav-tabs" id="adminTabNav" role="tablist">
         <li class="nav-item">
-          <a class="nav-link active" id="uploader-tab" data-toggle="tab" href="#uploader" role="tab" aria-controls="uploader" aria-selected="true">Uploader</a>
-        </li>
+          <a class="nav-link active" id="orders-tab" data-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false">Order Management</a>
+        </li>        
         <li class="nav-item">
-          <a class="nav-link" id="orders-tab" data-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false">Order Management</a>
+          <a class="nav-link" id="uploader-tab" data-toggle="tab" href="#uploader" role="tab" aria-controls="uploader" aria-selected="true">Uploader</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="false">Settings</a>
         </li>
       </ul>
       <div class="tab-content" id="adminTabContent">
-        <div class="tab-pane fade show active" id="uploader" role="tabpanel" aria-labelledby="uploader-tab">
+        <div class="tab-pane fade show active" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+          <!-- Order Management Panel -->
+          <iframe src="/config" style="width:100%;height:600px;border:none;"></iframe>
+        </div>
+        <div class="tab-pane fade" id="uploader" role="tabpanel" aria-labelledby="uploader-tab">
           <!-- Uploader Panel (existing uploader form) -->
           <div style="margin-top:20px;">
             <!-- Processing Modal for Upload Progress -->
@@ -661,10 +668,7 @@ $token = md5('unique_salt' . $timestamp);
             </div>
           </div>
         </div>
-        <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
-          <!-- Order Management Panel -->
-          <iframe src="/config" style="width:100%;height:600px;border:none;"></iframe>
-        </div>
+
         <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
           <!-- Settings Panel: Only show relevant fields -->
           <div style="margin-top:20px;max-width:500px;margin-left:auto;margin-right:auto;">
