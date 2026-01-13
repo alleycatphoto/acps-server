@@ -25,15 +25,6 @@ $Cart = new Shopping_Cart('shopping_cart');
 
 // Debug log
 //@file_put_contents('logs/cart_post_debug.log', print_r($_POST, true), FILE_APPEND);
-// Validate token early so we fail with a clear message instead of a low-level auth validation exception
-if (!empty($token)) {
-    $logDir = __DIR__ . '/logs';
-    if (!is_dir($logDir)) { @mkdir($logDir, 0777, true); }
-    $logFile = $logDir . '/cart_post.log';
-    $logMessage = "[" . date('Y-m-d H:i:s') . "] CART POST .\n" . print_r($_POST, true);
-    file_put_contents($logFile, $logMessage, FILE_APPEND);
-    return false;
-}
 ignore_user_abort(true);
 ini_set('memory_limit', '-1');
 set_time_limit(0);
@@ -133,7 +124,7 @@ if (strtolower($txtEmail) === 'photos@alleycatphoto.net' || $isQrPayment) {
     $response_array = explode(',', $response ?? '');
     $approval = substr($response_array[0] ?? '', 1, 1);
     $responseMode = ($resultStatus == 200 && $approval === 'Y') ? "approved" : "declined";
-    $responseMsg = $responseMod == 'approved'
+    $responseMsg = $responseMode == 'approved'
         ? "Your transaction has been approved."
         : "Your transaction was declined or could not be processed.";
 }

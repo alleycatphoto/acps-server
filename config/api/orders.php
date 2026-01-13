@@ -49,6 +49,7 @@ try {
             $isCash = false;
             $amount = 0.0;
             $orderId = null;
+            $station = 'MS';
             $orderDate = '';
             $label = '';
             $items = []; 
@@ -63,8 +64,9 @@ try {
                     $amount = (float)$m[1];
                 }
                 // Check for Order ID
-                if ($orderId === null && preg_match('/^Order (?:Number|#):\s*(\d+)/i', $lineTrim, $m)) {
+                if ($orderId === null && preg_match('/^Order (?:Number|#):\s*(\d+)(?:\s*-\s*([A-Z0-9]+))?/i', $lineTrim, $m)) {
                     $orderId = $m[1];
+                    $station = $m[2] ?? 'MS';
                 }
                 // Check for Date
                 if ($orderDate === '' && preg_match('/^Order Date:\s*(.+)$/i', $lineTrim, $m)) {
@@ -100,7 +102,9 @@ try {
             
             // Determine type
             $type = 'Standard';
-            if ($isCash) $type = 'Cash Pending';
+            if (stripos($raw, 'VOID') !== false) {
+                $type = 'Void';
+            } elseif ($isCash) $type = 'Cash Pending';
             elseif ($isPaid) $type = 'Paid';
             
             // Timestamp for elapsed calculation
@@ -117,12 +121,18 @@ try {
             }
 
             if ($include) {
+                $dt = strtotime($orderDate);
+                $formattedTime = $dt ? date('g:i a', $dt) : '';
+                $emoji = ($station === 'FS') ? '🔥' : '📷';
+
                 $response['orders'][] = [
                     'id'       => (string)$orderId,
+                    'emoji'    => $emoji,
                     'name'     => $label,
                     'total'    => $amount,
+                    'station'  => $station,
                     'cc_totaltaxed' => round($cc_totaltaxed, 2),
-                    'date'     => $orderDate, // Keep original date string
+                    'time'     => $formattedTime,
                     'timestamp'=> $fileTime,  // Add timestamp
                     'type'     => $type,
                     'filename' => basename($receiptFile),
@@ -145,4 +155,3 @@ try {
 }
 
 echo json_encode($response);
-

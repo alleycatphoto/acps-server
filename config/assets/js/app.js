@@ -9,21 +9,35 @@ const App = {
     },
 
     elements: {
-        list: document.getElementById('orders-list'),
-        clock: document.getElementById('clock'),
-        status: document.getElementById('status-text'),
-        modal: document.getElementById('receipt-modal'),
-        modalTitle: document.getElementById('modal-title'),
-        receiptContent: document.getElementById('receipt-content'),
-        refreshBtn: document.getElementById('refreshBtn'),
-        viewFilter: document.getElementById('view-filter'),
-        autoPrintToggle: document.getElementById('autoprint-toggle'),
-        autoRefreshToggle: document.getElementById('autorefresh-toggle'),
-        refreshCountdown: document.getElementById('refresh-countdown'),
-        viewBadge: document.getElementById('view-badge')
+        list: null,
+        clock: null,
+        status: null,
+        modal: null,
+        modalTitle: null,
+        receiptContent: null,
+        refreshBtn: null,
+        viewFilter: null,
+        autoPrintToggle: null,
+        autoRefreshToggle: null,
+        refreshCountdown: null,
+        viewBadge: null
     },
 
     init() {
+        // Initialize elements after DOM is ready
+        this.elements.list = document.getElementById('orders-list');
+        this.elements.clock = document.getElementById('clock');
+        this.elements.status = document.getElementById('status-text');
+        this.elements.modal = document.getElementById('receipt-modal');
+        this.elements.modalTitle = document.getElementById('modal-title');
+        this.elements.receiptContent = document.getElementById('receipt-content');
+        this.elements.refreshBtn = document.getElementById('refreshBtn');
+        this.elements.viewFilter = document.getElementById('view-filter');
+        this.elements.autoPrintToggle = document.getElementById('autoprint-toggle');
+        this.elements.autoRefreshToggle = document.getElementById('autorefresh-toggle');
+        this.elements.refreshCountdown = document.getElementById('refresh-countdown');
+        this.elements.viewBadge = document.getElementById('view-badge');
+
         this.updateClock();
         setInterval(() => this.updateClock(), 1000);
         
@@ -200,6 +214,9 @@ const App = {
             } else if (order.type.includes('Paid')) {
                 badgeClass += ' type-paid';
                 badgeText = 'PAID';
+            } else if (order.type === 'Void') {
+                badgeClass += ' type-void';
+                badgeText = 'VOID';
             } else {
                 badgeClass += ' type-standard';
             }
@@ -218,10 +235,10 @@ const App = {
             }
 
             card.innerHTML = `
-                <div class="order-id">#${order.id}</div>
-                <div class="order-date">
-                    <span>${order.date}</span>
-                    ${elapsedHtml}
+                <div class="order-id">${order.emoji} #${order.id}</div>
+                <div class="order-time-group">
+                    <span class="order-time">${order.time}</span>
+                    <span class="order-elapsed">${elapsedHtml}</span>
                 </div>
                 <div class="order-name">${order.name || 'Unknown'}</div>
                 <div class="order-total" style="color: #28a745; font-weight: bold;">$${Number(order.total).toFixed(2)}</div>
@@ -418,9 +435,9 @@ const App = {
     },
 
     async openReceipt(filename, orderId) {
-        this.elements.modal.classList.add('open');
-        this.elements.modalTitle.textContent = `Receipt #${orderId}`;
-        this.elements.receiptContent.textContent = "Loading receipt data...";
+        if (this.elements.modal) this.elements.modal.classList.add('open');
+        if (this.elements.modalTitle) this.elements.modalTitle.textContent = `Receipt #${orderId}`;
+        if (this.elements.receiptContent) this.elements.receiptContent.textContent = "Loading receipt data...";
         
         try {
             const res = await fetch(`api/receipt.php?file=${encodeURIComponent(filename)}`);
