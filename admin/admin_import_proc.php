@@ -35,7 +35,7 @@ $date_path = date('Y/m/d');
 $thiscount = 0;
 
 $photostock_base = getenv('PHOTOSTOCK_BASE_DIR') ?: __DIR__ . "/../photostock";
-$photostock = $photostock_base . "/" . date('Y') . " " . $locationSlug  . "/" . date('F') . " " . date('Y') . "/" . date('F d, Y');
+$photostock = $photostock_base . "/" . date('Y') . " " . $locationName  . "/" . date('F') . " " . date('Y') . "/" . date('F d, Y');
 
 // Load categories
 $cat_raw = @file_get_contents(__DIR__ . '/categories.txt');
@@ -287,18 +287,18 @@ foreach ($images as $image) {
             } // Smaller image with numbering
             imagejpeg($im, $webPath, 100); // Larger image without numbering
             imagejpeg($im, $rawPath, 70); // Larger image without numbering
-            imagejpeg($im, $firePath, 80); // Larger image without numbering
+            imagejpeg($im, $webPath, 80); // Larger image without numbering
             //imagejpeg($im, $firePath2, 80); // Larger image without numbering
             //Change permissions to read write
             chmod($rawPath, 0777);
             chmod($numberedPath, 0777);
             chmod($webPath, 0777);
-            chmod($firePath, 0777);
+           // chmod($firePath, 0777);
             // Update timestamps
             touch($rawPath, date_timestamp_get($importDateTime));
             touch($numberedPath, date_timestamp_get($importDateTime));
             touch($webPath, date_timestamp_get($importDateTime));
-            touch($firePath, date_timestamp_get($importDateTime));
+            //touch($firePath, date_timestamp_get($importDateTime));
             //touch($firePath2, date_timestamp_get($importDateTime));
 			unset($exif);
 			
