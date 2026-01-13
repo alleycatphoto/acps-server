@@ -220,9 +220,9 @@ function processCash() {
     // Redirect to cash handler
     // Ensure taxFreeAmt is available (passed from PHP via global or data attr)
     // We will read it from a hidden input or global var set in pay.php
-    const taxFreeAmt = window.acps_amount_without_tax; 
+    const baseAmt = window.acps_base_total; 
     
-    const q = `?txtAmt=${taxFreeAmt}&isOnsite=${state.onsite}&txtEmail=${encodeURIComponent(state.email)}` +
+    const q = `?txtAmt=${baseAmt}&isOnsite=${state.onsite}&txtEmail=${encodeURIComponent(state.email)}` +
               `&txtName=${encodeURIComponent(state.address.name)}&txtAddr=${encodeURIComponent(state.address.street)}` +
               `&txtCity=${encodeURIComponent(state.address.city)}&txtState=${encodeURIComponent(state.address.state)}` +
               `&txtZip=${encodeURIComponent(state.address.zip)}`;

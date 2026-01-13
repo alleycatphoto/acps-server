@@ -64,9 +64,9 @@ try {
                     $amount = (float)$m[1];
                 }
                 // Check for Order ID
-                if ($orderId === null && preg_match('/^Order (?:Number|#):\s*(\d+)(?:\s*-\s*([A-Z0-9]+))?/i', $lineTrim, $m)) {
+                if ($orderId === null && preg_match('/^Order (?:Number|#):\s*(\d+)(?:\s*[-–—]\s*([A-Z0-9]+))?/i', $lineTrim, $m)) {
                     $orderId = $m[1];
-                    $station = $m[2] ?? 'MS';
+                    $station = strtoupper($m[2] ?? 'MS');
                 }
                 // Check for Date
                 if ($orderDate === '' && preg_match('/^Order Date:\s*(.+)$/i', $lineTrim, $m)) {
@@ -121,7 +121,9 @@ try {
             }
 
             if ($include) {
-                $dt = strtotime($orderDate);
+                // Clean date string: remove extra commas that break strtotime on some systems
+                $cleanDate = str_replace(',', '', $orderDate);
+                $dt = strtotime($cleanDate);
                 $formattedTime = $dt ? date('g:i a', $dt) : '';
                 $emoji = ($station === 'FS') ? '🔥' : '📷';
 

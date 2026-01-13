@@ -307,7 +307,7 @@ if ($cc_totaltaxed > 0) {
 </div>
 
 <!-- Hidden Form for Final Submission -->
-<form id="frmFinal" method="post" action="cart_process_send.php">
+<form id="frmFinal" method="post" action="cart_process_cash.php">
     <!-- Variables populated by JS -->
     <input type="hidden" name="txtEmail" id="final-email">
     <input type="hidden" name="isOnsite" id="final-onsite" value="yes">
