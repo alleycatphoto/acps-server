@@ -31,9 +31,11 @@ use Square\Types\DeviceCheckoutOptions;
 
 header('Content-Type: application/json');
 
+$server_addy = $_SERVER['HTTP_HOST'] ?? '';
 // --- Configuration from .env ---
 $accessToken = getenv('SQUARE_ACCESS_TOKEN') ?: '';
-$deviceId    = getenv('SQUARE_TERMINAL_ID') ?: '';
+$deviceId = ($server_addy == '192.168.2.126') ? getenv('SQUARE_TERMINAL_ID_FIRE') : getenv('SQUARE_TERMINAL_ID');
+//$deviceId    = getenv('SQUARE_TERMINAL_ID') ?: '';
 $environment = Environments::Production;
 
 if (empty($accessToken) || empty($deviceId)) {
