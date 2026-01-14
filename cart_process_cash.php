@@ -207,7 +207,7 @@ $Cart->clearCart();
 // --- LOG TRANSACTION TO DAILY TOTALS CSV ---
 $csvFile = __DIR__ . '/sales/transactions.csv';
 $today = date("m/d/Y");
-$location = $locationName;
+$location = getenv('LOCATION_SLUG') ?: $locationName;
 $paymentTypeDisplay = $paymentType === 'cash' ? 'Cash' : 'Credit';
 
 // Read existing data
