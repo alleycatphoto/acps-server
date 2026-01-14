@@ -580,6 +580,9 @@ $token = md5('unique_salt' . $timestamp);
         <li class="nav-item">
           <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="false">Settings</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" id="sales-tab" data-toggle="tab" href="#sales" role="tab" aria-controls="sales" aria-selected="false">Sales</a>
+        </li>
       </ul>
       <div class="tab-content" id="adminTabContent">
         <div class="tab-pane fade show active" id="orders" role="tabpanel" aria-labelledby="orders-tab">
@@ -690,6 +693,11 @@ $token = md5('unique_salt' . $timestamp);
             </form>
             <div id="envSaveStatus"></div>
           </div>
+        </div>
+
+        <div class="tab-pane fade" id="sales" role="tabpanel" aria-labelledby="sales-tab">
+          <!-- Sales Panel -->
+          <iframe src="/sales" style="width:100%;height:600px;border:none;"></iframe>
         </div>
 
 
