@@ -1,5 +1,74 @@
 # 📜 CHANGELOG: The Evolution of Sexy
 
+## [2026-01-14] - v3.6.0 - Deployment Automation & Enhanced Payment Processing
+
+### Added
+- **GitHub Actions Deployment Workflow**: Automated multi-server deployment pipeline with PowerShell remoting and SSH key authentication for HAWK, MOON, and ZIP servers
+- **Environment Variable Management**: Centralized all credentials (USPS, eProcessing, email, Square) in .env file with automated update_env.php script
+- **Order Action API**: New RESTful endpoint (`/api/order_action.php`) for handling paid, void, and email actions on orders with JSON responses
+- **Auto Print Functionality**: Automatic receipt printing for Square payments with location-based configuration and status tracking
+- **Manual Importer Processor**: Enhanced photo upload interface with drag-and-drop processing, progress tracking, and batch import capabilities
+- **Background Email Sending**: Asynchronous email delivery system with 30-second timeout handling for improved performance
+- **Enhanced Sales Reporting**: Comprehensive historical CSV generation with cash transaction data, improved date folder scanning, and better layout readability
+- **Transaction Logging Enhancements**: Pre-tax amount calculations, savings display, spinner UI during payment processing, and detailed CSV logging
+- **Location-Based Icons**: Added branded icons for Hawksnest, Moonshine, and Zip n Slip locations in the admin interface
+- **Improved Order Management UI**: Enhanced styling and layout for better user experience in admin order management
+
+### Fixed
+- **Deployment Pipeline Issues**: Resolved PowerShell variable syntax errors, SSH authentication problems, and host key acceptance for remote servers
+- **Security Vulnerabilities**: Removed all hardcoded passwords, email credentials, and OAuth refresh tokens from version control
+- **File Management**: Normalized all text files to LF line endings, updated .gitignore patterns, and improved .htaccess routing
+- **Payment Processing Bugs**: Corrected transaction amount calculations, fixed retry flow for declined payments, and improved receipt parsing regex
+- **Admin Functionality**: Enabled image processing permissions for Hawksnest location, updated device ID assignment based on server address
+- **Merge Conflicts**: Resolved conflicts in .gitignore, package-lock.json, and other files during repository consolidation
+
+### Changed
+- **Deployment Scripts**: Migrated from manual SSH to automated PowerShell remoting with mirror repository setup and self-hosted runners
+- **Payment Flow**: Enhanced user experience with loading spinners, savings calculations display, and background email processing
+- **Sales Module**: Consolidated submodule into main repository, eliminating corruption issues and improving maintainability
+- **Admin Interface**: Refactored code structure for better readability, updated order logging to CSV format
+- **API Endpoints**: Improved order handling, receipt processing, and terminal configuration with enhanced error handling
+
+### Technical Details
+- **Deployment Architecture**: GitHub Actions workflow with self-hosted runners, PowerShell remoting to 3 production servers (HAWK/MOON/ZIP), SSH key-based authentication
+- **Security Model**: All sensitive data moved to .env files, automated credential updates, OAuth token removal from git history
+- **Payment Integration**: Square API with auto-print triggers, transaction fee calculations (3.5%), pre-tax amount handling
+- **Email System**: Background processing with timeout management, improved reliability for high-volume operations
+- **File Processing**: Location-specific permissions and device ID mapping for multi-location deployment
+- **Code Quality**: Refactored for improved readability, consistent formatting, and maintainability across all modules
+
+### Files Modified
+- `.github/workflows/deploy.yml` (NEW - automated deployment pipeline)
+- `deploy.ps1` (PowerShell deployment script)
+- `deploy.config.json` (deployment configuration)
+- `.env` (environment variables)
+- `admin/update_env.php` (credential management)
+- `config/api/order_action.php` (NEW - order actions API)
+- `admin/admin_import_proc.php` (manual importer enhancements)
+- `mailer.php` (background email sending)
+- `sales/generate_historical_csv.php` (enhanced reporting)
+- `pay.php` (payment processing improvements)
+- `cart_process_cash.php` (cash order handling)
+- `cart_process_send.php` (payment flow updates)
+- `public/assets/css/acps.css` (UI styling updates)
+- `public/assets/css/style.css` (admin interface styles)
+- `public/assets/js/acps.js` (payment UI enhancements)
+- `public/assets/js/app.js` (admin functionality)
+- `.gitignore` (updated exclusions)
+- `.gitattributes` (line ending normalization)
+- `.htaccess` (routing improvements)
+- `README.md` (documentation updates)
+- `SETUP_REMOTE_SERVERS.md` (deployment guide)
+- `SSH_SETUP.md` (SSH configuration)
+- And 30+ additional files for comprehensive system enhancements
+
+### Breaking Changes
+- All credentials now required in .env file (no defaults)
+- Sales module consolidated - no longer a separate submodule
+- Line endings normalized to LF across all text files
+
+---
+
 ## [2026-01-05] - v3.5.0 - Modal System Overhaul & Checkout UX Enhancements
 
 ### Added

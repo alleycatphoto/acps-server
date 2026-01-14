@@ -1,7 +1,7 @@
 # 🦅 AlleyCat PhotoStation V2 (ACPS) 🦅
 
-**Version:** 3.5.0
-**Release Date:** January 5, 2026  
+**Version:** 3.6.0
+**Release Date:** January 14, 2026  
 **Status:** Production Ready
 
 ---
@@ -18,11 +18,13 @@ AlleyCat PhotoStation is a specialized event photography kiosk system designed f
 
 ### Key Features
 
-#### 🎨 Modern UI/UX (v3.5.0)
+#### 🎨 Modern UI/UX (v3.6.0)
 - **Custom AJAX Modal System**: Lightning-fast cart operations without page reloads
 - **Full-Screen Checkout**: Distraction-free payment experience with 100vh black overlay
 - **Smart Keyboard Detection**: Forms automatically shift when on-screen keyboard appears (kiosk optimized)
 - **Touch-Optimized**: Large buttons, clear feedback, minimal text input required
+- **Loading Spinners**: Visual feedback during payment processing and email sending
+- **Enhanced Admin Interface**: Improved order management UI with location-based icons
 
 #### 🛒 Shopping Experience
 - **Real-Time Cart Updates**: Instant add/edit/remove with AJAX reload
@@ -31,10 +33,23 @@ AlleyCat PhotoStation is a specialized event photography kiosk system designed f
 - **Quantity Validation**: Numeric-only inputs with 3-digit max, real-time sanitization
 
 #### 💳 Payment Processing
-- **Square Integration**: QR code payments with live polling
+- **Square Integration**: QR code payments with live polling and auto-print functionality
 - **Card Reader Support**: Magnetic stripe card processing
 - **Retry Logic**: Failed transactions preserve customer data and return to payment screen
 - **Tax Calculation**: NC sales tax (6.75%) + transaction fee (3.5%) handling
+- **Background Email**: Asynchronous email delivery for improved performance
+- **Savings Display**: Real-time calculation and display of bundle savings
+
+#### 🚀 Deployment & Automation (v3.6.0)
+- **GitHub Actions CI/CD**: Automated deployment to multiple production servers
+- **PowerShell Remoting**: Secure remote deployment with SSH key authentication
+- **Environment Management**: Centralized credential handling with .env files
+- **Multi-Location Support**: HAWK, MOON, and ZIP server configurations
+
+#### 📊 Reporting & Analytics
+- **Enhanced Sales Reports**: Comprehensive historical CSV generation with cash transactions
+- **Transaction Logging**: Detailed logging to CSV with pre-tax amounts and savings
+- **Order Action API**: RESTful endpoints for order management and status updates
 
 #### 📬 Address Validation
 - **USPS API Integration**: Real-time address verification
@@ -246,9 +261,29 @@ Copyright (c) 2024-2026 AlleyCat Photo. All rights reserved.
 
 ---
 
-## 🎉 Recent Updates (v3.5.0)
+## 🎉 Recent Updates (v3.6.0)
 
-### Modal System Overhaul
+### Deployment Automation
+Automated CI/CD pipeline with GitHub Actions for seamless deployment to multiple production servers (HAWK, MOON, ZIP) using PowerShell remoting and SSH key authentication.
+
+### Enhanced Payment Processing
+- Auto-print functionality for Square payments with location-based configuration
+- Background email sending for improved performance and reliability
+- Loading spinners and savings calculations for better user experience
+- Comprehensive transaction logging with pre-tax amounts
+
+### Security & Infrastructure
+- Centralized credential management with .env files
+- Removed all hardcoded passwords and OAuth tokens from version control
+- Normalized file line endings and improved .gitignore patterns
+
+### Admin & Reporting Enhancements
+- New Order Action API for programmatic order management
+- Enhanced sales reporting with cash transaction data
+- Manual importer with drag-and-drop photo processing
+- Improved admin UI with location-based icons and better styling
+
+### Modal System Overhaul (v3.5.0)
 Completely replaced iframe-based VIBox system with custom AJAX modal architecture. All modals now render at top window level for proper coverage and responsive behavior.
 
 ### Keyboard Intelligence
