@@ -300,7 +300,10 @@ const App = {
             formData.append('action', action);
             formData.append('autoprint', this.state.autoPrint ? '1' : '0');
 
-            await fetch('../admin/admin_cash_order_action.php', {
+            // Force a minimum 5-second spinner delay
+            await new Promise(resolve => setTimeout(resolve, 5000));
+
+            await fetch('api/order_action.php', {
                 method: 'POST',
                 body: formData
             });

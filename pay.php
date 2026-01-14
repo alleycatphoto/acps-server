@@ -271,7 +271,7 @@ $savings = $cc_totaltaxed - $amount_without_tax;
                         <p style="color:black; font-weight:bold;">Loading...</p>
                     <?php endif; ?>
                 </div>
-                <img src="/public/assets/images/pay_icons_250.png" alt="Icons" style="width: 200px; margin-top: 1rem;">
+                <img src="/public/assets/images/pay_icons_250.png" alt="Icons" style="width: 250px; margin-top: 1rem;">
             </div>
             
             <!-- Right: Totals & Actions -->
@@ -287,7 +287,7 @@ $savings = $cc_totaltaxed - $amount_without_tax;
                         PAY CASH HERE AND SAVE <span style="color:#6F0; font-size:1.2em;">$<?php echo number_format($savings, 2); ?></span>
                     </div>
                     <button type="button" class="big-pay-btn" id="cashPayBtn" onclick="processCash()">
-                        <div class="big-pay-main"><span class="fa fa-money-bill-wave"></span> PAY AT COUNTER</div>
+                        <div class="big-pay-main"><span class="fa fa-money-bill-wave"></span> PAY CASH AT COUNTER</div>
                         <div class="big-pay-sub">SCAN QR TO LEFT TO PAY ON PHONE</div>
                     </button>
                     <button type="button" class="big-cancel-btn" onclick="location.reload()">

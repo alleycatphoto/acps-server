@@ -259,21 +259,70 @@ input:checked + .slider:before { transform: translateX(14px); }
 #receipt-content { font-family: 'Courier New', monospace; font-size: 0.9rem; white-space: pre-wrap; color: #fff; }
 .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color); }
 
-/* Responsive */
+/* Responsive Layout - Requested Order */
 @media (max-width: 900px) {
     .order-card { 
-        grid-template-columns: 1fr auto; 
-        grid-template-rows: auto auto auto;
-        gap: 8px; 
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline; /* Align text baselines */
+        padding: 12px;
+        gap: 5px; /* Tighter spacing */
+        justify-content: flex-start;
     }
-    .order-id { grid-column: 1; font-size: 1.2rem; }
-    .order-date { grid-column: 2; align-items: flex-end; }
-    .order-name { grid-column: 1 / -1; border-top: 1px solid #333; padding-top: 8px; margin-top: 4px; }
+    
+    /* ROW 1: ID, Time, Price (Right) */
+    .order-id { 
+        order: 1;
+        width: auto;
+        font-size: 1.1rem;
+        margin-right: 8px;
+    }
+    
+    .order-time-group { 
+        order: 2;
+        width: auto;
+        font-size: 0.9rem;
+        /* flex-grow removed */
+        text-align: left;
+        margin-right: auto; /* Push price to right instead */
+    }
+    
+    .order-total {
+        order: 3;
+        width: auto;
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-left: auto; /* Force right alignment */
+    }
+
+    /* ROW 2: Email (Full Width) */
+    .order-name { 
+        order: 4;
+        width: 100%;
+        margin-top: 4px;
+        font-size: 0.95rem;
+        border: none;
+        padding: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    /* ROW 3: Buttons */
     .order-actions { 
-        grid-column: 1 / -1; 
-        justify-content: flex-start; 
-        margin-top: 5px; 
-        overflow-x: auto;
+        order: 5;
+        width: 100%;
+        margin-top: 10px;
+        margin-left: 0; 
+        justify-content: center; 
+        flex-wrap: wrap; 
+        gap: 8px;
+    }
+    
+    .btn {
+        flex: 1 1 auto;
+        max-width: none; /* Allow buttons to fill space evenly */
+        padding: 8px 12px;
     }
 }
 
