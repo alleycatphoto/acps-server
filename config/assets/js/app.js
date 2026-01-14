@@ -267,8 +267,8 @@ const App = {
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const action = btn.dataset.action;
-                    if (action === 'cash') this.handleAction('paid', order.id);
-                    if (action === 'void') this.handleAction('void', order.id);
+                    if (action === 'cash') this.handleAction('paid', order.id, btn);
+                    if (action === 'void') this.handleAction('void', order.id, btn);
                     if (action === 'square') this.handleSquare(order.id, order.cc_totaltaxed, btn);
                 });
             });
@@ -284,9 +284,16 @@ const App = {
         });
     },
 
-    async handleAction(action, orderId) {
+    async handleAction(action, orderId, btn = null) {
         if (action === 'void' && !confirm('Void this order?')) return;
         
+        if (btn) {
+            btn.disabled = true;
+            // Store original text just in case, though usually list refreshes
+            btn.dataset.originalHtml = btn.innerHTML; 
+            btn.innerHTML = '<span class="spinner"></span>';
+        }
+
         try {
             const formData = new FormData();
             formData.append('order', orderId);
@@ -303,6 +310,10 @@ const App = {
         } catch (e) {
             console.error(e);
             alert('Action failed.');
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = btn.dataset.originalHtml || 'Retry';
+            }
         }
     },
 

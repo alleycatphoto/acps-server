@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ACPS Master Control</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>">
     <link rel="icon" href="/favicon.ico">
 </head>
 <body>
@@ -87,6 +87,6 @@
 
     <!-- jQuery needed for the script below -->
     <script src="/public/assets/js/jquery-3.2.1.min.js"></script>
-    <script src="assets/js/app.js"></script>
+    <script src="assets/js/app.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>
