@@ -150,8 +150,8 @@ if (file_exists($csvFile)) {
       }
 
       .card {
-        background: var(--surface);
-        border: 1px solid var(--border);
+        background: #070707;
+        border: none;
         border-radius: var(--radius);
         overflow: hidden;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
@@ -160,10 +160,10 @@ if (file_exists($csvFile)) {
       }
       .card-hd {
         padding: 20px;
-        border-bottom: 1px solid var(--border);
-        background: rgba(255, 255, 255, 0.03);
+        border: none;
+        background: #070707;
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
         gap: 10px;
         flex-wrap: wrap;
@@ -174,6 +174,7 @@ if (file_exists($csvFile)) {
         font-weight: 900;
         color: var(--accent);
         text-transform: uppercase;
+        text-align: center;
       }
       .card-hd .loc-total { font-size: 16px; font-weight: 800; color: #fff; }
 
@@ -183,12 +184,12 @@ if (file_exists($csvFile)) {
         padding: 8px 10px;
         color: var(--muted);
         font-weight: 900;
-        border-bottom: 1px solid var(--border);
+        border-bottom: 1px solid #000000;
         text-transform: uppercase;
-        font-size: 10px;
+        font-size: 14px;
       }
       th:first-child { text-align: left; }
-      td { padding: 8px 10px; border-bottom: 1px solid var(--border); text-align: center; }
+      td { padding: 8px 10px; border-bottom: 1px solid #000000; text-align: center; }
       td:first-child { text-align: left; font-weight: 700; }
       td:last-child { text-align: center; }
       tr:last-child td { border-bottom: none; }
@@ -200,18 +201,51 @@ if (file_exists($csvFile)) {
       tfoot tr { background: rgba(255, 255, 255, 0.05); font-weight: 900; }
 
       /* Table row styling */
-      tbody tr:nth-child(odd) { background-color: #2c2c2c !important; }
-      tbody tr:nth-child(even) { background-color: #3a3a3a !important; }
+      tbody tr:nth-child(odd) { background-color: #070707 !important; }
+      tbody tr:nth-child(even) { background-color: #242426 !important; }
       tbody tr { color: #fff !important; }
       tbody td:last-child { color: #27ae60 !important; font-weight: bold; }
 
       /* Vertical borders */
-      th, td { border-right: 1px solid #666 !important; }
-      th:last-child, td:last-child { border-right: 1px solid #666 !important; }
+      th, td { border-right: 1px solid #000000 !important; }
+      th:last-child, td:last-child { border-right: none !important; }
 
       /* Header styling */
-      thead th { background-color: #2c2c2c !important; }
-      thead tr:first-child th { border-bottom: none !important; }
+      thead th { background-color: #070707 !important; }
+      thead tr:first-child th { border-bottom: 1px solid #000000 !important; }
+
+      /* Monthly total rows */
+      .monthly-total {
+        background-color: #1a1a1a !important;
+        border-top: 2px solid #27ae60 !important;
+        border-bottom: 1px solid #27ae60 !important;
+        font-weight: bold !important;
+      }
+      .monthly-total td {
+        color: #27ae60 !important;
+        font-size: 13px !important;
+      }
+
+      /* Grand total row */
+      .grand-total {
+        background-color: #0a2a0a !important;
+        border-top: 3px solid #27ae60 !important;
+        font-weight: bold !important;
+        font-size: 16px !important;
+      }
+      .grand-total td {
+        color: #27ae60 !important;
+      }
+
+      /* Override Bootstrap table borders */
+      .table thead th {
+        border-bottom: 1px solid #000000 !important;
+      }
+
+      .table td, .table th {
+        border-top: none !important;
+        border-bottom: 1px solid #000000 !important;
+      }
 
       .empty { padding: 40px; text-align: center; color: var(--muted); font-weight: 700; }
 
@@ -464,6 +498,20 @@ if (file_exists($csvFile)) {
         `;
       }
 
+      function getMonthName(monthKey) {
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        try {
+          const [year, monthStr] = monthKey.split('-');
+          const month = parseInt(monthStr, 10) - 1;
+          if (month >= 0 && month < 12) {
+            return `${monthNames[month]} ${year}`;
+          }
+          return `Month ${monthKey}`;
+        } catch (e) {
+          return `Month ${monthKey}`;
+        }
+      }
+
       function renderCombinedTable(data, startISO, endISO) {
         const container = document.getElementById('cardsContainer');
         container.innerHTML = '';
@@ -503,24 +551,24 @@ if (file_exists($csvFile)) {
             <thead>
               <tr>
                 <th rowspan="2" style="vertical-align: bottom;">Date</th>
-                <th colspan="2" style="background-color: #2c2c2c; color: #f1c40f; text-align: center;">
-                  <img src="/public/assets/images/moonshine.png" alt="Moonshine" style="height:16px; margin-right:8px;">Moonshine
+                <th colspan="2" style="background-color: #070707; color: #f1c40f; text-align: center;">
+                  <img src="/public/assets/images/moonshine.png" alt="Moonshine" style="height:24px; margin-right:8px;">Moonshine
                 </th>
-                <th colspan="2" style="background-color: #2c2c2c; color: #16a085; text-align: center;">
-                  <img src="/public/assets/images/zipnslip.png" alt="Zip'n'Slip" style="height:16px; margin-right:8px;">Zip'n'Slip
+                <th colspan="2" style="background-color: #070707; color: #16a085; text-align: center;">
+                  <img src="/public/assets/images/zipnslip.png" alt="Zip'n'Slip" style="height:24px; margin-right:8px;">Zip'n'Slip
                 </th>
-                <th colspan="2" style="background-color: #2c2c2c; color: #e74c3c; text-align: center;">
-                  <img src="/public/assets/images/hawk.png" alt="Hawks Nest" style="height:16px; margin-right:8px;">Hawks Nest
+                <th colspan="2" style="background-color: #070707; color: #e74c3c; text-align: center;">
+                  <img src="/public/assets/images/hawk.png" alt="Hawks Nest" style="height:24px; margin-right:8px;">Hawks Nest
                 </th>
                 <th rowspan="2" style="background-color: #2c2c2c; color: #27ae60; text-align: center; vertical-align: bottom;">Grand Total</th>
               </tr>
               <tr>
-                <th style="background-color: #2c2c2c; color: #fff; text-align: center;">Credit</th>
-                <th style="background-color: #2c2c2c; color: #fff; text-align: center;">Cash</th>
-                <th style="background-color: #2c2c2c; color: #fff; text-align: center;">Credit</th>
-                <th style="background-color: #2c2c2c; color: #fff; text-align: center;">Cash</th>
-                <th style="background-color: #2c2c2c; color: #fff; text-align: center;">Credit</th>
-                <th style="background-color: #2c2c2c; color: #fff; text-align: center;">Cash</th>
+                <th style="background-color: #070707; color: #fff; text-align: center;">Credit</th>
+                <th style="background-color: #070707; color: #fff; text-align: center;">Cash</th>
+                <th style="background-color: #070707; color: #fff; text-align: center;">Credit</th>
+                <th style="background-color: #070707; color: #fff; text-align: center;">Cash</th>
+                <th style="background-color: #070707; color: #fff; text-align: center;">Credit</th>
+                <th style="background-color: #070707; color: #fff; text-align: center;">Cash</th>
               </tr>
             </thead>
             <tbody id="combined-tbody">
@@ -531,24 +579,86 @@ if (file_exists($csvFile)) {
 
         const tbody = card.querySelector('#combined-tbody');
         const labels = ['Date', 'Moonshine Credit', 'Moonshine Cash', 'Zip Credit', 'Zip Cash', 'Hawks Nest Credit', 'Hawks Nest Cash', 'Grand Total'];
+
+        // Group dates by month
+        const datesByMonth = {};
         for (const date of sortedDates) {
-          let grandTotal = 0;
-          const rowData = [formatDate(date)];
-
-          for (const locId of locOrder) {
-            const byDate = data[locId] || {};
-            const day = byDate[date] || { square: 0, cash: 0 };
-            const square = day.square || 0;
-            const cash = day.cash || 0;
-            rowData.push(formatMoney(square), formatMoney(cash));
-            grandTotal += square + cash;
+          // Parse date from YYYY/MM/DD format
+          const parts = date.split('/');
+          if (parts.length >= 2) {
+            const year = parts[0];
+            const month = parts[1];
+            const monthKey = `${year}-${month.padStart ? month.padStart(2, '0') : ('0' + month).slice(-2)}`;
+            if (!datesByMonth[monthKey]) datesByMonth[monthKey] = [];
+            datesByMonth[monthKey].push(date);
           }
-          rowData.push(formatMoney(grandTotal));
-
-          const tr = document.createElement('tr');
-          tr.innerHTML = rowData.map((val, i) => i === 7 ? `<td style="text-align: center;" data-label="${labels[i]}">${val}</td>` : `<td data-label="${labels[i]}">${val}</td>`).join('');
-          tbody.appendChild(tr);
         }
+
+        // Sort months
+        const sortedMonths = Object.keys(datesByMonth).sort();
+
+        const overallByLocation = { L40Y7W2DPY4XD: { square: 0, cash: 0 }, LBV58VND0C84K: { square: 0, cash: 0 }, L69EQY1WK4M4A: { square: 0, cash: 0 } };
+
+        // Render each month
+        for (const monthKey of sortedMonths) {
+          const monthDates = datesByMonth[monthKey].sort((a, b) => (a < b ? 1 : a > b ? -1 : 0));
+
+          const monthByLocation = { L40Y7W2DPY4XD: { square: 0, cash: 0 }, LBV58VND0C84K: { square: 0, cash: 0 }, L69EQY1WK4M4A: { square: 0, cash: 0 } };
+
+          // Render daily rows for this month
+          for (const date of monthDates) {
+            let grandTotal = 0;
+            const rowData = [formatDate(date)];
+
+            for (const locId of locOrder) {
+              const byDate = data[locId] || {};
+              const day = byDate[date] || { square: 0, cash: 0 };
+              const square = day.square || 0;
+              const cash = day.cash || 0;
+              rowData.push(formatMoney(square), formatMoney(cash));
+              grandTotal += square + cash;
+
+              monthByLocation[locId].square += square;
+              monthByLocation[locId].cash += cash;
+              overallByLocation[locId].square += square;
+              overallByLocation[locId].cash += cash;
+            }
+            rowData.push(formatMoney(grandTotal));
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = rowData.map((val, i) => i === 7 ? `<td style="text-align: center;" data-label="${labels[i]}">${val}</td>` : `<td data-label="${labels[i]}">${val}</td>`).join('');
+            tbody.appendChild(tr);
+          }
+
+          // Add monthly total row
+          const monthName = getMonthName(monthKey);
+          let monthGrandTotal = 0;
+          const monthRowData = [`${monthName} Total`];
+          for (const locId of locOrder) {
+            monthRowData.push(formatMoney(monthByLocation[locId].square), formatMoney(monthByLocation[locId].cash));
+            monthGrandTotal += monthByLocation[locId].square + monthByLocation[locId].cash;
+          }
+          monthRowData.push(formatMoney(monthGrandTotal));
+
+          const monthTr = document.createElement('tr');
+          monthTr.className = 'monthly-total';
+          monthTr.innerHTML = monthRowData.map((val, i) => i === 7 ? `<td style="text-align: center;" data-label="${labels[i]}">${val}</td>` : `<td data-label="${labels[i]}">${val}</td>`).join('');
+          tbody.appendChild(monthTr);
+        }
+
+        // Add grand total row
+        const grandRowData = ['Grand Total'];
+        let overallTotal = 0;
+        for (const locId of locOrder) {
+          grandRowData.push(formatMoney(overallByLocation[locId].square), formatMoney(overallByLocation[locId].cash));
+          overallTotal += overallByLocation[locId].square + overallByLocation[locId].cash;
+        }
+        grandRowData.push(formatMoney(overallTotal));
+
+        const grandTr = document.createElement('tr');
+        grandTr.className = 'grand-total';
+        grandTr.innerHTML = grandRowData.map((val, i) => i === 7 ? `<td style="text-align: center;" data-label="${labels[i]}">${val}</td>` : `<td data-label="${labels[i]}">${val}</td>`).join('');
+        tbody.appendChild(grandTr);
       }
 
       function renderAll(data, startISO, endISO) {
