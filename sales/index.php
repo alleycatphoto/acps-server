@@ -2,6 +2,7 @@
 // Map location names to display names
 $locMap = [
     "Hawksnest" => "Hawks Nest",
+    "ZipnSlip" => "Zip'n'Slip",
     "Test Location" => "Moonshine",
     // Add more as needed
 ];
@@ -133,7 +134,7 @@ if (file_exists($historicalCsv)) {
       * { box-sizing: border-box; }
       body {
         margin: 0;
-        padding: 20px;
+        padding: 15px;
         font-family: 'Inter', sans-serif;
         background:
           radial-gradient(1200px 700px at 20% -10%, rgba(200, 28, 28, 0.15), transparent 60%),
@@ -237,10 +238,10 @@ if (file_exists($historicalCsv)) {
         overflow: hidden;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         backdrop-filter: blur(10px);
-        margin-bottom: 30px;
+        margin-bottom: 20px;
       }
       .card-hd {
-        padding: 20px;
+        padding: 15px;
         border: none;
         background: #070707;
         display: flex;
@@ -285,7 +286,8 @@ if (file_exists($historicalCsv)) {
       tbody tr:nth-child(odd) { background-color: #070707 !important; }
       tbody tr:nth-child(even) { background-color: #242426 !important; }
       tbody tr { color: #fff !important; }
-      tbody td:last-child { color: #27ae60 !important; font-weight: bold; }
+      tbody td:nth-child(4), tbody td:nth-child(7), tbody td:nth-child(10), tbody td:nth-child(11) { color: #27ae60 !important; }
+      tbody td:last-child { font-weight: bold; }
 
       /* Vertical borders */
       th, td { border-right: 1px solid #000000 !important; }
@@ -328,7 +330,36 @@ if (file_exists($historicalCsv)) {
         border-bottom: 1px solid #000000 !important;
       }
 
-      .empty { padding: 40px; text-align: center; color: var(--muted); font-weight: 700; }
+      .month-summary {
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .month-summary h2 {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--accent);
+      }
+      .loc-totals {
+        font-size: 14px;
+        font-weight: 700;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .loc-totals span {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .month-table {
+        margin-top: 10px;
+      }
 
       .warn {
         border: 1px solid var(--border);
@@ -370,6 +401,16 @@ if (file_exists($historicalCsv)) {
         .filters { width: 100%; flex-direction: column; }
         .filters input, .filters button { width: 100%; }
         .upload-grid { grid-template-columns: 1fr; }
+
+        .month-summary {
+          flex-direction: column !important;
+          text-align: center !important;
+        }
+        .loc-totals {
+          font-size: 12px !important;
+          flex-direction: column !important;
+          gap: 4px !important;
+        }
 
         /* Table to cards */
         table, thead, tbody, th, td, tr { display: block; }
@@ -441,9 +482,13 @@ if (file_exists($historicalCsv)) {
         
         tr.expanded .mobile-summary { display: none; }
 
-        tfoot tr { background: var(--accent); color: white; }
-        tfoot td { color: white; }
-        tfoot td:first-child { color: white; border-bottom: 1px solid rgba(255, 255, 255, 0.2); }
+        .month-summary {
+          flex-direction: column;
+          text-align: center;
+        }
+        .loc-totals {
+          font-size: 12px;
+        }
       }
     </style>
   </head>
@@ -497,7 +542,8 @@ if (file_exists($historicalCsv)) {
       const rawData = <?php echo json_encode($data); ?>;
 
       function formatMoney(cents) {
-        return `$${(cents / 100).toFixed(2)}`;
+        const dollars = cents / 100;
+        return '$' + dollars.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       }
 
       function formatDate(yyyyMmDd) {
@@ -526,11 +572,13 @@ if (file_exists($historicalCsv)) {
       }
 
       function sortDataDescByDate(data) {
-        const locs = Object.keys(data).sort();
-        const sorted = { 'Moonshine': {}, 'Zip\'n\'Slip': {}, 'Hawks Nest': {}, 'UNKNOWN': {} };
-        for (const locId of locs) {
-          const dates = Object.keys(data[locId] || {}).sort((a, b) => (a < b ? 1 : a > b ? -1 : 0));
-          for (const date of dates) sorted[locId][date] = data[locId][date];
+        const sorted = {};
+        for (const locId of locOrder) {
+          sorted[locId] = {};
+          if (data[locId]) {
+            const dates = Object.keys(data[locId]).sort((a, b) => (a < b ? 1 : a > b ? -1 : 0));
+            for (const date of dates) sorted[locId][date] = data[locId][date];
+          }
         }
         return sorted;
       }
@@ -613,68 +661,109 @@ if (file_exists($historicalCsv)) {
           return;
         }
 
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <div class="card-hd">
-            <h2>Combined Sales Report</h2>
-          </div>
-          <table class="table table-striped table-hover">
-            <thead>
-              <tr>
-                <th rowspan="2" style="vertical-align: bottom;">Date</th>
-                <th colspan="2" style="background-color: #070707; color: #f1c40f; text-align: center;">
-                  <img src="/public/assets/images/moonshine.png" alt="Moonshine" style="height:24px; margin-right:8px;">Moonshine
-                </th>
-                <th colspan="2" style="background-color: #070707; color: #16a085; text-align: center;">
-                  <img src="/public/assets/images/zipnslip.png" alt="Zip'n'Slip" style="height:24px; margin-right:8px;">Zip'n'Slip
-                </th>
-                <th colspan="2" style="background-color: #070707; color: #e74c3c; text-align: center;">
-                  <img src="/public/assets/images/hawk.png" alt="Hawks Nest" style="height:24px; margin-right:8px;">Hawks Nest
-                </th>
-                <th rowspan="2" style="background-color: #2c2c2c; color: #27ae60; text-align: center; vertical-align: bottom;">Grand Total</th>
-              </tr>
-              <tr>
-                <th style="background-color: #070707; color: #fff; text-align: center;">Credit</th>
-                <th style="background-color: #070707; color: #fff; text-align: center;">Cash</th>
-                <th style="background-color: #070707; color: #fff; text-align: center;">Credit</th>
-                <th style="background-color: #070707; color: #fff; text-align: center;">Cash</th>
-                <th style="background-color: #070707; color: #fff; text-align: center;">Credit</th>
-                <th style="background-color: #070707; color: #fff; text-align: center;">Cash</th>
-              </tr>
-            </thead>
-            <tbody id="combined-tbody">
-            </tbody>
-          </table>
-        `;
-        container.appendChild(card);
-
-        const tbody = card.querySelector('#combined-tbody');
-        const labels = ['Date', 'Moonshine Credit', 'Moonshine Cash', 'Zip Credit', 'Zip Cash', 'Hawks Nest Credit', 'Hawks Nest Cash', 'Grand Total'];
-
-        // Render each day (most recent first)
+        // Group dates by month
+        const months = {};
         for (const date of sortedDates) {
-          let grandTotal = 0;
-          let totalOrders = 0;
-          const rowData = [formatDate(date)];
+          const [year, month] = date.split('-');
+          const monthKey = `${year}-${month}`;
+          if (!months[monthKey]) months[monthKey] = [];
+          months[monthKey].push(date);
+        }
 
-          for (const locId of locOrder) {
-            const byDate = data[locId] || {};
-            const day = byDate[date] || { credit: 0, cash: 0, orders: 0 };
-            const credit = day.credit || 0;
-            const cash = day.cash || 0;
-            rowData.push(formatMoney(credit), formatMoney(cash));
-            grandTotal += credit + cash;
-            totalOrders += day.orders || 0;
+        // Sort months descending
+        const sortedMonths = Object.keys(months).sort((a, b) => (a < b ? 1 : a > b ? -1 : 0));
+
+        // Render each month as a collapsible card
+        for (const monthKey of sortedMonths) {
+          const monthDates = months[monthKey];
+          const [year, month] = monthKey.split('-');
+          const monthName = getMonthName(monthKey);
+
+          // Calculate monthly totals
+          let monthTotal = 0;
+          let monthOrders = 0;
+          const locTotals = { 'Moonshine': 0, 'Zip\'n\'Slip': 0, 'Hawks Nest': 0 };
+          for (const date of monthDates) {
+            let dayTotal = 0;
+            let dayOrders = 0;
+            for (const locId of locOrder) {
+              const byDate = data[locId] || {};
+              const day = byDate[date] || { credit: 0, cash: 0, orders: 0 };
+              const locDayTotal = day.credit + day.cash;
+              dayTotal += locDayTotal;
+              dayOrders += day.orders;
+              locTotals[locId] += locDayTotal;
+            }
+            monthTotal += dayTotal;
+            monthOrders += dayOrders;
           }
-          rowData.push(formatMoney(grandTotal));
 
-          // Include order count in date cell
-          rowData[0] = `${rowData[0]} (${totalOrders})`;
+          // Create month card
+          const card = document.createElement('div');
+          card.className = 'card month-card';
 
-          const tr = document.createElement('tr');
-          tr.innerHTML = rowData.map((val, i) => `<td data-label="${labels[i]}">${val}</td>`).join('');
-          tbody.appendChild(tr);
+          card.innerHTML = `
+            <div class="card-hd month-summary">
+              <h2>${monthName.toUpperCase()} <span style="color: var(--muted);">(${monthOrders} Orders)</span></h2>
+              <div class="loc-totals">
+                <span style="color: #f1c40f;"><img src="/public/assets/images/moonshine.png" style="height:16px; margin-right:4px;">MOON: ${formatMoney(locTotals['Moonshine'])}</span> |
+                <span style="color: #3498db;"><img src="/public/assets/images/zipnslip.png" style="height:16px; margin-right:4px;">ZIP: ${formatMoney(locTotals['Zip\'n\'Slip'])}</span> |
+                <span style="color: #e74c3c;"><img src="/public/assets/images/hawk.png" style="height:16px; margin-right:4px;">HAWK: ${formatMoney(locTotals['Hawks Nest'])}</span> |
+                <span style="color: #27ae60;">TOTAL: ${formatMoney(monthTotal)}</span>
+              </div>
+            </div>
+            <div class="month-table" style="display: none;">
+              <table class="table table-striped table-hover">
+                <thead>
+                  <tr>
+                    <th rowspan="2">Date</th>
+                    <th colspan="3" style="text-align: center;">Moonshine</th>
+                    <th colspan="3" style="text-align: center;">Zip'n'Slip</th>
+                    <th colspan="3" style="text-align: center;">Hawks Nest</th>
+                    <th rowspan="2" style="text-align: center;">Grand Total</th>
+                  </tr>
+                  <tr>
+                    <th style="color: #f1c40f; text-align: center;">Credit</th><th style="color: #f1c40f; text-align: center;">Cash</th><th style="color: #f1c40f; text-align: center;">Total</th>
+                    <th style="color: #3498db; text-align: center;">Credit</th><th style="color: #3498db; text-align: center;">Cash</th><th style="color: #3498db; text-align: center;">Total</th>
+                    <th style="color: #e74c3c; text-align: center;">Credit</th><th style="color: #e74c3c; text-align: center;">Cash</th><th style="color: #e74c3c; text-align: center;">Total</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          `;
+
+          const tbody = card.querySelector('tbody');
+          const labels = ['Date', 'Moonshine Credit', 'Moonshine Cash', 'Moonshine Total', 'Zip Credit', 'Zip Cash', 'Zip Total', 'Hawks Nest Credit', 'Hawks Nest Cash', 'Hawks Nest Total', 'Grand Total'];
+
+          // Add rows for each date in the month
+          for (const date of monthDates) {
+            let grandTotal = 0;
+            const rowData = [formatDate(date)];
+            for (const locId of locOrder) {
+              const byDate = data[locId] || {};
+              const day = byDate[date] || { credit: 0, cash: 0, orders: 0 };
+              const credit = day.credit;
+              const cash = day.cash;
+              const total = credit + cash;
+              rowData.push(credit === 0 ? '' : formatMoney(credit), cash === 0 ? '' : formatMoney(cash), total === 0 ? '' : formatMoney(total));
+              grandTotal += total;
+            }
+            rowData.push(grandTotal === 0 ? '' : formatMoney(grandTotal));
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = rowData.map((val, i) => `<td data-label="${labels[i]}">${val}</td>`).join('');
+            tbody.appendChild(tr);
+          }
+
+          // Add click handler to toggle table
+          const summary = card.querySelector('.month-summary');
+          const tableDiv = card.querySelector('.month-table');
+          summary.addEventListener('click', () => {
+            tableDiv.style.display = tableDiv.style.display === 'none' ? 'block' : 'none';
+          });
+
+          container.appendChild(card);
         }
       }
 
