@@ -67,6 +67,12 @@ $subject = "Alley Cat Photo : " . $locationName . " " . $stationID . " New Order
 
 // Detect payment type and Square response/confirmation
 $paymentType = $_REQUEST['payment_type'] ?? (($_POST['is_square_payment'] ?? '0') == '1' || ($_POST['is_qr_payment'] ?? '0') == '1' ? 'square' : 'cash');
+
+// Apply tax only if QR code callback (Square) happened
+if ($paymentType === 'square') {
+    $txtAmt = $txtAmt * 1.0675;
+}
+
 $squareResponse = $_REQUEST['square_response'] ?? '';
 $squareOrderId = $_REQUEST['square_order_id'] ?? '';
 $message .= "$txtEmail | \r\n";
@@ -199,7 +205,7 @@ if ($paymentType === 'square') {
 $Cart->clearCart();
 
 // --- LOG TRANSACTION TO DAILY TOTALS CSV ---
-$csvFile = __DIR__ . '/../sales/transactions.csv';
+$csvFile = __DIR__ . '/sales/transactions.csv';
 $today = date("m/d/Y");
 $location = $locationName;
 $paymentTypeDisplay = $paymentType === 'cash' ? 'Cash' : 'Credit';
@@ -211,6 +217,10 @@ if (file_exists($csvFile)) {
     $header = fgetcsv($handle);
     while (($row = fgetcsv($handle)) !== false) {
         $key = $row[0] . '|' . $row[1]; // Location|Date
+        // Sanitize amount (remove $ and ,)
+        if (isset($row[4])) {
+            $row[4] = (float)str_replace(['$', ','], '', $row[4]);
+        }
         $data[$key] = $row;
     }
     fclose($handle);

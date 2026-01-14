@@ -282,7 +282,7 @@ if ($cc_totaltaxed > 0) {
                 <div class="pay-actions-fullwidth">
                     <button type="button" class="big-pay-btn" id="cashPayBtn" onclick="processCash()">
                         <div class="big-pay-main"><span class="fa fa-money-bill-wave"></span> PAY AT COUNTER</div>
-                        <div class="big-pay-sub">CASH OR CARD &nbsp; • &nbsp; SCAN QR TO LEFT</div>
+                        <div class="big-pay-sub">SCAN QR TO LEFT TO PAY ON PHONE</div>
                     </button>
                     <button type="button" class="big-cancel-btn" onclick="location.reload()">
                         <div class="big-cancel-main"><span class="fa fa-times-circle"></span> CANCEL</div>
@@ -336,7 +336,7 @@ if ($cc_totaltaxed > 0) {
 <!-- <script src="/public/assets/js/jsKeyboard.js?v=<?php echo time(); ?>"></script> -->
 <script src="/public/assets/js/modern_keyboard.js?v=<?php echo time(); ?>"></script>
 <script src="/public/assets/js/CardReader.js"></script>
-<script src="/public/assets/js/acps.js"></script> <!-- Master JS -->
+<script src="/public/assets/js/acps.js?v=<?php echo time(); ?>"></script> <!-- Master JS -->
 
 
 <script>
