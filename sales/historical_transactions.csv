@@ -1,0 +1,9 @@
+Location,Time,"Order Date","Payment Type",Amount,"Order Number"
+Zip'n'Slip,"2026-01-13 15:45:22","January 13, 2026, 4:34 am",cash,23,1000
+Zip'n'Slip,"2026-01-12 23:34:35","January 13, 2026, 4:34 am",cash,23,1000
+Zip'n'Slip,"2026-01-13 15:49:05","January 13, 2026, 8:49 pm",square,12.15,1001
+Zip'n'Slip,"2026-01-13 15:49:05","January 13, 2026, 8:49 pm",square,12.15,1001
+Zip'n'Slip,"2026-01-13 16:21:29","January 13, 2026, 9:21 pm",square,12.15,1002
+Zip'n'Slip,"2026-01-13 16:21:29","January 13, 2026, 9:21 pm",square,12.15,1002
+Zip'n'Slip,"2026-01-13 16:29:19","January 13, 2026, 9:29 pm",square,12.15,1003
+Zip'n'Slip,"2026-01-13 16:29:19","January 13, 2026, 9:29 pm",square,12.15,1003
