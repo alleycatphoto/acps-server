@@ -198,6 +198,23 @@ if ($paymentType === 'square') {
 // --- CLEAR CART ---
 $Cart->clearCart();
 
+// --- LOG TRANSACTION TO CSV ---
+$csvFile = __DIR__ . '/../sales/transactions.csv';
+$logData = [
+    $locationName,
+    date("Y-m-d H:i:s"),
+    date("Y/m/d"),
+    $paymentType,
+    $txtAmt,
+    $orderID
+];
+$csvLine = implode(',', array_map(function($v) { return '"' . str_replace('"', '""', $v) . '"'; }, $logData)) . "\n";
+if (!file_exists($csvFile)) {
+    $header = "Location,Time,Order Date,Payment Type,Amount,Order Number\n";
+    file_put_contents($csvFile, $header);
+}
+file_put_contents($csvFile, $csvLine, FILE_APPEND);
+
 // Determine UI Display
 $isApproved = ($paymentType === 'square');
 ?>
