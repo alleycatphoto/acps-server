@@ -98,6 +98,9 @@ if ($cc_totaltaxed > 0) {
     // }
 }
 
+// New calculation
+$savings = $cc_totaltaxed - $amount_without_tax;
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -280,6 +283,9 @@ if ($cc_totaltaxed > 0) {
                 </div>
 
                 <div class="pay-actions-fullwidth">
+                    <div style="text-align:center; color:#fff; font-size:2rem; margin-bottom:20px; text-transform:uppercase; font-weight:bold;">
+                        PAY CASH HERE AND SAVE <span style="color:#6F0; font-size:1.2em;">$<?php echo number_format($savings, 2); ?></span>
+                    </div>
                     <button type="button" class="big-pay-btn" id="cashPayBtn" onclick="processCash()">
                         <div class="big-pay-main"><span class="fa fa-money-bill-wave"></span> PAY AT COUNTER</div>
                         <div class="big-pay-sub">SCAN QR TO LEFT TO PAY ON PHONE</div>
@@ -375,16 +381,37 @@ if ($cc_totaltaxed > 0) {
 
 // Lock cash/pay button and show spinner, then call real processCash
 var _originalProcessCash = null;
+
+// Capture the original function immediately if it exists
 if (typeof window.processCash === 'function') {
     _originalProcessCash = window.processCash;
 }
+
 window.processCash = function() {
     var btn = document.getElementById('cashPayBtn');
-    if (!btn.disabled) {
+    if (btn) {
+        // Stop if already disabled
+        if (btn.disabled || btn.getAttribute('disabled') === 'disabled') return;
+
+        // Immediate UI Lock
         btn.disabled = true;
+        btn.setAttribute('disabled', 'disabled');
+        btn.onclick = null; // Kill property handler
+        btn.removeAttribute('onclick'); // Kill attribute handler
+        
+        // Show Spinner
         btn.innerHTML = '<div class="big-pay-main"><span class="fa fa-spinner fa-spin"></span> Processing...</div><div class="big-pay-sub">Please wait</div>';
+
+        // Call original logic
         if (typeof _originalProcessCash === 'function') {
             _originalProcessCash();
+        } else {
+            console.error("Original processCash function not found.");
+            // Fallback: try to find it in case of race condition (unlikely with sync script tags)
+            if (typeof window.acps_base_total !== 'undefined') {
+               // We could try to reconstruct the redirect here if desperate, 
+               // but it's better to rely on the loaded file.
+            }
         }
     }
 };
