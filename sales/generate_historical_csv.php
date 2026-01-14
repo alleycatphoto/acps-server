@@ -4,9 +4,10 @@ ini_set('memory_limit', '-1'); // Unlimited memory
 ini_set('max_execution_time', 0); // Unlimited execution time
 set_time_limit(0); // Remove time limit
 
-// Script to generate historical transactions CSV from receipt files
+// Script to generate historical CASH transactions CSV from receipt files
 // Usage: php generate_historical_csv.php "Location Name" "/path/to/base/dir"
-// Scans date folders and processes receipts with CASH/CREDIT detection
+// Scans date folders and processes receipts for "CASH ORDER: $XX.XX PAID" lines
+// Outputs daily cash totals in same format as CREDIT_ALL_ALLEYCAT.csv
 
 $location = $argv[1] ?? 'Historical';
 $baseDir = $argv[2] ?? __DIR__ . '/../photos';
@@ -55,69 +56,30 @@ function findDateFolders($baseDir) {
     return $dateFolders;
 }
 
-// Function to parse a receipt file
-function parseReceipt($filePath, $location) {
+// Function to parse a receipt file for CASH ORDER lines
+function parseReceipt($filePath) {
     $content = file_get_contents($filePath);
-    if (!$content) return null;
+    if (!$content) return [];
 
     $lines = explode("\n", $content);
-    $data = [
-        'payment_type' => null,
-        'amount' => 0,
-        'order_number' => null,
-        'order_date' => null,
-        'time' => date("Y-m-d H:i:s", filemtime($filePath)),
-        'location' => $location
-    ];
-
-    $hasCashOrder = false;
+    $cashAmounts = [];
 
     foreach ($lines as $line) {
         $line = trim($line);
-        if (strpos($line, 'CASH ORDER:') !== false) {
-            $data['payment_type'] = 'cash';
-            $hasCashOrder = true;
-            if (preg_match('/\$([0-9]+\.[0-9]{2})/', $line, $m)) {
-                $data['amount'] = (float)$m[1];
-            }
-        } elseif (strpos($line, 'SQUARE ORDER:') !== false) {
-            $data['payment_type'] = 'square';
-            if (preg_match('/\$([0-9]+\.[0-9]{2})/', $line, $m)) {
-                $data['amount'] = (float)$m[1];
-            }
-        }
-        // Extract order total if no payment type found yet
-        elseif (strpos($line, 'Order Total:') !== false && !$data['payment_type']) {
-            // If we haven't found CASH ORDER, assume it's credit/Square
-            $data['payment_type'] = $hasCashOrder ? 'cash' : 'credit';
-            if (preg_match('/\$([0-9]+\.[0-9]{2})/', $line, $m)) {
-                $data['amount'] = (float)$m[1];
-            }
-        }
-        if (preg_match('/Order #:\s*(\d+)/', $line, $m)) {
-            $data['order_number'] = $m[1];
-        }
-        if (preg_match('/Order Date:\s*(.+)/', $line, $m)) {
-            $data['order_date'] = trim($m[1]);
+        // Only match exact format: "CASH ORDER: ($24.00) PAID"
+        if (preg_match('/^CASH ORDER:\s*\(\$([0-9]+\.[0-9]{2})\)\s*PAID$/', $line, $matches)) {
+            $cashAmounts[] = (float)$matches[1];
         }
     }
 
-    // If we still don't have payment type but have order total, determine based on CASH presence
-    if (!$data['payment_type'] && $data['amount'] > 0 && $data['order_number']) {
-        $data['payment_type'] = strpos($content, 'CASH ORDER:') !== false ? 'cash' : 'square';
-    }
-
-    if (!$data['payment_type'] || !$data['order_number'] || $data['amount'] == 0) return null;
-
-    return $data;
+    return $cashAmounts;
 }
 
 // Main execution
 $dateFolders = findDateFolders($baseDir);
-$allTransactions = [];
+$cashByDate = [];
 $totalProcessed = 0;
-$totalCash = 0;
-$totalCredit = 0;
+$totalCashAmount = 0;
 
 echo "Found " . count($dateFolders) . " date folders to process\n\n";
 
@@ -135,55 +97,56 @@ foreach ($dateFolders as $dateFolder) {
         continue;
     }
 
-    $dateTransactions = [];
     $dateCash = 0;
-    $dateCredit = 0;
+    $orderCount = 0;
 
     foreach ($receiptFiles as $file) {
-        $data = parseReceipt($file, $location);
-        if ($data) {
-            $dateTransactions[] = $data;
-            if ($data['payment_type'] === 'cash') {
-                $dateCash++;
-                $totalCash++;
-            } else {
-                $dateCredit++;
-                $totalCredit++;
-            }
+        $amounts = parseReceipt($file);
+        foreach ($amounts as $amount) {
+            $dateCash += $amount;
+            $orderCount++;
+            $totalProcessed++;
+            $totalCashAmount += $amount;
         }
     }
 
-    $dateName = basename($dateFolder);
-    $dateProcessed = count($dateTransactions);
+    if ($orderCount > 0) {
+        // Extract date from folder path (YYYY/MM/DD)
+        $parts = explode('/', $dateFolder);
+        $year = $parts[count($parts)-3];
+        $month = $parts[count($parts)-2];
+        $day = $parts[count($parts)-1];
+        $dateKey = "$month/$day/$year";
 
-    echo "$dateName: added $dateProcessed transactions ($dateCash cash, $dateCredit credit)\n";
+        $cashByDate[$dateKey] = [
+            'location' => $location,
+            'orders' => $orderCount,
+            'amount' => $dateCash
+        ];
 
-    $allTransactions = array_merge($allTransactions, $dateTransactions);
-    $totalProcessed += $dateProcessed;
+        echo "$dateKey: $orderCount cash orders, $" . number_format($dateCash, 2) . "\n";
+    }
 }
 
-// Sort all transactions by order number
-usort($allTransactions, function($a, $b) {
-    return $a['order_number'] <=> $b['order_number'];
-});
+// Sort by date descending
+krsort($cashByDate);
 
-// Write to CSV
+// Write cash CSV in same format as credit CSV
 $fp = fopen($outputCsv, 'w');
-fputcsv($fp, ['Location', 'Time', 'Order Date', 'Payment Type', 'Amount', 'Order Number']);
+fputcsv($fp, ['Location', 'Order Date', 'Orders', 'Payment Type', 'Amount']);
 
-foreach ($allTransactions as $t) {
+foreach ($cashByDate as $date => $data) {
     fputcsv($fp, [
-        $t['location'],
-        $t['time'],
-        $t['order_date'],
-        $t['payment_type'],
-        $t['amount'],
-        $t['order_number']
+        $data['location'],
+        $date,
+        $data['orders'],
+        'Cash',
+        '$' . number_format($data['amount'], 2)
     ]);
 }
 
 fclose($fp);
 
-echo "\nHistorical transactions CSV generated: $outputCsv\n";
-echo "Total processed: $totalProcessed transactions ($totalCash cash, $totalCredit credit) from " . count($dateFolders) . " date folders\n";
+echo "\nCash transactions CSV generated: $outputCsv\n";
+echo "Total processed: $totalProcessed cash payments, $" . number_format($totalCashAmount, 2) . " from " . count($cashByDate) . " dates\n";
 ?>
