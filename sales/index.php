@@ -1,9 +1,8 @@
 <?php
-// Map location names to IDs
+// Map location names to display names
 $locMap = [
-    "Hawks Nest" => "L69EQY1WK4M4A",
-    "Zip" => "LBV58VND0C84K",
-    "Moonshine" => "L40Y7W2DPY4XD",
+    "Hawksnest" => "Hawks Nest",
+    "Test Location" => "Moonshine",
     // Add more as needed
 ];
 
@@ -15,18 +14,83 @@ if (file_exists($csvFile)) {
     $header = fgetcsv($handle);
     while (($row = fgetcsv($handle)) !== false) {
         $locName = trim($row[0]);
-        $locId = $locMap[$locName] ?? "UNKNOWN";
-        $date = trim($row[2]);
+        $locId = $locMap[$locName] ?? $locName;
+        $date = date('Y-m-d', strtotime(trim($row[1])));
         $type = trim($row[3]);
         $amount = (float)trim($row[4]);
         if (!isset($data[$locId])) $data[$locId] = [];
-        if (!isset($data[$locId][$date])) $data[$locId][$date] = ['square' => 0, 'cash' => 0, 'orders' => 0];
-        if ($type === 'square') {
-            $data[$locId][$date]['square'] += $amount;
-        } elseif ($type === 'cash') {
+        if (!isset($data[$locId][$date])) $data[$locId][$date] = ['credit' => 0, 'cash' => 0, 'orders' => 0];
+        // cash orders go to cash, everything else goes to credit
+        if ($type === 'cash') {
             $data[$locId][$date]['cash'] += $amount;
+        } else {
+            $data[$locId][$date]['credit'] += $amount;
         }
         $data[$locId][$date]['orders'] += 1;
+    }
+    fclose($handle);
+}
+
+// Read historical credit data
+$creditCsv = __DIR__ . '/CREDIT_ALL_ALLEYCAT.csv';
+if (file_exists($creditCsv)) {
+    $handle = fopen($creditCsv, 'r');
+    $header = fgetcsv($handle);
+    while (($row = fgetcsv($handle)) !== false) {
+        $locName = trim($row[0]);
+        $locId = $locMap[$locName] ?? $locName;
+        // Convert MM/DD/YYYY to YYYY-MM-DD
+        $dateParts = explode('/', trim($row[1]));
+        if (count($dateParts) === 3) {
+            $date = sprintf('%04d-%02d-%02d', $dateParts[2], $dateParts[0], $dateParts[1]);
+        } else {
+            continue; // Skip invalid dates
+        }
+        $orders = (int)trim($row[2]);
+        $type = strtolower(trim($row[3]));
+        $amount = (float)str_replace(['$', ','], '', trim($row[4]));
+        
+        if (!isset($data[$locId])) $data[$locId] = [];
+        if (!isset($data[$locId][$date])) $data[$locId][$date] = ['credit' => 0, 'cash' => 0, 'orders' => 0];
+        
+        if ($type === 'cash') {
+            $data[$locId][$date]['cash'] += $amount;
+        } else {
+            $data[$locId][$date]['credit'] += $amount;
+        }
+        $data[$locId][$date]['orders'] += $orders;
+    }
+    fclose($handle);
+}
+
+// Read historical cash data
+$historicalCsv = __DIR__ . '/historical_transactions.csv';
+if (file_exists($historicalCsv)) {
+    $handle = fopen($historicalCsv, 'r');
+    $header = fgetcsv($handle);
+    while (($row = fgetcsv($handle)) !== false) {
+        $locName = trim($row[0]);
+        $locId = $locMap[$locName] ?? $locName;
+        // Convert MM/DD/YYYY to YYYY-MM-DD
+        $dateParts = explode('/', trim($row[1]));
+        if (count($dateParts) === 3) {
+            $date = sprintf('%04d-%02d-%02d', $dateParts[2], $dateParts[0], $dateParts[1]);
+        } else {
+            continue; // Skip invalid dates
+        }
+        $orders = (int)trim($row[2]);
+        $type = strtolower(trim($row[3]));
+        $amount = (float)str_replace(['$', ','], '', trim($row[4]));
+        
+        if (!isset($data[$locId])) $data[$locId] = [];
+        if (!isset($data[$locId][$date])) $data[$locId][$date] = ['credit' => 0, 'cash' => 0, 'orders' => 0];
+        
+        if ($type === 'cash') {
+            $data[$locId][$date]['cash'] += $amount;
+        } else {
+            $data[$locId][$date]['credit'] += $amount;
+        }
+        $data[$locId][$date]['orders'] += $orders;
     }
     fclose($handle);
 }
@@ -194,7 +258,7 @@ if (file_exists($csvFile)) {
       td:last-child { text-align: center; }
       tr:last-child td { border-bottom: none; }
 
-      .col-square { color: #3b82f6; }
+      .col-credit { color: #3b82f6; }
       .col-cash { color: #10b981; }
       .col-total { font-weight: normal; color: #fff; }
 
@@ -374,7 +438,7 @@ if (file_exists($csvFile)) {
           <img src="https://alleycatphoto.net/alley_logo_sm.png" alt="Alley Cat" />
           <div class="brand-text">
             <div class="title">ALLEYCAT SALES BREAKDOWN</div>
-            <div class="subtitle">Square vs Cash Breakdown</div>
+            <div class="subtitle">Credit vs Cash Breakdown</div>
           </div>
         </div>
         <a href="/admin/index.php" class="back-btn">BACK TO ADMIN</a>
@@ -404,17 +468,13 @@ if (file_exists($csvFile)) {
 
     <script>
       const LOCATIONS = {
-        "L69EQY1WK4M4A": "Hawks Nest",
-        "LBV58VND0C84K": "Zip",
-        "L40Y7W2DPY4XD": "Moonshine",
+        "Moonshine": "Moonshine",
+        "Zip'n'Slip": "Zip'n'Slip",
+        "Hawks Nest": "Hawks Nest",
         "UNKNOWN": "Unknown"
       };
 
-      const DEV_ID_MAP = {
-        "Hawk": "L69EQY1WK4M4A",
-        "Zip": "LBV58VND0C84K",
-        "Moonshine": "L40Y7W2DPY4XD"
-      };
+      const locOrder = ['Moonshine', 'Zip\'n\'Slip', 'Hawks Nest'];
 
       // Data from PHP
       const rawData = <?php echo json_encode($data); ?>;
@@ -426,11 +486,10 @@ if (file_exists($csvFile)) {
       function formatDate(yyyyMmDd) {
         const d = new Date(yyyyMmDd + "T00:00:00");
         if (isNaN(d)) return yyyyMmDd;
-        if (yyyy < 1950) yyyy += 100; 
-        
+        const yyyy = d.getFullYear();
         const mm = String(d.getMonth() + 1).padStart(2, "0");
         const dd = String(d.getDate()).padStart(2, "0");
-        return `${yyyy}-${mm}-${dd}`;
+        return `${mm}/${dd}/${yyyy}`;
       }
 
       function isInRange(dateISO, startISO, endISO) {
@@ -439,18 +498,19 @@ if (file_exists($csvFile)) {
 
       function clampLocId(raw) {
         if (!raw) return "UNKNOWN";
-        return Object.prototype.hasOwnProperty.call(LOCATIONS, raw) ? raw : "UNKNOWN";
+        // Simplified: just return the location name as-is
+        return raw;
       }
 
       function ensureDay(data, locId, dateISO) {
         if (!data[locId]) data[locId] = {};
-        if (!data[locId][dateISO]) data[locId][dateISO] = { square: 0, cash: 0, orders: 0 };
+        if (!data[locId][dateISO]) data[locId][dateISO] = { credit: 0, cash: 0, orders: 0 };
         return data[locId][dateISO];
       }
 
       function sortDataDescByDate(data) {
         const locs = Object.keys(data).sort();
-        const sorted = { L40Y7W2DPY4XD: {}, L69EQY1WK4M4A: {}, LBV58VND0C84K: {}, UNKNOWN: {} };
+        const sorted = { 'Moonshine': {}, 'Zip\'n\'Slip': {}, 'Hawks Nest': {}, 'UNKNOWN': {} };
         for (const locId of locs) {
           const dates = Object.keys(data[locId] || {}).sort((a, b) => (a < b ? 1 : a > b ? -1 : 0));
           for (const date of dates) sorted[locId][date] = data[locId][date];
@@ -465,7 +525,7 @@ if (file_exists($csvFile)) {
           const byDate = data[locId] || {};
           for (const date of Object.keys(byDate)) {
             const s = byDate[date];
-            total += (s.square || 0) + (s.cash || 0);
+            total += (s.credit || 0) + (s.cash || 0);
             orders += s.orders || 0;
           }
         }
@@ -477,7 +537,7 @@ if (file_exists($csvFile)) {
         let orders = 0;
         for (const date of Object.keys(byDate)) {
           const s = byDate[date];
-          total += (s.square || 0) + (s.cash || 0);
+          total += (s.credit || 0) + (s.cash || 0);
           orders += s.orders || 0;
         }
         return { total, orders };
@@ -516,13 +576,8 @@ if (file_exists($csvFile)) {
         const container = document.getElementById('cardsContainer');
         container.innerHTML = '';
 
-        // Define location order: Moonshine, Zip, Hawks Nest
-        const locOrder = ['L40Y7W2DPY4XD', 'LBV58VND0C84K', 'L69EQY1WK4M4A'];
-        const locNames = {
-          'L40Y7W2DPY4XD': 'Moonshine',
-          'LBV58VND0C84K': 'Zip',
-          'L69EQY1WK4M4A': 'Hawks Nest'
-        };
+        // Define location order: Moonshine, Zip'n'Slip, Hawks Nest
+        const locOrder = ['Moonshine', 'Zip\'n\'Slip', 'Hawks Nest'];
 
         // Collect all dates
         const allDates = new Set();
@@ -534,7 +589,7 @@ if (file_exists($csvFile)) {
             }
           }
         }
-        const sortedDates = Array.from(allDates).sort((a, b) => (a < b ? 1 : a > b ? -1 : 0));
+        const sortedDates = Array.from(allDates).sort((a, b) => (a < b ? 1 : a > b ? -1 : 0)); // Most recent first
 
         if (!sortedDates.length) {
           container.innerHTML = '<div class="empty">No data available for the selected date range.</div>';
@@ -580,85 +635,30 @@ if (file_exists($csvFile)) {
         const tbody = card.querySelector('#combined-tbody');
         const labels = ['Date', 'Moonshine Credit', 'Moonshine Cash', 'Zip Credit', 'Zip Cash', 'Hawks Nest Credit', 'Hawks Nest Cash', 'Grand Total'];
 
-        // Group dates by month
-        const datesByMonth = {};
+        // Render each day (most recent first)
         for (const date of sortedDates) {
-          // Parse date from YYYY/MM/DD format
-          const parts = date.split('/');
-          if (parts.length >= 2) {
-            const year = parts[0];
-            const month = parts[1];
-            const monthKey = `${year}-${month.padStart ? month.padStart(2, '0') : ('0' + month).slice(-2)}`;
-            if (!datesByMonth[monthKey]) datesByMonth[monthKey] = [];
-            datesByMonth[monthKey].push(date);
-          }
-        }
+          let grandTotal = 0;
+          let totalOrders = 0;
+          const rowData = [formatDate(date)];
 
-        // Sort months
-        const sortedMonths = Object.keys(datesByMonth).sort();
-
-        const overallByLocation = { L40Y7W2DPY4XD: { square: 0, cash: 0 }, LBV58VND0C84K: { square: 0, cash: 0 }, L69EQY1WK4M4A: { square: 0, cash: 0 } };
-
-        // Render each month
-        for (const monthKey of sortedMonths) {
-          const monthDates = datesByMonth[monthKey].sort((a, b) => (a < b ? 1 : a > b ? -1 : 0));
-
-          const monthByLocation = { L40Y7W2DPY4XD: { square: 0, cash: 0 }, LBV58VND0C84K: { square: 0, cash: 0 }, L69EQY1WK4M4A: { square: 0, cash: 0 } };
-
-          // Render daily rows for this month
-          for (const date of monthDates) {
-            let grandTotal = 0;
-            const rowData = [formatDate(date)];
-
-            for (const locId of locOrder) {
-              const byDate = data[locId] || {};
-              const day = byDate[date] || { square: 0, cash: 0 };
-              const square = day.square || 0;
-              const cash = day.cash || 0;
-              rowData.push(formatMoney(square), formatMoney(cash));
-              grandTotal += square + cash;
-
-              monthByLocation[locId].square += square;
-              monthByLocation[locId].cash += cash;
-              overallByLocation[locId].square += square;
-              overallByLocation[locId].cash += cash;
-            }
-            rowData.push(formatMoney(grandTotal));
-
-            const tr = document.createElement('tr');
-            tr.innerHTML = rowData.map((val, i) => i === 7 ? `<td style="text-align: center;" data-label="${labels[i]}">${val}</td>` : `<td data-label="${labels[i]}">${val}</td>`).join('');
-            tbody.appendChild(tr);
-          }
-
-          // Add monthly total row
-          const monthName = getMonthName(monthKey);
-          let monthGrandTotal = 0;
-          const monthRowData = [`${monthName} Total`];
           for (const locId of locOrder) {
-            monthRowData.push(formatMoney(monthByLocation[locId].square), formatMoney(monthByLocation[locId].cash));
-            monthGrandTotal += monthByLocation[locId].square + monthByLocation[locId].cash;
+            const byDate = data[locId] || {};
+            const day = byDate[date] || { credit: 0, cash: 0, orders: 0 };
+            const credit = day.credit || 0;
+            const cash = day.cash || 0;
+            rowData.push(formatMoney(credit), formatMoney(cash));
+            grandTotal += credit + cash;
+            totalOrders += day.orders || 0;
           }
-          monthRowData.push(formatMoney(monthGrandTotal));
+          rowData.push(formatMoney(grandTotal));
 
-          const monthTr = document.createElement('tr');
-          monthTr.className = 'monthly-total';
-          monthTr.innerHTML = monthRowData.map((val, i) => i === 7 ? `<td style="text-align: center;" data-label="${labels[i]}">${val}</td>` : `<td data-label="${labels[i]}">${val}</td>`).join('');
-          tbody.appendChild(monthTr);
+          // Include order count in date cell
+          rowData[0] = `${rowData[0]} (${totalOrders})`;
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = rowData.map((val, i) => `<td data-label="${labels[i]}">${val}</td>`).join('');
+          tbody.appendChild(tr);
         }
-
-        // Add grand total row
-        const grandRowData = ['Grand Total'];
-        let overallTotal = 0;
-        for (const locId of locOrder) {
-          grandRowData.push(formatMoney(overallByLocation[locId].square), formatMoney(overallByLocation[locId].cash));
-          overallTotal += overallByLocation[locId].square + overallByLocation[locId].cash;
-        }
-        grandRowData.push(formatMoney(overallTotal));
-
-        const grandTr = document.createElement('tr');
-        grandTr.className = 'grand-total';
-        grandTr.innerHTML = grandRowData.map((val, i) => i === 7 ? `<td style="text-align: center;" data-label="${labels[i]}">${val}</td>` : `<td data-label="${labels[i]}">${val}</td>`).join('');
-        tbody.appendChild(grandTr);
       }
 
       function renderAll(data, startISO, endISO) {
@@ -674,7 +674,7 @@ if (file_exists($csvFile)) {
           for (const date of Object.keys(raw[locId])) {
             const day = raw[locId][date];
             processed[locId][date] = {
-              square: Math.round(day.square * 100),
+              credit: Math.round(day.credit * 100),
               cash: Math.round(day.cash * 100),
               orders: day.orders
             };
