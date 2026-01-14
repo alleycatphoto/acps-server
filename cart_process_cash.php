@@ -198,22 +198,41 @@ if ($paymentType === 'square') {
 // --- CLEAR CART ---
 $Cart->clearCart();
 
-// --- LOG TRANSACTION TO CSV ---
+// --- LOG TRANSACTION TO DAILY TOTALS CSV ---
 $csvFile = __DIR__ . '/../sales/transactions.csv';
-$logData = [
-    $locationName,
-    date("Y-m-d H:i:s"),
-    date("Y/m/d"),
-    $paymentType,
-    $txtAmt,
-    $orderID
-];
-$csvLine = implode(',', array_map(function($v) { return '"' . str_replace('"', '""', $v) . '"'; }, $logData)) . "\n";
-if (!file_exists($csvFile)) {
-    $header = "Location,Time,Order Date,Payment Type,Amount,Order Number\n";
-    file_put_contents($csvFile, $header);
+$today = date("m/d/Y");
+$location = $locationName;
+$paymentTypeDisplay = $paymentType === 'cash' ? 'Cash' : 'Credit';
+
+// Read existing data
+$data = [];
+if (file_exists($csvFile)) {
+    $handle = fopen($csvFile, 'r');
+    $header = fgetcsv($handle);
+    while (($row = fgetcsv($handle)) !== false) {
+        $key = $row[0] . '|' . $row[1]; // Location|Date
+        $data[$key] = $row;
+    }
+    fclose($handle);
 }
-file_put_contents($csvFile, $csvLine, FILE_APPEND);
+
+// Update or create entry for today
+$key = $location . '|' . $today;
+if (!isset($data[$key])) {
+    $data[$key] = [$location, $today, 0, $paymentTypeDisplay, 0];
+}
+$data[$key][2] += 1; // Orders
+$data[$key][4] += $txtAmt; // Amount
+
+// Write back to CSV
+$fp = fopen($csvFile, 'w');
+fputcsv($fp, ['Location', 'Order Date', 'Orders', 'Payment Type', 'Amount']);
+foreach ($data as $row) {
+    // Format amount with $
+    $row[4] = '$' . number_format($row[4], 2);
+    fputcsv($fp, $row);
+}
+fclose($fp);
 
 // Determine UI Display
 $isApproved = ($paymentType === 'square');
