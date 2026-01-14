@@ -66,8 +66,8 @@ function parseReceipt($filePath) {
 
     foreach ($lines as $line) {
         $line = trim($line);
-        // Only match exact format: "CASH ORDER: $24.00 PAID"
-        if (preg_match('/^CASH ORDER:\s*\$([0-9]+\.[0-9]{2})\s*PAID$/', $line, $matches)) {
+        // Only match exact format: "CASH ORDER: ($24.00) PAID"
+        if (preg_match('/^CASH ORDER:\s*\(\$([0-9]+\.[0-9]{2})\)\s*PAID$/', $line, $matches)) {
             $cashAmounts[] = (float)$matches[1];
         }
     }

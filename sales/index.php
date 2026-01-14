@@ -6,7 +6,7 @@ $locMap = [
     // Add more as needed
 ];
 
-// Read transactions CSV and build data
+// Read current transactions CSV (daily aggregates or legacy individual)
 $csvFile = __DIR__ . '/transactions.csv';
 $data = [];
 if (file_exists($csvFile)) {
@@ -15,18 +15,35 @@ if (file_exists($csvFile)) {
     while (($row = fgetcsv($handle)) !== false) {
         $locName = trim($row[0]);
         $locId = $locMap[$locName] ?? $locName;
-        $date = date('Y-m-d', strtotime(trim($row[1])));
-        $type = trim($row[3]);
-        $amount = (float)trim($row[4]);
+        
+        if (count($row) == 6) {
+            // Legacy format: Location,Time,Order Date,Payment Type,Amount,Order Number
+            $date = date('Y-m-d', strtotime(trim($row[1])));
+            $type = trim($row[3]);
+            $amount = (float)trim($row[4]);
+            $orders = 1;
+        } else {
+            // New format: Location,Order Date,Orders,Payment Type,Amount
+            $dateParts = explode('/', trim($row[1]));
+            if (count($dateParts) === 3) {
+                $date = sprintf('%04d-%02d-%02d', $dateParts[2], $dateParts[0], $dateParts[1]);
+            } else {
+                continue;
+            }
+            $orders = (int)trim($row[2]);
+            $type = strtolower(trim($row[3]));
+            $amount = (float)str_replace(['$', ','], '', trim($row[4]));
+        }
+        
         if (!isset($data[$locId])) $data[$locId] = [];
         if (!isset($data[$locId][$date])) $data[$locId][$date] = ['credit' => 0, 'cash' => 0, 'orders' => 0];
-        // cash orders go to cash, everything else goes to credit
-        if ($type === 'cash') {
+        
+        if (strtolower($type) === 'cash') {
             $data[$locId][$date]['cash'] += $amount;
         } else {
             $data[$locId][$date]['credit'] += $amount;
         }
-        $data[$locId][$date]['orders'] += 1;
+        $data[$locId][$date]['orders'] += $orders;
     }
     fclose($handle);
 }
