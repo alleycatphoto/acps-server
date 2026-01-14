@@ -1,144 +1,2083 @@
 Location,Time,"Order Date","Payment Type",Amount,"Order Number"
-"Test Location","2026-01-13 15:45:22","January 13, 2026, 4:34 am",cash,23,1000
-"Test Location","2025-12-28 11:12:55","December 28, 2025, 11:12 am",credit,26.52,1000
-"Test Location","2026-01-13 15:49:05","January 13, 2026, 8:49 pm",square,12.15,1001
-"Test Location","2025-12-28 11:19:31","December 28, 2025, 11:19 am",credit,49.72,1001
-"Test Location","2026-01-13 16:21:29","January 13, 2026, 9:21 pm",square,12.15,1002
-"Test Location","2025-12-28 11:27:51","December 28, 2025, 11:27 am",credit,38.67,1002
-"Test Location","2026-01-13 16:29:19","January 13, 2026, 9:29 pm",square,12.15,1003
-"Test Location","2025-12-28 11:33:12","December 28, 2025, 11:33 am",credit,66.29,1003
-"Test Location","2025-12-28 11:34:46","December 28, 2025, 11:34 am",credit,84.62,1004
-"Test Location","2025-12-28 11:36:14","December 28, 2025, 11:36 am",credit,46.4,1005
-"Test Location","2025-12-28 11:37:55","December 28, 2025, 11:37 am",cash,24,1006
-"Test Location","2025-12-28 11:39:45","December 28, 2025, 11:39 am",credit,61.87,1007
-"Test Location","2025-12-28 11:42:48","December 28, 2025, 11:42 am",credit,33.15,1008
-"Test Location","2025-12-28 11:44:36","December 28, 2025, 11:44 am",credit,38.67,1009
-"Test Location","2025-12-28 11:45:52","December 28, 2025, 11:45 am",credit,17.68,1010
-"Test Location","2025-12-28 11:46:33","December 28, 2025, 11:46 am",credit,26.52,1011
-"Test Location","2025-12-28 11:47:21","December 28, 2025, 11:47 am",credit,38.67,1012
-"Test Location","2025-12-28 11:47:58","December 28, 2025, 11:47 am",credit,17.68,1013
-"Test Location","2025-12-28 11:49:06","December 28, 2025, 11:49 am",credit,54.14,1014
-"Test Location","2025-12-28 11:53:06","December 28, 2025, 11:53 am",credit,38.67,1015
-"Test Location","2025-12-28 11:56:01","December 28, 2025, 11:54 am",cash,33,1016
-"Test Location","2025-12-28 11:54:58","December 28, 2025, 11:54 am",credit,55.24,1017
-"Test Location","2025-12-28 11:55:01","December 28, 2025, 11:55 am",credit,17.68,1018
-"Test Location","2025-12-28 11:56:05","December 28, 2025, 11:56 am",credit,36.46,1019
-"Test Location","2025-12-28 11:56:26","December 28, 2025, 11:56 am",credit,54.14,1020
-"Test Location","2025-12-28 11:59:00","December 28, 2025, 11:59 am",credit,17.68,1021
-"Test Location","2025-12-28 11:59:20","December 28, 2025, 11:59 am",credit,27.62,1022
-"Test Location","2025-12-28 12:00:11","December 28, 2025, 12:00 pm",credit,66.29,1023
-"Test Location","2025-12-28 12:01:39","December 28, 2025, 12:01 pm",credit,38.67,1024
-"Test Location","2025-12-28 12:02:59","December 28, 2025, 12:01 pm",cash,11,1025
-"Test Location","2025-12-28 12:03:41","December 28, 2025, 12:03 pm",credit,54.14,1026
-"Test Location","2025-12-28 12:04:22","December 28, 2025, 12:04 pm",credit,38.67,1027
-"Test Location","2025-12-28 12:04:55","December 28, 2025, 12:04 pm",credit,45.3,1028
-"Test Location","2025-12-28 12:06:03","December 28, 2025, 12:06 pm",credit,54.14,1029
-"Test Location","2025-12-28 12:08:56","December 28, 2025, 12:08 pm",credit,8.84,1030
-"Test Location","2025-12-28 12:14:25","December 28, 2025, 12:14 pm",credit,85.07,1031
-"Test Location","2025-12-28 12:20:52","December 28, 2025, 12:20 pm",credit,46.4,1032
-"Test Location","2025-12-28 13:27:30","December 28, 2025, 1:27 pm",credit,18.3,1033
-"Test Location","2025-12-28 13:32:00","December 28, 2025, 1:31 pm",cash,25,1034
-"Test Location","2025-12-28 13:32:46","December 28, 2025, 1:31 pm",cash,8,1035
-"Test Location","2025-12-28 13:31:49","December 28, 2025, 1:31 pm",credit,22.1,1036
-"Test Location","2025-12-28 13:34:02","December 28, 2025, 1:34 pm",credit,114.91,1037
-"Test Location","2025-12-28 13:35:13","December 28, 2025, 1:35 pm",credit,17.68,1038
-"Test Location","2025-12-28 13:36:16","December 28, 2025, 1:36 pm",credit,14.2,1039
-"Test Location","2025-12-28 13:38:48","December 28, 2025, 1:37 pm",cash,35,1040
-"Test Location","2025-12-28 13:38:35","December 28, 2025, 1:38 pm",credit,61.87,1041
-"Test Location","2025-12-28 13:40:31","December 28, 2025, 1:39 pm",cash,40,1042
-"Test Location","2025-12-28 13:40:42","December 28, 2025, 1:40 pm",credit,22.1,1043
-"Test Location","2025-12-28 13:44:35","December 28, 2025, 1:44 pm",credit,17.68,1044
-"Test Location","2025-12-28 13:46:08","December 28, 2025, 1:45 pm",cash,25,1045
-"Test Location","2025-12-28 13:48:29","December 28, 2025, 1:48 pm",credit,13.26,1046
-"Test Location","2025-12-28 13:51:28","December 28, 2025, 1:50 pm",cash,49,1047
-"Test Location","2025-12-28 13:52:05","December 28, 2025, 1:50 pm",cash,25,1048
-"Test Location","2025-12-28 13:51:00","December 28, 2025, 1:51 pm",credit,27.62,1049
-"Test Location","2025-12-28 13:51:00","December 28, 2025, 1:51 pm",credit,12.15,1050
-"Test Location","2025-12-28 13:51:08","December 28, 2025, 1:51 pm",credit,12.15,1051
-"Test Location","2025-12-28 13:52:51","December 28, 2025, 1:52 pm",credit,35.36,1052
-"Test Location","2025-12-28 13:54:14","December 28, 2025, 1:54 pm",credit,27.62,1053
-"Test Location","2025-12-28 13:54:21","December 28, 2025, 1:54 pm",credit,61.87,1054
-"Test Location","2025-12-28 13:55:04","December 28, 2025, 1:55 pm",credit,38.67,1055
-"Test Location","2025-12-28 13:57:39","December 28, 2025, 1:57 pm",credit,27.62,1056
-"Test Location","2025-12-28 13:58:27","December 28, 2025, 1:58 pm",credit,33.15,1057
-"Test Location","2025-12-28 14:00:42","December 28, 2025, 2:00 pm",credit,8.84,1058
-"Test Location","2025-12-28 14:01:38","December 28, 2025, 2:01 pm",credit,27.62,1059
-"Test Location","2025-12-28 14:27:49","December 28, 2025, 2:27 pm",credit,46.4,1060
-"Test Location","2025-12-28 14:50:27","December 28, 2025, 2:50 pm",credit,12.15,1061
-"Test Location","2025-12-28 14:54:00","December 28, 2025, 2:54 pm",credit,34.25,1062
-"Test Location","2025-12-28 14:55:50","December 28, 2025, 2:55 pm",credit,8.84,1063
-"Test Location","2025-12-28 15:25:33","December 28, 2025, 3:25 pm",credit,59.66,1064
-"Test Location","2025-12-28 15:26:49","December 28, 2025, 3:25 pm",cash,25,1065
-"Test Location","2025-12-28 15:29:07","December 28, 2025, 3:28 pm",cash,25,1066
-"Test Location","2025-12-28 15:29:18","December 28, 2025, 3:28 pm",cash,33,1067
-"Test Location","2025-12-28 15:38:54","December 28, 2025, 3:38 pm",cash,39,1068
-"Test Location","2025-12-28 15:39:22","December 28, 2025, 3:39 pm",credit,8.84,1069
-"Test Location","2025-12-28 15:41:01","December 28, 2025, 3:40 pm",cash,30,1070
-"Test Location","2025-12-28 15:44:08","December 28, 2025, 3:44 pm",credit,26.52,1071
-"Test Location","2025-12-28 15:44:57","December 28, 2025, 3:44 pm",credit,27.62,1072
-"Test Location","2025-12-28 15:48:20","December 28, 2025, 3:48 pm",credit,30.94,1073
-"Test Location","2025-12-28 15:51:52","December 28, 2025, 3:51 pm",credit,69.61,1074
-"Test Location","2025-12-28 15:57:41","December 28, 2025, 3:57 pm",credit,54.14,1075
-"Test Location","2025-12-28 15:59:14","December 28, 2025, 3:58 pm",cash,24.84,1076
-"Test Location","2025-12-28 15:59:50","December 28, 2025, 3:58 pm",cash,35,1077
-"Test Location","2025-12-28 16:00:43","December 28, 2025, 3:58 pm",cash,30,1078
-"Test Location","2025-12-28 16:00:06","December 28, 2025, 3:58 pm",cash,44.35,1079
-"Test Location","2025-12-28 15:59:53","December 28, 2025, 3:59 pm",credit,16.57,1080
-"Test Location","2025-12-28 16:00:58","December 28, 2025, 4:00 pm",credit,33.15,1081
-"Test Location","2025-12-28 16:02:14","December 28, 2025, 4:02 pm",credit,13.26,1082
-"Test Location","2025-12-28 16:06:26","December 28, 2025, 4:06 pm",credit,13.26,1083
-"Test Location","2025-12-28 19:40:06","December 28, 2025, 4:09 pm",cash,70,1084
-"Test Location","2025-12-28 16:09:48","December 28, 2025, 4:09 pm",credit,38.67,1085
-"Test Location","2025-12-28 16:11:25","December 28, 2025, 4:09 pm",cash,25,1086
-"Test Location","2025-12-28 16:16:38","December 28, 2025, 4:16 pm",credit,27.62,1087
-"Test Location","2025-12-28 16:18:27","December 28, 2025, 4:18 pm",credit,55.24,1088
-"Test Location","2025-12-28 16:19:32","December 28, 2025, 4:19 pm",credit,27.62,1089
-"Test Location","2025-12-28 16:29:49","December 28, 2025, 4:29 pm",cash,25,1090
-"Test Location","2025-12-28 16:58:16","December 28, 2025, 4:57 pm",cash,15,1091
-"Test Location","2025-12-28 17:12:58","December 28, 2025, 5:12 pm",credit,22.1,1092
-"Test Location","2025-12-28 17:18:19","December 28, 2025, 5:18 pm",credit,38.67,1093
-"Test Location","2025-12-28 17:20:46","December 28, 2025, 5:20 pm",credit,45.3,1094
-"Test Location","2025-12-28 17:23:05","December 28, 2025, 5:21 pm",cash,30,1095
-"Test Location","2025-12-28 17:22:23","December 28, 2025, 5:22 pm",credit,26.52,1096
-"Test Location","2025-12-28 17:24:44","December 28, 2025, 5:24 pm",credit,26.52,1097
-"Test Location","2025-12-28 17:26:34","December 28, 2025, 5:25 pm",cash,11,1098
-"Test Location","2025-12-28 17:29:48","December 28, 2025, 5:29 pm",credit,27.62,1099
-"Test Location","2025-12-28 17:32:48","December 28, 2025, 5:32 pm",credit,16.57,1100
-"Test Location","2025-12-28 17:36:55","December 28, 2025, 5:36 pm",credit,8.84,1101
-"Test Location","2025-12-28 17:40:51","December 28, 2025, 5:40 pm",cash,12,1102
-"Test Location","2025-12-28 17:49:16","December 28, 2025, 5:48 pm",cash,16,1103
-"Test Location","2025-12-28 17:49:07","December 28, 2025, 5:49 pm",credit,46.4,1104
-"Test Location","2025-12-28 17:49:33","December 28, 2025, 5:49 pm",credit,27.62,1105
-"Test Location","2025-12-28 17:50:31","December 28, 2025, 5:50 pm",credit,26.52,1106
-"Test Location","2025-12-28 17:52:39","December 28, 2025, 5:52 pm",credit,33.15,1107
-"Test Location","2025-12-28 17:57:04","December 28, 2025, 5:57 pm",credit,13.26,1108
-"Test Location","2025-12-28 17:59:40","December 28, 2025, 5:59 pm",credit,38.67,1109
-"Test Location","2025-12-28 18:01:03","December 28, 2025, 6:01 pm",credit,26.52,1110
-"Test Location","2025-12-28 18:02:34","December 28, 2025, 6:02 pm",credit,38.67,1111
-"Test Location","2025-12-28 18:07:14","December 28, 2025, 6:07 pm",credit,27.62,1112
-"Test Location","2025-12-28 18:13:49","December 28, 2025, 6:13 pm",credit,67.4,1113
-"Test Location","2025-12-28 18:15:25","December 28, 2025, 6:15 pm",credit,61.87,1114
-"Test Location","2025-12-28 19:07:15","December 28, 2025, 7:05 pm",cash,36,1115
-"Test Location","2025-12-28 19:14:28","December 28, 2025, 7:14 pm",credit,38.67,1116
-"Test Location","2025-12-28 19:16:14","December 28, 2025, 7:16 pm",credit,17.68,1117
-"Test Location","2025-12-28 19:20:17","December 28, 2025, 7:20 pm",credit,26.52,1118
-"Test Location","2025-12-28 19:22:33","December 28, 2025, 7:22 pm",credit,27.62,1119
-"Test Location","2025-12-28 19:25:51","December 28, 2025, 7:25 pm",credit,37.74,1120
-"Test Location","2025-12-28 19:26:54","December 28, 2025, 7:26 pm",credit,27.62,1121
-"Test Location","2025-12-28 19:29:24","December 28, 2025, 7:29 pm",credit,48.61,1122
-"Test Location","2025-12-28 19:33:18","December 28, 2025, 7:33 pm",credit,27.62,1123
-"Test Location","2025-12-28 19:37:03","December 28, 2025, 7:35 pm",cash,70,1124
-"Test Location","2025-12-28 19:38:45","December 28, 2025, 7:38 pm",credit,12.15,1125
-"Test Location","2025-12-28 19:40:08","December 28, 2025, 7:40 pm",credit,48.61,1126
-"Test Location","2025-12-28 19:42:42","December 28, 2025, 7:42 pm",credit,64.08,1127
-"Test Location","2025-12-28 19:45:15","December 28, 2025, 7:45 pm",credit,16.57,1128
-"Test Location","2025-12-28 19:50:57","December 28, 2025, 7:50 pm",credit,13.26,1129
-"Test Location","2025-12-28 19:51:49","December 28, 2025, 7:51 pm",credit,35.36,1130
-"Test Location","2025-12-28 19:54:06","December 28, 2025, 7:52 pm",cash,35,1131
-"Test Location","2025-12-28 19:54:11","December 28, 2025, 7:54 pm",credit,66.29,1132
-"Test Location","2025-12-28 19:55:09","December 28, 2025, 7:55 pm",credit,35.36,1133
-"Test Location","2025-12-28 20:00:08","December 28, 2025, 7:59 pm",cash,25,1134
-"Test Location","2025-12-28 20:01:31","December 28, 2025, 8:01 pm",credit,61.87,1135
-"Test Location","2025-12-28 20:07:03","December 28, 2025, 8:02 pm",cash,25,1136
-"Test Location","2025-12-28 20:06:59","December 28, 2025, 8:06 pm",credit,61.87,1137
-"Test Location","2025-12-28 20:09:33","December 28, 2025, 8:09 pm",credit,61.87,1138
+Hawksnest,"2026-01-13 11:08:13","January 13, 2026, 11:08 am",credit,27.62,1000
+Hawksnest,"2026-01-12 11:16:23","January 12, 2026, 11:16 am",cash,30,1000
+Hawksnest,"2026-01-06 11:36:32","January 6, 2026, 11:36 am",credit,38.67,1000
+Hawksnest,"2026-01-05 11:36:14","January 5, 2026, 11:36 am",credit,49.72,1000
+Hawksnest,"2026-01-04 11:08:57","January 4, 2026, 11:08 am",credit,17.68,1000
+Hawksnest,"2026-01-03 10:54:30","January 3, 2026, 10:54 am",credit,26.52,1000
+Hawksnest,"2026-01-02 11:17:59","January 2, 2026, 11:17 am",credit,54.14,1000
+Hawksnest,"2026-01-01 15:13:52","January 1, 2026, 3:13 pm",credit,26.52,1000
+Hawksnest,"2025-12-31 11:10:18","December 31, 2025, 11:07 am",cash,12,1000
+Hawksnest,"2025-12-30 15:27:17","December 30, 2025, 3:27 pm",credit,17.68,1000
+Hawksnest,"2025-12-28 11:12:55","December 28, 2025, 11:12 am",credit,26.52,1000
+Hawksnest,"2025-12-27 11:03:22","December 27, 2025, 11:03 am",credit,26.52,1000
+Hawksnest,"2025-12-26 10:51:07","December 26, 2025, 10:51 am",credit,26.52,1000
+Hawksnest,"2025-12-24 11:06:14","December 24, 2025, 11:06 am",credit,38.67,1000
+Hawksnest,"2025-12-23 11:05:07","December 23, 2025, 11:05 am",credit,26.52,1000
+Hawksnest,"2025-12-22 11:15:30","December 22, 2025, 11:15 am",credit,36.46,1000
+Hawksnest,"2025-12-21 11:10:17","December 21, 2025, 11:10 am",credit,33.15,1000
+Hawksnest,"2025-12-20 11:44:29","December 20, 2025, 11:10 am",cash,16,1000
+Hawksnest,"2025-12-17 03:08:17","December 17, 2025, 3:08 am",credit,25.51,1000
+Hawksnest,"2025-12-16 11:25:14","December 16, 2025, 11:25 am",credit,147.51,1000
+Hawksnest,"2025-12-13 11:17:11","December 13, 2025, 11:17 am",credit,12.2,1000
+Hawksnest,"2025-12-12 11:19:55","December 12, 2025, 11:19 am",credit,116.46,1000
+Hawksnest,"2025-12-09 13:28:52","2025/12/09 13:28:52",credit,54.92,1000
+Hawksnest,"2025-12-05 11:41:17","2025/12/05 11:41:17",credit,8.79,1000
+Hawksnest,"2025-11-24 13:26:03","2025/11/24 13:26:03",credit,13.18,1000
+Hawksnest,"2025-11-23 12:16:42","2025/11/23 12:16:42",credit,17.58,1000
+Hawksnest,"2025-11-15 11:26:06","2025/11/15 11:26:06",credit,26.36,1000
+Hawksnest,"2025-11-09 13:34:12","2025/11/09 13:34:12",credit,13.18,1000
+Hawksnest,"2025-11-08 10:52:36","2025/11/08 10:52:36",credit,61.51,1000
+Hawksnest,"2025-11-07 13:10:46","2025/11/07 13:10:46",credit,27.46,1000
+Hawksnest,"2025-11-06 12:23:13","2025/11/06 12:23:12",credit,27.46,1000
+Hawksnest,"2025-11-04 10:40:05","2025/11/04 10:40:05",credit,38.45,1000
+Hawksnest,"2025-10-25 11:17:00","2025/10/25 11:17:00",credit,13.18,1000
+Hawksnest,"2025-10-21 11:49:39","2025/10/21 11:49:39",credit,38.45,1000
+Hawksnest,"2025-10-19 11:28:13","2025/10/19 11:28:13",credit,13.18,1000
+Hawksnest,"2025-10-18 11:14:33","2025/10/18 11:14:32",credit,27.46,1000
+Hawksnest,"2025-10-16 11:25:53","2025/10/16 11:25:52",credit,38.45,1000
+Hawksnest,"2026-01-13 11:38:46","January 13, 2026, 11:38 am",credit,30.94,1001
+Hawksnest,"2026-01-12 11:18:41","January 12, 2026, 11:17 am",cash,45,1001
+Hawksnest,"2026-01-09 10:48:05","January 9, 2026, 10:47 am",cash,30,1001
+Hawksnest,"2026-01-06 11:58:13","January 6, 2026, 11:56 am",cash,42,1001
+Hawksnest,"2026-01-05 11:37:09","January 5, 2026, 11:37 am",credit,46.4,1001
+Hawksnest,"2026-01-04 11:16:06","January 4, 2026, 11:16 am",credit,38.67,1001
+Hawksnest,"2026-01-03 11:05:18","January 3, 2026, 11:05 am",credit,33.15,1001
+Hawksnest,"2026-01-02 11:25:07","January 2, 2026, 11:23 am",cash,15,1001
+Hawksnest,"2026-01-01 15:21:55","January 1, 2026, 3:21 pm",credit,77.34,1001
+Hawksnest,"2025-12-31 11:10:22","December 31, 2025, 11:07 am",cash,12,1001
+Hawksnest,"2025-12-30 15:30:50","December 30, 2025, 3:30 pm",credit,49.72,1001
+Hawksnest,"2025-12-28 11:19:31","December 28, 2025, 11:19 am",credit,49.72,1001
+Hawksnest,"2025-12-27 11:14:36","December 27, 2025, 11:13 am",cash,45,1001
+Hawksnest,"2025-12-26 11:07:53","December 26, 2025, 10:56 am",cash,8,1001
+Hawksnest,"2025-12-24 11:14:38","December 24, 2025, 11:14 am",credit,38.67,1001
+Hawksnest,"2025-12-23 11:08:32","December 23, 2025, 11:08 am",credit,45.3,1001
+Hawksnest,"2025-12-22 11:19:11","December 22, 2025, 11:19 am",credit,36.46,1001
+Hawksnest,"2025-12-21 11:12:39","December 21, 2025, 11:12 am",credit,27.62,1001
+Hawksnest,"2025-12-20 11:24:45","December 20, 2025, 11:17 am",cash,60,1001
+Hawksnest,"2025-12-17 03:29:01","December 17, 2025, 3:29 am",credit,25.51,1001
+Hawksnest,"2025-12-16 11:54:09","December 16, 2025, 11:53 am",cash,16,1001
+Hawksnest,"2025-12-13 11:17:39","December 13, 2025, 11:17 am",credit,26.62,1001
+Hawksnest,"2025-12-12 11:29:34","December 12, 2025, 11:29 am",credit,55.46,1001
+Hawksnest,"2025-12-09 13:31:43","2025/12/09 13:31:43",credit,27.46,1001
+Hawksnest,"2025-12-06 10:57:28","2025/12/06 10:57:28",credit,29.92,1001
+Hawksnest,"2025-12-05 11:55:26","2025/12/05 11:55:26",credit,53.82,1001
+Hawksnest,"2025-11-24 13:31:37","2025/11/24 13:31:37",credit,38.45,1001
+Hawksnest,"2025-11-23 14:13:33","2025/11/23 14:13:33",credit,38.45,1001
+Hawksnest,"2025-11-15 11:45:01","2025/11/15 11:45:01",credit,16.48,1001
+Hawksnest,"2025-11-09 13:36:01","2025/11/09 13:36:01",credit,13.18,1001
+Hawksnest,"2025-11-07 13:13:31","2025/11/07 13:13:31",credit,26.36,1001
+Hawksnest,"2025-11-03 13:30:29","2025/11/03 13:30:29",credit,34.89,1001
+Hawksnest,"2025-11-02 11:53:43","2025/11/02 11:53:43",credit,27.46,1001
+Hawksnest,"2025-11-01 10:55:33","2025/11/01 10:55:33",credit,27.46,1001
+Hawksnest,"2025-10-26 13:18:11","2025/10/26 13:18:11",credit,17.58,1001
+Hawksnest,"2025-10-25 12:58:04","2025/10/25 12:58:04",credit,26.36,1001
+Hawksnest,"2025-10-24 11:10:55","2025/10/24 11:10:55",credit,36.25,1001
+Hawksnest,"2025-10-21 11:56:36","2025/10/21 11:56:36",credit,38.45,1001
+Hawksnest,"2025-10-19 11:30:47","2025/10/19 11:30:47",credit,38.45,1001
+Hawksnest,"2025-10-16 11:27:30","2025/10/16 11:27:29",credit,38.45,1001
+Hawksnest,"2026-01-13 11:53:30","January 13, 2026, 11:53 am",credit,61.87,1002
+Hawksnest,"2026-01-12 11:23:03","January 12, 2026, 11:23 am",credit,54.14,1002
+Hawksnest,"2026-01-09 11:03:43","January 9, 2026, 11:03 am",credit,17.68,1002
+Hawksnest,"2026-01-06 11:58:29","January 6, 2026, 11:57 am",cash,24,1002
+Hawksnest,"2026-01-05 11:39:53","January 5, 2026, 11:38 am",cash,25,1002
+Hawksnest,"2026-01-04 11:20:56","January 4, 2026, 11:20 am",credit,8.84,1002
+Hawksnest,"2026-01-03 11:08:40","January 3, 2026, 11:08 am",credit,49.72,1002
+Hawksnest,"2026-01-02 11:24:12","January 2, 2026, 11:24 am",credit,22.1,1002
+Hawksnest,"2026-01-01 15:30:59","January 1, 2026, 3:29 pm",cash,91,1002
+Hawksnest,"2025-12-31 11:10:25","December 31, 2025, 11:07 am",cash,12,1002
+Hawksnest,"2025-12-30 15:31:13","December 30, 2025, 3:31 pm",credit,66.29,1002
+Hawksnest,"2025-12-28 11:27:51","December 28, 2025, 11:27 am",credit,38.67,1002
+Hawksnest,"2025-12-27 11:13:45","December 27, 2025, 11:13 am",credit,26.52,1002
+Hawksnest,"2025-12-26 11:05:35","December 26, 2025, 10:59 am",cash,45,1002
+Hawksnest,"2025-12-24 11:16:19","December 24, 2025, 11:16 am",credit,16.57,1002
+Hawksnest,"2025-12-23 11:08:44","December 23, 2025, 11:08 am",credit,66.29,1002
+Hawksnest,"2025-12-22 11:29:18","December 22, 2025, 11:29 am",credit,26.52,1002
+Hawksnest,"2025-12-21 11:19:08","December 21, 2025, 11:17 am",cash,25.88,1002
+Hawksnest,"2025-12-20 11:30:20","December 20, 2025, 11:30 am",credit,26.52,1002
+Hawksnest,"2025-12-17 11:59:54","December 17, 2025, 11:59 am",credit,48.4,1002
+Hawksnest,"2025-12-16 12:26:00","December 16, 2025, 12:26 pm",credit,27.73,1002
+Hawksnest,"2025-12-13 11:18:55","December 13, 2025, 11:18 am",credit,49.91,1002
+Hawksnest,"2025-12-12 11:29:40","December 12, 2025, 11:29 am",credit,33.27,1002
+Hawksnest,"2025-12-07 11:46:30","2025/12/07 11:46:30",credit,34.05,1002
+Hawksnest,"2025-12-06 11:10:24","2025/12/06 11:10:24",credit,17.58,1002
+Hawksnest,"2025-12-05 11:57:01","2025/12/05 11:57:01",credit,27.46,1002
+Hawksnest,"2025-11-09 13:38:39","2025/11/09 13:38:39",credit,16.48,1002
+Hawksnest,"2025-11-08 11:12:56","2025/11/08 11:12:56",credit,47.23,1002
+Hawksnest,"2025-11-07 13:18:20","2025/11/07 13:18:20",credit,16.48,1002
+Hawksnest,"2025-11-03 13:37:54","2025/11/03 13:37:54",credit,46.14,1002
+Hawksnest,"2025-11-01 13:01:40","2025/11/01 13:01:39",credit,38.45,1002
+Hawksnest,"2025-10-26 13:19:44","2025/10/26 13:19:44",credit,38.45,1002
+Hawksnest,"2025-10-24 13:44:59","2025/10/24 13:44:59",credit,49.43,1002
+Hawksnest,"2025-10-16 11:35:15","2025/10/16 11:35:15",credit,27.46,1002
+Hawksnest,"2026-01-13 11:57:30","January 13, 2026, 11:57 am",credit,61.87,1003
+Hawksnest,"2026-01-12 11:28:04","January 12, 2026, 11:27 am",cash,16,1003
+Hawksnest,"2026-01-09 11:09:22","January 9, 2026, 11:08 am",cash,46,1003
+Hawksnest,"2026-01-06 11:59:06","January 6, 2026, 11:57 am",cash,25,1003
+Hawksnest,"2026-01-05 11:42:01","January 5, 2026, 11:41 am",credit,26.52,1003
+Hawksnest,"2026-01-04 11:24:24","January 4, 2026, 11:24 am",credit,17.68,1003
+Hawksnest,"2026-01-03 11:19:57","January 3, 2026, 11:14 am",cash,66,1003
+Hawksnest,"2026-01-02 11:26:20","January 2, 2026, 11:26 am",credit,39.78,1003
+Hawksnest,"2026-01-01 15:31:31","January 1, 2026, 3:31 pm",credit,120.07,1003
+Hawksnest,"2025-12-31 11:10:28","December 31, 2025, 11:07 am",cash,12,1003
+Hawksnest,"2025-12-30 15:32:00","December 30, 2025, 3:31 pm",credit,16.57,1003
+Hawksnest,"2025-12-28 11:33:12","December 28, 2025, 11:33 am",credit,66.29,1003
+Hawksnest,"2025-12-27 11:15:14","December 27, 2025, 11:14 am",cash,25,1003
+Hawksnest,"2025-12-26 11:01:47","December 26, 2025, 11:01 am",credit,55.24,1003
+Hawksnest,"2025-12-24 11:18:33","December 24, 2025, 11:18 am",credit,17.68,1003
+Hawksnest,"2025-12-23 11:12:33","December 23, 2025, 11:12 am",credit,48.61,1003
+Hawksnest,"2025-12-22 11:35:08","December 22, 2025, 11:34 am",cash,16,1003
+Hawksnest,"2025-12-21 11:31:57","December 21, 2025, 11:31 am",credit,20.99,1003
+Hawksnest,"2025-12-20 11:31:46","December 20, 2025, 11:31 am",credit,17.68,1003
+Hawksnest,"2025-12-17 12:03:07","December 17, 2025, 12:03 pm",credit,16.64,1003
+Hawksnest,"2025-12-16 13:09:05","December 16, 2025, 1:09 pm",credit,27.73,1003
+Hawksnest,"2025-12-13 11:21:55","December 13, 2025, 11:21 am",credit,26.62,1003
+Hawksnest,"2025-12-12 11:35:51","December 12, 2025, 11:35 am",credit,46.58,1003
+Hawksnest,"2025-12-09 13:55:44","2025/12/09 13:55:44",credit,17.58,1003
+Hawksnest,"2025-12-07 11:49:42","2025/12/07 11:49:42",credit,54.92,1003
+Hawksnest,"2025-12-06 11:25:52","2025/12/06 11:25:52",credit,16.95,1003
+Hawksnest,"2025-11-09 14:51:01","2025/11/09 14:51:01",credit,38.45,1003
+Hawksnest,"2025-11-08 12:46:29","2025/11/08 12:46:29",credit,46.14,1003
+Hawksnest,"2025-11-07 13:23:33","2025/11/07 13:23:33",credit,27.46,1003
+Hawksnest,"2025-11-01 13:32:02","2025/11/01 13:32:02",credit,76.89,1003
+Hawksnest,"2025-10-25 13:55:50","2025/10/25 13:55:50",credit,38.45,1003
+Hawksnest,"2025-10-18 11:48:11","2025/10/18 11:48:11",credit,92.27,1003
+Hawksnest,"2025-10-17 11:35:00","2025/10/17 11:35:00",credit,38.45,1003
+Hawksnest,"2025-10-16 13:33:48","2025/10/16 13:33:48",credit,17.58,1003
+Hawksnest,"2026-01-13 13:18:42","January 13, 2026, 1:17 pm",cash,15,1004
+Hawksnest,"2026-01-12 11:30:51","January 12, 2026, 11:30 am",credit,38.67,1004
+Hawksnest,"2026-01-09 11:12:51","January 9, 2026, 11:11 am",cash,8,1004
+Hawksnest,"2026-01-06 13:33:58","January 6, 2026, 1:33 pm",credit,13.26,1004
+Hawksnest,"2026-01-05 11:42:34","January 5, 2026, 11:42 am",credit,45.3,1004
+Hawksnest,"2026-01-04 11:24:57","January 4, 2026, 11:24 am",credit,8.84,1004
+Hawksnest,"2026-01-03 11:40:37","January 3, 2026, 11:40 am",credit,38.67,1004
+Hawksnest,"2026-01-02 11:33:02","January 2, 2026, 11:33 am",credit,27.62,1004
+Hawksnest,"2026-01-01 15:36:00","January 1, 2026, 3:35 pm",credit,17.68,1004
+Hawksnest,"2025-12-31 11:10:30","December 31, 2025, 11:07 am",cash,12,1004
+Hawksnest,"2025-12-30 15:34:04","December 30, 2025, 3:34 pm",credit,27.62,1004
+Hawksnest,"2025-12-28 11:34:46","December 28, 2025, 11:34 am",credit,84.62,1004
+Hawksnest,"2025-12-27 11:20:46","December 27, 2025, 11:20 am",credit,27.62,1004
+Hawksnest,"2025-12-26 11:07:03","December 26, 2025, 11:05 am",cash,38,1004
+Hawksnest,"2025-12-24 11:23:32","December 24, 2025, 11:23 am",credit,46.4,1004
+Hawksnest,"2025-12-23 11:17:20","December 23, 2025, 11:17 am",credit,16.57,1004
+Hawksnest,"2025-12-22 11:34:43","December 22, 2025, 11:34 am",credit,27.62,1004
+Hawksnest,"2025-12-21 11:32:06","December 21, 2025, 11:32 am",credit,35.36,1004
+Hawksnest,"2025-12-20 11:33:14","December 20, 2025, 11:33 am",credit,13.26,1004
+Hawksnest,"2025-12-17 12:12:51","December 17, 2025, 12:12 pm",credit,27.73,1004
+Hawksnest,"2025-12-16 13:13:46","December 16, 2025, 1:13 pm",cash,11,1004
+Hawksnest,"2025-12-13 11:27:38","December 13, 2025, 11:27 am",credit,27.73,1004
+Hawksnest,"2025-12-12 11:47:33","December 12, 2025, 11:47 am",credit,54.35,1004
+Hawksnest,"2025-12-09 14:00:55","2025/12/09 14:00:55",credit,98.86,1004
+Hawksnest,"2025-12-07 11:53:51","2025/12/07 11:53:51",credit,27.46,1004
+Hawksnest,"2025-12-06 11:31:08","2025/12/06 11:31:08",credit,26.36,1004
+Hawksnest,"2025-12-05 12:36:39","2025/12/05 12:36:39",credit,8.79,1004
+Hawksnest,"2025-11-24 15:21:23","2025/11/24 15:21:23",credit,53.82,1004
+Hawksnest,"2025-11-15 15:07:19","2025/11/15 15:07:19",credit,27.46,1004
+Hawksnest,"2025-11-08 15:16:44","2025/11/08 15:16:44",credit,8.79,1004
+Hawksnest,"2025-11-01 14:23:15","2025/11/01 14:23:15",credit,13.18,1004
+Hawksnest,"2025-10-26 14:07:44","2025/10/26 14:07:44",credit,46.14,1004
+Hawksnest,"2025-10-25 14:12:16","2025/10/25 14:12:16",credit,38.45,1004
+Hawksnest,"2025-10-18 13:35:59","2025/10/18 13:35:59",credit,27.46,1004
+Hawksnest,"2025-10-16 13:35:47","2025/10/16 13:35:47",credit,53.82,1004
+Hawksnest,"2026-01-13 13:28:54","January 13, 2026, 1:20 pm",cash,8,1005
+Hawksnest,"2026-01-12 11:33:46","January 12, 2026, 11:33 am",credit,145.84,1005
+Hawksnest,"2026-01-09 11:23:52","January 9, 2026, 11:23 am",credit,49.72,1005
+Hawksnest,"2026-01-06 13:42:47","January 6, 2026, 1:42 pm",credit,27.62,1005
+Hawksnest,"2026-01-05 11:45:47","January 5, 2026, 11:45 am",credit,61.87,1005
+Hawksnest,"2026-01-04 11:36:49","January 4, 2026, 11:36 am",credit,26.52,1005
+Hawksnest,"2026-01-03 11:41:03","January 3, 2026, 11:41 am",credit,27.62,1005
+Hawksnest,"2026-01-02 11:44:41","January 2, 2026, 11:44 am",credit,54.14,1005
+Hawksnest,"2026-01-01 15:43:17","January 1, 2026, 3:37 pm",cash,42,1005
+Hawksnest,"2025-12-31 11:10:32","December 31, 2025, 11:07 am",cash,12,1005
+Hawksnest,"2025-12-30 15:35:43","December 30, 2025, 3:35 pm",credit,16.57,1005
+Hawksnest,"2025-12-28 11:36:14","December 28, 2025, 11:36 am",credit,46.4,1005
+Hawksnest,"2025-12-27 11:24:47","December 27, 2025, 11:24 am",cash,30,1005
+Hawksnest,"2025-12-26 11:12:10","December 26, 2025, 11:12 am",credit,26.52,1005
+Hawksnest,"2025-12-24 11:26:53","December 24, 2025, 11:26 am",credit,26.52,1005
+Hawksnest,"2025-12-23 11:18:27","December 23, 2025, 11:18 am",credit,33.15,1005
+Hawksnest,"2025-12-22 11:37:57","December 22, 2025, 11:37 am",credit,38.67,1005
+Hawksnest,"2025-12-21 11:33:43","December 21, 2025, 11:33 am",credit,8.84,1005
+Hawksnest,"2025-12-20 11:34:48","December 20, 2025, 11:34 am",cash,30,1005
+Hawksnest,"2025-12-17 13:44:51","December 17, 2025, 1:44 pm",credit,8.87,1005
+Hawksnest,"2025-12-16 13:22:51","December 16, 2025, 1:22 pm",credit,48.8,1005
+Hawksnest,"2025-12-13 11:34:22","December 13, 2025, 11:31 am",cash,132,1005
+Hawksnest,"2025-12-12 11:50:13","December 12, 2025, 11:47 am",cash,77,1005
+Hawksnest,"2025-12-06 11:34:03","2025/12/06 11:34:03",credit,53.82,1005
+Hawksnest,"2025-12-05 13:37:54","2025/12/05 13:37:54",credit,13.18,1005
+Hawksnest,"2025-11-24 15:23:23","2025/11/24 15:23:23",credit,84.58,1005
+Hawksnest,"2025-10-26 14:08:11","2025/10/26 14:08:11",credit,27.46,1005
+Hawksnest,"2025-10-25 15:35:06","2025/10/25 15:35:06",credit,8.79,1005
+Hawksnest,"2025-10-18 13:40:26","2025/10/18 13:40:26",credit,27.46,1005
+Hawksnest,"2026-01-13 13:33:54","January 13, 2026, 1:33 pm",square,35.36,1006
+Hawksnest,"2026-01-12 11:34:50","January 12, 2026, 11:34 am",credit,33.15,1006
+Hawksnest,"2026-01-09 11:25:57","January 9, 2026, 11:25 am",cash,16,1006
+Hawksnest,"2026-01-06 13:46:11","January 6, 2026, 1:46 pm",credit,27.62,1006
+Hawksnest,"2026-01-05 11:50:03","January 5, 2026, 11:50 am",credit,54.14,1006
+Hawksnest,"2026-01-04 11:37:58","January 4, 2026, 11:37 am",credit,27.62,1006
+Hawksnest,"2026-01-03 11:42:36","January 3, 2026, 11:41 am",cash,12.42,1006
+Hawksnest,"2026-01-02 11:48:19","January 2, 2026, 11:48 am",credit,38.67,1006
+Hawksnest,"2026-01-01 15:42:57","January 1, 2026, 3:40 pm",cash,25,1006
+Hawksnest,"2025-12-31 11:10:33","December 31, 2025, 11:07 am",cash,12,1006
+Hawksnest,"2025-12-30 15:38:59","December 30, 2025, 3:38 pm",credit,46.4,1006
+Hawksnest,"2025-12-28 11:37:55","December 28, 2025, 11:37 am",cash,24,1006
+Hawksnest,"2025-12-27 11:31:30","December 27, 2025, 11:31 am",credit,17.68,1006
+Hawksnest,"2025-12-26 11:12:53","December 26, 2025, 11:12 am",cash,40,1006
+Hawksnest,"2025-12-24 11:28:15","December 24, 2025, 11:28 am",credit,17.68,1006
+Hawksnest,"2025-12-23 11:28:13","December 23, 2025, 11:28 am",credit,36.46,1006
+Hawksnest,"2025-12-22 11:47:27","December 22, 2025, 11:47 am",credit,8.84,1006
+Hawksnest,"2025-12-21 11:35:19","December 21, 2025, 11:34 am",cash,36,1006
+Hawksnest,"2025-12-20 11:40:45","December 20, 2025, 11:40 am",credit,71.82,1006
+Hawksnest,"2025-12-17 13:46:18","December 17, 2025, 1:46 pm",credit,36.6,1006
+Hawksnest,"2025-12-16 13:23:29","December 16, 2025, 1:23 pm",credit,69.88,1006
+Hawksnest,"2025-12-13 11:38:11","December 13, 2025, 11:37 am",cash,25,1006
+Hawksnest,"2025-12-12 11:47:50","December 12, 2025, 11:47 am",credit,45.47,1006
+Hawksnest,"2025-12-09 14:42:44","2025/12/09 14:42:44",credit,43.94,1006
+Hawksnest,"2025-12-05 13:41:37","2025/12/05 13:41:37",credit,53.82,1006
+Hawksnest,"2025-10-26 14:08:31","2025/10/26 14:08:31",credit,17.58,1006
+Hawksnest,"2025-10-25 15:38:05","2025/10/25 15:38:05",credit,27.46,1006
+Hawksnest,"2025-10-18 13:49:03","2025/10/18 13:49:03",credit,36.25,1006
+Hawksnest,"2026-01-13 13:36:05","January 13, 2026, 1:35 pm",cash,25,1007
+Hawksnest,"2026-01-12 11:56:05","January 12, 2026, 11:38 am",cash,15,1007
+Hawksnest,"2026-01-09 11:27:03","January 9, 2026, 11:27 am",credit,24.31,1007
+Hawksnest,"2026-01-06 13:49:16","January 6, 2026, 1:49 pm",credit,8.84,1007
+Hawksnest,"2026-01-05 11:53:15","January 5, 2026, 11:53 am",credit,8.84,1007
+Hawksnest,"2026-01-04 11:41:02","January 4, 2026, 11:40 am",cash,28,1007
+Hawksnest,"2026-01-03 11:44:11","January 3, 2026, 11:42 am",cash,25,1007
+Hawksnest,"2026-01-02 11:49:23","January 2, 2026, 11:49 am",credit,13.26,1007
+Hawksnest,"2026-01-01 15:46:22","January 1, 2026, 3:45 pm",cash,46,1007
+Hawksnest,"2025-12-31 11:10:35","December 31, 2025, 11:07 am",cash,12,1007
+Hawksnest,"2025-12-30 15:39:07","December 30, 2025, 3:39 pm",credit,13.26,1007
+Hawksnest,"2025-12-28 11:39:45","December 28, 2025, 11:39 am",credit,61.87,1007
+Hawksnest,"2025-12-27 11:33:34","December 27, 2025, 11:33 am",credit,49.72,1007
+Hawksnest,"2025-12-26 11:24:27","December 26, 2025, 11:22 am",cash,32,1007
+Hawksnest,"2025-12-24 11:33:12","December 24, 2025, 11:33 am",credit,54.14,1007
+Hawksnest,"2025-12-23 11:28:53","December 23, 2025, 11:28 am",credit,38.67,1007
+Hawksnest,"2025-12-22 11:48:39","December 22, 2025, 11:47 am",cash,35,1007
+Hawksnest,"2025-12-21 11:38:53","December 21, 2025, 11:38 am",credit,46.4,1007
+Hawksnest,"2025-12-20 11:41:04","December 20, 2025, 11:41 am",credit,36.46,1007
+Hawksnest,"2025-12-17 13:47:23","December 17, 2025, 1:47 pm",credit,93.17,1007
+Hawksnest,"2025-12-16 13:32:35","December 16, 2025, 1:32 pm",credit,8.87,1007
+Hawksnest,"2025-12-13 11:37:04","December 13, 2025, 11:37 am",credit,17.75,1007
+Hawksnest,"2025-12-12 11:49:19","December 12, 2025, 11:49 am",credit,38.82,1007
+Hawksnest,"2025-12-09 14:57:05","2025/12/09 14:57:05",credit,35.15,1007
+Hawksnest,"2025-12-07 12:11:20","2025/12/07 12:11:20",credit,13.55,1007
+Hawksnest,"2025-12-06 11:42:47","2025/12/06 11:42:47",credit,8.79,1007
+Hawksnest,"2025-12-05 13:43:02","2025/12/05 13:43:02",credit,38.45,1007
+Hawksnest,"2025-10-17 13:28:46","2025/10/17 13:28:45",credit,38.45,1007
+Hawksnest,"2025-10-16 17:38:33","2025/10/16 17:38:33",credit,36.25,1007
+Hawksnest,"2026-01-13 13:46:51","January 13, 2026, 1:46 pm",cash,32,1008
+Hawksnest,"2026-01-12 11:40:23","January 12, 2026, 11:40 am",credit,13.26,1008
+Hawksnest,"2026-01-09 11:31:47","January 9, 2026, 11:31 am",cash,11,1008
+Hawksnest,"2026-01-06 13:55:09","January 6, 2026, 1:54 pm",cash,25,1008
+Hawksnest,"2026-01-05 11:54:40","January 5, 2026, 11:54 am",credit,36.46,1008
+Hawksnest,"2026-01-04 11:44:06","January 4, 2026, 11:44 am",credit,48.61,1008
+Hawksnest,"2026-01-03 11:44:12","January 3, 2026, 11:42 am",cash,8,1008
+Hawksnest,"2026-01-02 11:49:51","January 2, 2026, 11:49 am",credit,27.62,1008
+Hawksnest,"2026-01-01 15:47:55","January 1, 2026, 3:47 pm",credit,17.68,1008
+Hawksnest,"2025-12-31 11:10:38","December 31, 2025, 11:07 am",cash,12,1008
+Hawksnest,"2025-12-30 15:40:48","December 30, 2025, 3:40 pm",credit,8.84,1008
+Hawksnest,"2025-12-28 11:42:48","December 28, 2025, 11:42 am",credit,33.15,1008
+Hawksnest,"2025-12-27 11:33:47","December 27, 2025, 11:33 am",credit,13.26,1008
+Hawksnest,"2025-12-26 11:23:56","December 26, 2025, 11:23 am",credit,46.4,1008
+Hawksnest,"2025-12-24 11:34:45","December 24, 2025, 11:34 am",credit,30.94,1008
+Hawksnest,"2025-12-23 11:33:34","December 23, 2025, 11:33 am",credit,34.25,1008
+Hawksnest,"2025-12-22 11:50:48","December 22, 2025, 11:50 am",credit,46.4,1008
+Hawksnest,"2025-12-21 11:43:18","December 21, 2025, 11:43 am",credit,54.14,1008
+Hawksnest,"2025-12-20 11:41:20","December 20, 2025, 11:41 am",credit,27.62,1008
+Hawksnest,"2025-12-17 13:50:38","December 17, 2025, 1:50 pm",credit,8.87,1008
+Hawksnest,"2025-12-16 13:35:09","December 16, 2025, 1:33 pm",cash,8,1008
+Hawksnest,"2025-12-13 11:42:04","December 13, 2025, 11:42 am",credit,33.27,1008
+Hawksnest,"2025-12-12 11:50:59","December 12, 2025, 11:50 am",credit,17.75,1008
+Hawksnest,"2025-12-09 14:59:28","December 9, 2025, 2:59 pm",credit,20.87,1008
+Hawksnest,"2025-12-06 11:49:05","2025/12/06 11:49:05",credit,27.46,1008
+Hawksnest,"2025-12-05 13:47:52","2025/12/05 13:47:52",credit,27.46,1008
+Hawksnest,"2025-10-17 13:52:24","2025/10/17 13:52:24",credit,21.97,1008
+Hawksnest,"2025-10-16 17:39:43","2025/10/16 17:39:43",credit,27.46,1008
+Hawksnest,"2026-01-13 13:54:18","January 13, 2026, 1:53 pm",cash,25,1009
+Hawksnest,"2026-01-12 11:56:01","January 12, 2026, 11:55 am",cash,16,1009
+Hawksnest,"2026-01-09 11:33:57","January 9, 2026, 11:33 am",credit,49.72,1009
+Hawksnest,"2026-01-06 13:58:46","January 6, 2026, 1:58 pm",credit,17.68,1009
+Hawksnest,"2026-01-05 11:55:09","January 5, 2026, 11:55 am",credit,46.4,1009
+Hawksnest,"2026-01-04 11:50:03","January 4, 2026, 11:50 am",credit,37.74,1009
+Hawksnest,"2026-01-03 11:45:12","January 3, 2026, 11:45 am",credit,38.67,1009
+Hawksnest,"2026-01-02 11:52:27","January 2, 2026, 11:49 am",cash,20,1009
+Hawksnest,"2026-01-01 15:49:26","January 1, 2026, 3:49 pm",credit,55.24,1009
+Hawksnest,"2025-12-31 11:10:39","December 31, 2025, 11:07 am",cash,12,1009
+Hawksnest,"2025-12-30 15:43:57","December 30, 2025, 3:43 pm",credit,80.05,1009
+Hawksnest,"2025-12-28 11:44:36","December 28, 2025, 11:44 am",credit,38.67,1009
+Hawksnest,"2025-12-27 11:35:41","December 27, 2025, 11:34 am",cash,32,1009
+Hawksnest,"2025-12-26 11:25:59","December 26, 2025, 11:25 am",credit,27.62,1009
+Hawksnest,"2025-12-24 11:37:40","December 24, 2025, 11:36 am",cash,54,1009
+Hawksnest,"2025-12-23 11:39:33","December 23, 2025, 11:39 am",credit,38.67,1009
+Hawksnest,"2025-12-22 11:52:11","December 22, 2025, 11:52 am",credit,13.26,1009
+Hawksnest,"2025-12-21 11:45:41","December 21, 2025, 11:45 am",credit,27.62,1009
+Hawksnest,"2025-12-20 11:41:42","December 20, 2025, 11:41 am",credit,13.26,1009
+Hawksnest,"2025-12-17 15:00:59","December 17, 2025, 1:51 pm",cash,98,1009
+Hawksnest,"2025-12-16 13:38:48","December 16, 2025, 1:38 pm",credit,12.2,1009
+Hawksnest,"2025-12-13 11:45:15","December 13, 2025, 11:45 am",credit,38.82,1009
+Hawksnest,"2025-12-12 11:51:54","December 12, 2025, 11:51 am",credit,26.62,1009
+Hawksnest,"2025-12-06 11:51:02","2025/12/06 11:51:02",credit,38.45,1009
+Hawksnest,"2025-12-05 13:48:22","2025/12/05 13:48:22",credit,17.58,1009
+Hawksnest,"2026-01-13 13:59:35","January 13, 2026, 1:58 pm",cash,16,1010
+Hawksnest,"2026-01-12 11:55:59","January 12, 2026, 11:55 am",credit,26.52,1010
+Hawksnest,"2026-01-09 11:37:44","January 9, 2026, 11:37 am",credit,8.84,1010
+Hawksnest,"2026-01-06 13:59:40","January 6, 2026, 1:59 pm",credit,58.56,1010
+Hawksnest,"2026-01-05 11:58:14","January 5, 2026, 11:57 am",cash,8,1010
+Hawksnest,"2026-01-04 11:50:30","January 4, 2026, 11:50 am",credit,27.62,1010
+Hawksnest,"2026-01-03 11:46:26","January 3, 2026, 11:46 am",credit,17.68,1010
+Hawksnest,"2026-01-02 11:50:14","January 2, 2026, 11:50 am",credit,32.02,1010
+Hawksnest,"2026-01-01 15:57:19","January 1, 2026, 3:49 pm",cash,25,1010
+Hawksnest,"2025-12-31 11:10:41","December 31, 2025, 11:07 am",cash,12,1010
+Hawksnest,"2025-12-30 15:47:05","December 30, 2025, 3:47 pm",credit,16.57,1010
+Hawksnest,"2025-12-28 11:45:52","December 28, 2025, 11:45 am",credit,17.68,1010
+Hawksnest,"2025-12-27 11:37:08","December 27, 2025, 11:37 am",credit,27.62,1010
+Hawksnest,"2025-12-26 14:12:05","December 26, 2025, 11:29 am",cash,8,1010
+Hawksnest,"2025-12-24 11:46:38","December 24, 2025, 11:46 am",credit,61.87,1010
+Hawksnest,"2025-12-23 11:39:48","December 23, 2025, 11:39 am",credit,38.67,1010
+Hawksnest,"2025-12-22 11:53:50","December 22, 2025, 11:53 am",credit,39.78,1010
+Hawksnest,"2025-12-21 11:46:01","December 21, 2025, 11:46 am",credit,27.62,1010
+Hawksnest,"2025-12-20 11:46:55","December 20, 2025, 11:46 am",credit,27.62,1010
+Hawksnest,"2025-12-17 13:58:37","December 17, 2025, 1:54 pm",cash,35,1010
+Hawksnest,"2025-12-16 13:40:13","December 16, 2025, 1:39 pm",cash,8,1010
+Hawksnest,"2025-12-13 11:48:50","December 13, 2025, 11:48 am",credit,31.06,1010
+Hawksnest,"2025-12-12 11:52:20","December 12, 2025, 11:52 am",credit,24.4,1010
+Hawksnest,"2025-12-06 12:17:00","2025/12/06 12:17:00",credit,53.82,1010
+Hawksnest,"2025-12-05 13:51:03","2025/12/05 13:51:03",credit,38.3,1010
+Hawksnest,"2025-10-17 13:57:56","2025/10/17 13:57:56",credit,27.46,1010
+Hawksnest,"2026-01-13 14:01:05","January 13, 2026, 2:00 pm",cash,25,1011
+Hawksnest,"2026-01-12 11:58:25","January 12, 2026, 11:58 am",credit,46.4,1011
+Hawksnest,"2026-01-09 11:41:38","January 9, 2026, 11:41 am",credit,26.52,1011
+Hawksnest,"2026-01-06 15:07:13","January 6, 2026, 3:07 pm",credit,17.68,1011
+Hawksnest,"2026-01-05 11:58:15","January 5, 2026, 11:58 am",credit,27.62,1011
+Hawksnest,"2026-01-04 11:55:33","January 4, 2026, 11:55 am",credit,8.84,1011
+Hawksnest,"2026-01-03 11:47:06","January 3, 2026, 11:47 am",credit,35.36,1011
+Hawksnest,"2026-01-02 11:54:21","January 2, 2026, 11:50 am",cash,63,1011
+Hawksnest,"2026-01-01 15:51:17","January 1, 2026, 3:51 pm",credit,33.15,1011
+Hawksnest,"2025-12-31 11:10:43","December 31, 2025, 11:07 am",cash,12,1011
+Hawksnest,"2025-12-30 15:48:26","December 30, 2025, 3:48 pm",credit,45.3,1011
+Hawksnest,"2025-12-28 11:46:33","December 28, 2025, 11:46 am",credit,26.52,1011
+Hawksnest,"2025-12-27 11:38:03","December 27, 2025, 11:38 am",credit,22.1,1011
+Hawksnest,"2025-12-26 11:30:15","December 26, 2025, 11:30 am",credit,38.67,1011
+Hawksnest,"2025-12-24 11:47:37","December 24, 2025, 11:47 am",credit,35.36,1011
+Hawksnest,"2025-12-23 11:41:43","December 23, 2025, 11:41 am",credit,33.15,1011
+Hawksnest,"2025-12-22 11:54:07","December 22, 2025, 11:54 am",credit,39.78,1011
+Hawksnest,"2025-12-21 11:48:59","December 21, 2025, 11:48 am",credit,27.62,1011
+Hawksnest,"2025-12-20 11:48:14","December 20, 2025, 11:48 am",credit,49.72,1011
+Hawksnest,"2025-12-17 13:54:12","December 17, 2025, 1:54 pm",credit,55.46,1011
+Hawksnest,"2025-12-16 13:41:22","December 16, 2025, 1:41 pm",credit,17.75,1011
+Hawksnest,"2025-12-13 11:52:25","December 13, 2025, 11:52 am",credit,27.73,1011
+Hawksnest,"2025-12-12 11:52:52","December 12, 2025, 11:52 am",credit,36.6,1011
+Hawksnest,"2025-12-07 13:14:12","2025/12/07 13:14:12",credit,8.79,1011
+Hawksnest,"2025-12-06 12:55:09","2025/12/06 12:55:09",credit,17.58,1011
+Hawksnest,"2025-12-05 14:00:30","2025/12/05 14:00:30",credit,27.46,1011
+Hawksnest,"2025-10-18 16:33:55","2025/10/18 16:33:55",credit,87.88,1011
+Hawksnest,"2026-01-13 14:03:23","January 13, 2026, 2:03 pm",square,38.67,1012
+Hawksnest,"2026-01-12 12:07:19","January 12, 2026, 12:07 pm",credit,75.13,1012
+Hawksnest,"2026-01-09 11:56:21","January 9, 2026, 11:55 am",cash,58,1012
+Hawksnest,"2026-01-06 15:23:15","January 6, 2026, 3:23 pm",credit,27.62,1012
+Hawksnest,"2026-01-05 12:08:57","January 5, 2026, 12:08 pm",credit,77.34,1012
+Hawksnest,"2026-01-04 11:55:36","January 4, 2026, 11:55 am",credit,26.52,1012
+Hawksnest,"2026-01-03 11:51:42","January 3, 2026, 11:51 am",credit,13.26,1012
+Hawksnest,"2026-01-02 11:52:20","January 2, 2026, 11:52 am",credit,17.68,1012
+Hawksnest,"2026-01-01 15:52:20","January 1, 2026, 3:52 pm",credit,112.7,1012
+Hawksnest,"2025-12-31 11:10:44","December 31, 2025, 11:07 am",cash,12,1012
+Hawksnest,"2025-12-30 15:51:49","December 30, 2025, 3:51 pm",credit,16.57,1012
+Hawksnest,"2025-12-28 11:47:21","December 28, 2025, 11:47 am",credit,38.67,1012
+Hawksnest,"2025-12-27 11:40:37","December 27, 2025, 11:39 am",cash,30,1012
+Hawksnest,"2025-12-26 11:30:27","December 26, 2025, 11:30 am",credit,45.3,1012
+Hawksnest,"2025-12-24 11:50:00","December 24, 2025, 11:47 am",cash,32,1012
+Hawksnest,"2025-12-23 11:50:16","December 23, 2025, 11:50 am",credit,26.52,1012
+Hawksnest,"2025-12-22 11:56:51","December 22, 2025, 11:56 am",credit,8.84,1012
+Hawksnest,"2025-12-21 11:54:16","December 21, 2025, 11:54 am",credit,8.84,1012
+Hawksnest,"2025-12-20 11:49:11","December 20, 2025, 11:49 am",credit,33.15,1012
+Hawksnest,"2025-12-17 14:00:24","December 17, 2025, 1:57 pm",cash,49,1012
+Hawksnest,"2025-12-16 13:43:08","December 16, 2025, 1:43 pm",credit,17.75,1012
+Hawksnest,"2025-12-13 11:52:57","December 13, 2025, 11:52 am",credit,38.82,1012
+Hawksnest,"2025-12-12 11:53:36","December 12, 2025, 11:53 am",credit,27.73,1012
+Hawksnest,"2025-12-07 13:15:01","2025/12/07 13:15:01",credit,8.79,1012
+Hawksnest,"2025-12-06 12:55:37","2025/12/06 12:55:37",credit,17.58,1012
+Hawksnest,"2025-12-05 15:36:56","2025/12/05 15:36:56",credit,38.45,1012
+Hawksnest,"2026-01-13 14:07:30","January 13, 2026, 2:04 pm",cash,25,1013
+Hawksnest,"2026-01-12 13:25:33","January 12, 2026, 1:24 pm",cash,42,1013
+Hawksnest,"2026-01-09 11:57:07","January 9, 2026, 11:57 am",credit,27.62,1013
+Hawksnest,"2026-01-06 15:24:29","January 6, 2026, 3:24 pm",credit,13.26,1013
+Hawksnest,"2026-01-05 13:12:27","January 5, 2026, 1:12 pm",credit,35.36,1013
+Hawksnest,"2026-01-04 11:57:43","January 4, 2026, 11:55 am",cash,16,1013
+Hawksnest,"2026-01-03 11:52:40","January 3, 2026, 11:51 am",cash,72,1013
+Hawksnest,"2026-01-02 11:57:50","January 2, 2026, 11:57 am",credit,100.54,1013
+Hawksnest,"2026-01-01 15:59:55","January 1, 2026, 3:52 pm",cash,8,1013
+Hawksnest,"2025-12-31 11:10:45","December 31, 2025, 11:07 am",cash,12,1013
+Hawksnest,"2025-12-30 15:52:49","December 30, 2025, 3:52 pm",credit,17.68,1013
+Hawksnest,"2025-12-28 11:47:58","December 28, 2025, 11:47 am",credit,17.68,1013
+Hawksnest,"2025-12-27 11:42:39","December 27, 2025, 11:42 am",credit,44.19,1013
+Hawksnest,"2025-12-26 11:34:00","December 26, 2025, 11:34 am",credit,45.3,1013
+Hawksnest,"2025-12-24 11:49:26","December 24, 2025, 11:49 am",credit,61.87,1013
+Hawksnest,"2025-12-23 11:51:04","December 23, 2025, 11:51 am",credit,8.84,1013
+Hawksnest,"2025-12-22 11:58:49","December 22, 2025, 11:58 am",credit,146.95,1013
+Hawksnest,"2025-12-21 11:58:04","December 21, 2025, 11:58 am",credit,66.29,1013
+Hawksnest,"2025-12-20 11:49:41","December 20, 2025, 11:49 am",credit,106.07,1013
+Hawksnest,"2025-12-17 14:08:25","December 17, 2025, 2:03 pm",cash,16,1013
+Hawksnest,"2025-12-16 13:45:23","December 16, 2025, 1:44 pm",cash,8,1013
+Hawksnest,"2025-12-13 11:53:20","December 13, 2025, 11:53 am",credit,38.82,1013
+Hawksnest,"2025-12-12 12:01:23","December 12, 2025, 11:59 am",cash,60,1013
+Hawksnest,"2025-12-07 13:17:00","2025/12/07 13:17:00",credit,8.79,1013
+Hawksnest,"2025-12-06 13:02:34","2025/12/06 13:02:34",credit,35.15,1013
+Hawksnest,"2025-12-05 15:41:32","2025/12/05 15:41:32",credit,17.58,1013
+Hawksnest,"2025-10-18 16:36:33","2025/10/18 16:36:33",credit,87.88,1013
+Hawksnest,"2025-10-17 15:48:52","2025/10/17 15:48:52",credit,38.45,1013
+Hawksnest,"2026-01-13 14:40:38","January 13, 2026, 2:40 pm",square,49.72,1014
+Hawksnest,"2026-01-12 13:30:29","January 12, 2026, 1:30 pm",credit,38.67,1014
+Hawksnest,"2026-01-09 12:01:51","January 9, 2026, 12:01 pm",credit,17.68,1014
+Hawksnest,"2026-01-06 15:28:05","January 6, 2026, 3:27 pm",cash,30,1014
+Hawksnest,"2026-01-05 13:14:07","January 5, 2026, 1:14 pm",credit,13.26,1014
+Hawksnest,"2026-01-04 11:56:44","January 4, 2026, 11:56 am",credit,44.19,1014
+Hawksnest,"2026-01-03 11:53:05","January 3, 2026, 11:51 am",cash,30,1014
+Hawksnest,"2026-01-02 11:58:46","January 2, 2026, 11:58 am",credit,26.52,1014
+Hawksnest,"2026-01-01 15:52:38","January 1, 2026, 3:52 pm",credit,46.4,1014
+Hawksnest,"2025-12-31 11:10:47","December 31, 2025, 11:07 am",cash,12,1014
+Hawksnest,"2025-12-30 16:07:04","December 30, 2025, 4:07 pm",credit,38.67,1014
+Hawksnest,"2025-12-28 11:49:06","December 28, 2025, 11:49 am",credit,54.14,1014
+Hawksnest,"2025-12-27 11:42:50","December 27, 2025, 11:42 am",credit,8.84,1014
+Hawksnest,"2025-12-26 11:39:47","December 26, 2025, 11:39 am",credit,27.62,1014
+Hawksnest,"2025-12-24 11:51:42","December 24, 2025, 11:51 am",credit,22.1,1014
+Hawksnest,"2025-12-23 13:19:28","December 23, 2025, 11:52 am",cash,16,1014
+Hawksnest,"2025-12-22 12:00:52","December 22, 2025, 12:00 pm",cash,32,1014
+Hawksnest,"2025-12-21 11:59:09","December 21, 2025, 11:59 am",credit,17.68,1014
+Hawksnest,"2025-12-20 11:58:18","December 20, 2025, 11:53 am",cash,42,1014
+Hawksnest,"2025-12-17 15:29:35","December 17, 2025, 3:29 pm",credit,100.93,1014
+Hawksnest,"2025-12-16 13:47:36","December 16, 2025, 1:44 pm",cash,8,1014
+Hawksnest,"2025-12-13 11:56:23","December 13, 2025, 11:56 am",credit,36.6,1014
+Hawksnest,"2025-12-12 12:03:57","December 12, 2025, 12:03 pm",credit,38.82,1014
+Hawksnest,"2025-12-07 13:17:38","2025/12/07 13:17:38",credit,8.79,1014
+Hawksnest,"2025-12-06 13:04:24","2025/12/06 13:04:23",credit,27.46,1014
+Hawksnest,"2025-12-05 15:44:25","2025/12/05 15:44:25",credit,16.48,1014
+Hawksnest,"2025-10-18 16:49:18","2025/10/18 16:49:18",credit,8.79,1014
+Hawksnest,"2025-10-17 17:00:18","2025/10/17 17:00:18",credit,17.58,1014
+Hawksnest,"2026-01-13 14:43:06","January 13, 2026, 2:43 pm",square,33.15,1015
+Hawksnest,"2026-01-12 13:36:40","January 12, 2026, 1:36 pm",cash,60,1015
+Hawksnest,"2026-01-09 12:02:12","January 9, 2026, 12:02 pm",credit,8.84,1015
+Hawksnest,"2026-01-06 15:29:09","January 6, 2026, 3:28 pm",cash,12,1015
+Hawksnest,"2026-01-05 13:19:59","January 5, 2026, 1:19 pm",credit,8.84,1015
+Hawksnest,"2026-01-04 11:56:45","January 4, 2026, 11:56 am",credit,27.62,1015
+Hawksnest,"2026-01-03 11:53:07","January 3, 2026, 11:53 am",credit,8.84,1015
+Hawksnest,"2026-01-02 12:00:20","January 2, 2026, 11:59 am",cash,8,1015
+Hawksnest,"2026-01-01 15:54:34","January 1, 2026, 3:54 pm",credit,33.15,1015
+Hawksnest,"2025-12-31 11:10:49","December 31, 2025, 11:07 am",cash,12,1015
+Hawksnest,"2025-12-30 16:09:34","December 30, 2025, 4:09 pm",credit,54.14,1015
+Hawksnest,"2025-12-28 11:53:06","December 28, 2025, 11:53 am",credit,38.67,1015
+Hawksnest,"2025-12-27 11:49:26","December 27, 2025, 11:48 am",cash,69,1015
+Hawksnest,"2025-12-26 11:43:30","December 26, 2025, 11:43 am",credit,16.57,1015
+Hawksnest,"2025-12-24 11:54:04","December 24, 2025, 11:54 am",credit,38.67,1015
+Hawksnest,"2025-12-23 11:58:55","December 23, 2025, 11:58 am",credit,142.53,1015
+Hawksnest,"2025-12-22 12:03:19","December 22, 2025, 12:03 pm",credit,55.24,1015
+Hawksnest,"2025-12-21 12:01:48","December 21, 2025, 12:01 pm",credit,24.31,1015
+Hawksnest,"2025-12-20 11:53:42","December 20, 2025, 11:53 am",credit,8.84,1015
+Hawksnest,"2025-12-17 15:40:23","December 17, 2025, 3:39 pm",cash,16,1015
+Hawksnest,"2025-12-16 13:48:00","December 16, 2025, 1:44 pm",cash,8,1015
+Hawksnest,"2025-12-13 11:57:21","December 13, 2025, 11:57 am",credit,26.62,1015
+Hawksnest,"2025-12-12 13:09:46","December 12, 2025, 1:09 pm",credit,35.49,1015
+Hawksnest,"2025-12-06 13:12:15","2025/12/06 13:12:15",credit,16.48,1015
+Hawksnest,"2025-12-05 15:51:16","2025/12/05 15:51:16",credit,8.79,1015
+Hawksnest,"2025-10-17 17:06:20","2025/10/17 17:06:20",credit,38.45,1015
+Hawksnest,"2026-01-13 15:06:02","January 13, 2026, 3:06 pm",square,138.11,1016
+Hawksnest,"2026-01-12 13:40:30","January 12, 2026, 1:38 pm",cash,57,1016
+Hawksnest,"2026-01-09 12:08:48","January 9, 2026, 12:08 pm",credit,60.77,1016
+Hawksnest,"2026-01-06 15:37:17","January 6, 2026, 3:37 pm",credit,29.83,1016
+Hawksnest,"2026-01-05 13:21:56","January 5, 2026, 1:20 pm",cash,12,1016
+Hawksnest,"2026-01-04 11:59:36","January 4, 2026, 11:59 am",credit,38.67,1016
+Hawksnest,"2026-01-03 11:56:01","January 3, 2026, 11:56 am",credit,30.94,1016
+Hawksnest,"2026-01-02 12:00:01","January 2, 2026, 11:59 am",credit,27.62,1016
+Hawksnest,"2026-01-01 15:59:17","January 1, 2026, 3:55 pm",cash,24,1016
+Hawksnest,"2025-12-31 11:10:50","December 31, 2025, 11:07 am",cash,12,1016
+Hawksnest,"2025-12-30 16:11:28","December 30, 2025, 4:11 pm",credit,16.57,1016
+Hawksnest,"2025-12-28 11:56:01","December 28, 2025, 11:54 am",cash,33,1016
+Hawksnest,"2025-12-27 11:48:39","December 27, 2025, 11:48 am",credit,13.26,1016
+Hawksnest,"2025-12-26 11:43:47","December 26, 2025, 11:43 am",credit,61.87,1016
+Hawksnest,"2025-12-24 11:54:07","December 24, 2025, 11:54 am",credit,30.94,1016
+Hawksnest,"2025-12-23 11:59:44","December 23, 2025, 11:59 am",credit,69.61,1016
+Hawksnest,"2025-12-22 12:26:59","December 22, 2025, 12:26 pm",credit,26.52,1016
+Hawksnest,"2025-12-21 12:06:16","December 21, 2025, 12:06 pm",credit,72.92,1016
+Hawksnest,"2025-12-20 11:55:13","December 20, 2025, 11:55 am",credit,8.84,1016
+Hawksnest,"2025-12-17 15:41:34","December 17, 2025, 3:39 pm",cash,33,1016
+Hawksnest,"2025-12-16 13:47:40","December 16, 2025, 1:44 pm",cash,8,1016
+Hawksnest,"2025-12-13 12:09:31","December 13, 2025, 12:09 pm",credit,17.75,1016
+Hawksnest,"2025-12-12 13:14:39","December 12, 2025, 1:12 pm",cash,42,1016
+Hawksnest,"2025-12-07 13:38:50","2025/12/07 13:38:50",credit,21.97,1016
+Hawksnest,"2025-12-05 15:53:05","2025/12/05 15:53:05",credit,16.48,1016
+Hawksnest,"2026-01-13 15:13:57","January 13, 2026, 3:13 pm",square,12.15,1017
+Hawksnest,"2026-01-12 13:46:45","January 12, 2026, 1:46 pm",credit,12.15,1017
+Hawksnest,"2026-01-09 12:09:25","January 9, 2026, 12:09 pm",credit,50.82,1017
+Hawksnest,"2026-01-06 15:46:48","January 6, 2026, 3:46 pm",cash,25,1017
+Hawksnest,"2026-01-05 13:31:34","January 5, 2026, 1:30 pm",cash,8,1017
+Hawksnest,"2026-01-04 11:59:36","January 4, 2026, 11:59 am",credit,76.24,1017
+Hawksnest,"2026-01-03 11:56:52","January 3, 2026, 11:56 am",credit,43.09,1017
+Hawksnest,"2026-01-02 12:00:51","January 2, 2026, 12:00 pm",credit,66.29,1017
+Hawksnest,"2026-01-01 16:00:25","January 1, 2026, 3:56 pm",cash,15,1017
+Hawksnest,"2025-12-31 11:10:52","December 31, 2025, 11:07 am",cash,12,1017
+Hawksnest,"2025-12-30 16:13:00","December 30, 2025, 4:12 pm",credit,17.68,1017
+Hawksnest,"2025-12-28 11:54:58","December 28, 2025, 11:54 am",credit,55.24,1017
+Hawksnest,"2025-12-27 11:49:22","December 27, 2025, 11:49 am",credit,90.6,1017
+Hawksnest,"2025-12-26 11:43:50","December 26, 2025, 11:43 am",credit,33.15,1017
+Hawksnest,"2025-12-24 11:58:14","December 24, 2025, 11:55 am",cash,70,1017
+Hawksnest,"2025-12-23 12:01:48","December 23, 2025, 12:01 pm",credit,46.4,1017
+Hawksnest,"2025-12-22 13:11:37","December 22, 2025, 1:11 pm",credit,33.15,1017
+Hawksnest,"2025-12-21 12:09:35","December 21, 2025, 12:09 pm",credit,54.14,1017
+Hawksnest,"2025-12-20 11:59:07","December 20, 2025, 11:55 am",cash,8,1017
+Hawksnest,"2025-12-16 13:47:55","December 16, 2025, 1:44 pm",cash,8,1017
+Hawksnest,"2025-12-13 12:11:33","December 13, 2025, 12:11 pm",credit,38.82,1017
+Hawksnest,"2025-12-12 13:17:08","December 12, 2025, 1:13 pm",cash,16,1017
+Hawksnest,"2025-12-05 15:55:07","2025/12/05 15:55:07",credit,27.46,1017
+Hawksnest,"2026-01-13 15:16:47","January 13, 2026, 3:16 pm",square,49.72,1018
+Hawksnest,"2026-01-12 13:54:01","January 12, 2026, 1:53 pm",cash,25,1018
+Hawksnest,"2026-01-09 12:13:07","January 9, 2026, 12:13 pm",credit,61.87,1018
+Hawksnest,"2026-01-06 15:51:13","January 6, 2026, 3:51 pm",credit,55.24,1018
+Hawksnest,"2026-01-05 13:33:51","January 5, 2026, 1:30 pm",cash,8,1018
+Hawksnest,"2026-01-04 12:01:07","January 4, 2026, 12:01 pm",credit,26.52,1018
+Hawksnest,"2026-01-03 11:57:19","January 3, 2026, 11:57 am",credit,46.4,1018
+Hawksnest,"2026-01-02 12:02:14","January 2, 2026, 12:01 pm",cash,90,1018
+Hawksnest,"2026-01-01 15:59:58","January 1, 2026, 3:56 pm",cash,16,1018
+Hawksnest,"2025-12-31 11:10:54","December 31, 2025, 11:07 am",cash,12,1018
+Hawksnest,"2025-12-30 16:28:45","December 30, 2025, 4:28 pm",credit,38.67,1018
+Hawksnest,"2025-12-28 11:55:01","December 28, 2025, 11:55 am",credit,17.68,1018
+Hawksnest,"2025-12-27 11:55:20","December 27, 2025, 11:55 am",credit,118.22,1018
+Hawksnest,"2025-12-26 11:44:09","December 26, 2025, 11:44 am",credit,44.19,1018
+Hawksnest,"2025-12-24 11:56:53","December 24, 2025, 11:56 am",credit,17.68,1018
+Hawksnest,"2025-12-23 12:03:27","December 23, 2025, 12:03 pm",credit,55.24,1018
+Hawksnest,"2025-12-22 13:23:57","December 22, 2025, 1:23 pm",credit,26.52,1018
+Hawksnest,"2025-12-21 12:14:12","December 21, 2025, 12:14 pm",credit,38.67,1018
+Hawksnest,"2025-12-20 11:56:15","December 20, 2025, 11:55 am",cash,16,1018
+Hawksnest,"2025-12-16 13:47:42","December 16, 2025, 1:44 pm",cash,8,1018
+Hawksnest,"2025-12-13 12:18:20","December 13, 2025, 12:14 pm",cash,25,1018
+Hawksnest,"2025-12-12 13:13:47","December 12, 2025, 1:13 pm",credit,35.49,1018
+Hawksnest,"2025-12-06 13:39:41","2025/12/06 13:39:41",credit,17.58,1018
+Hawksnest,"2026-01-12 15:31:28","January 12, 2026, 3:31 pm",credit,16.57,1019
+Hawksnest,"2026-01-09 13:11:08","January 9, 2026, 1:11 pm",credit,40.88,1019
+Hawksnest,"2026-01-06 17:24:06","January 6, 2026, 5:23 pm",cash,25,1019
+Hawksnest,"2026-01-05 13:32:23","January 5, 2026, 1:31 pm",cash,34,1019
+Hawksnest,"2026-01-04 12:03:36","January 4, 2026, 12:03 pm",credit,27.62,1019
+Hawksnest,"2026-01-03 11:57:26","January 3, 2026, 11:57 am",credit,16.57,1019
+Hawksnest,"2026-01-02 12:34:39","January 2, 2026, 12:34 pm",credit,27.62,1019
+Hawksnest,"2026-01-01 15:57:29","January 1, 2026, 3:57 pm",credit,50.82,1019
+Hawksnest,"2025-12-31 11:10:55","December 31, 2025, 11:07 am",cash,12,1019
+Hawksnest,"2025-12-30 16:40:20","December 30, 2025, 4:40 pm",credit,49.72,1019
+Hawksnest,"2025-12-28 11:56:05","December 28, 2025, 11:56 am",credit,36.46,1019
+Hawksnest,"2025-12-27 11:56:45","December 27, 2025, 11:55 am",cash,25,1019
+Hawksnest,"2025-12-26 11:44:37","December 26, 2025, 11:44 am",credit,39.2,1019
+Hawksnest,"2025-12-24 12:00:26","December 24, 2025, 11:58 am",cash,91,1019
+Hawksnest,"2025-12-23 13:04:19","December 23, 2025, 12:17 pm",cash,15,1019
+Hawksnest,"2025-12-22 13:33:11","December 22, 2025, 1:33 pm",credit,26.52,1019
+Hawksnest,"2025-12-21 12:16:46","December 21, 2025, 12:16 pm",credit,38.67,1019
+Hawksnest,"2025-12-20 11:57:14","December 20, 2025, 11:57 am",credit,55.24,1019
+Hawksnest,"2025-12-16 13:47:44","December 16, 2025, 1:44 pm",cash,8,1019
+Hawksnest,"2025-12-13 12:19:05","December 13, 2025, 12:19 pm",credit,59.89,1019
+Hawksnest,"2025-12-12 13:16:33","December 12, 2025, 1:16 pm",credit,62.11,1019
+Hawksnest,"2025-12-06 13:40:55","2025/12/06 13:40:55",credit,65.91,1019
+Hawksnest,"2025-12-05 16:00:29","2025/12/05 16:00:29",credit,8.79,1019
+Hawksnest,"2025-10-18 17:51:32","2025/10/18 17:51:32",credit,27.46,1019
+Hawksnest,"2026-01-12 15:41:08","January 12, 2026, 3:41 pm",credit,27.62,1020
+Hawksnest,"2026-01-09 13:31:00","January 9, 2026, 1:30 pm",credit,24.31,1020
+Hawksnest,"2026-01-06 17:39:04","January 6, 2026, 5:39 pm",credit,69.61,1020
+Hawksnest,"2026-01-05 13:34:10","January 5, 2026, 1:31 pm",cash,35,1020
+Hawksnest,"2026-01-04 12:04:29","January 4, 2026, 12:04 pm",credit,8.84,1020
+Hawksnest,"2026-01-03 11:59:15","January 3, 2026, 11:58 am",cash,45,1020
+Hawksnest,"2026-01-02 13:15:48","January 2, 2026, 1:15 pm",credit,22.1,1020
+Hawksnest,"2026-01-01 16:04:36","January 1, 2026, 3:59 pm",cash,32,1020
+Hawksnest,"2025-12-31 11:10:58","December 31, 2025, 11:07 am",cash,12,1020
+Hawksnest,"2025-12-30 17:11:55","December 30, 2025, 5:11 pm",credit,35.36,1020
+Hawksnest,"2025-12-28 11:56:26","December 28, 2025, 11:56 am",credit,54.14,1020
+Hawksnest,"2025-12-27 11:56:54","December 27, 2025, 11:56 am",credit,27.62,1020
+Hawksnest,"2025-12-26 11:44:54","December 26, 2025, 11:44 am",credit,38.67,1020
+Hawksnest,"2025-12-24 11:58:41","December 24, 2025, 11:58 am",credit,27.62,1020
+Hawksnest,"2025-12-23 13:00:19","December 23, 2025, 1:00 pm",credit,46.4,1020
+Hawksnest,"2025-12-22 13:35:06","December 22, 2025, 1:35 pm",credit,27.62,1020
+Hawksnest,"2025-12-21 12:19:21","December 21, 2025, 12:19 pm",credit,85.07,1020
+Hawksnest,"2025-12-20 12:02:34","December 20, 2025, 11:59 am",cash,58,1020
+Hawksnest,"2025-12-16 13:47:47","December 16, 2025, 1:44 pm",cash,8,1020
+Hawksnest,"2025-12-13 12:44:55","December 13, 2025, 12:44 pm",credit,46.58,1020
+Hawksnest,"2025-12-12 13:20:19","December 12, 2025, 1:20 pm",credit,73.2,1020
+Hawksnest,"2025-12-06 13:41:21","2025/12/06 13:41:21",credit,27.46,1020
+Hawksnest,"2025-12-05 16:01:21","2025/12/05 16:01:21",credit,8.79,1020
+Hawksnest,"2025-10-18 17:53:34","2025/10/18 17:53:34",credit,36.25,1020
+Hawksnest,"2026-01-12 15:42:17","January 12, 2026, 3:42 pm",credit,16.57,1021
+Hawksnest,"2026-01-09 13:34:06","January 9, 2026, 1:34 pm",credit,36.46,1021
+Hawksnest,"2026-01-05 13:38:36","January 5, 2026, 1:37 pm",cash,30,1021
+Hawksnest,"2026-01-04 12:05:32","January 4, 2026, 12:05 pm",credit,56.03,1021
+Hawksnest,"2026-01-03 12:05:19","January 3, 2026, 12:05 pm",credit,38.67,1021
+Hawksnest,"2026-01-02 13:18:58","January 2, 2026, 1:18 pm",cash,8,1021
+Hawksnest,"2026-01-01 16:05:32","January 1, 2026, 4:00 pm",cash,50,1021
+Hawksnest,"2025-12-31 11:11:04","December 31, 2025, 11:07 am",cash,12,1021
+Hawksnest,"2025-12-30 17:13:24","December 30, 2025, 5:13 pm",credit,38.67,1021
+Hawksnest,"2025-12-28 11:59:00","December 28, 2025, 11:59 am",credit,17.68,1021
+Hawksnest,"2025-12-27 12:00:43","December 27, 2025, 11:58 am",cash,30,1021
+Hawksnest,"2025-12-26 11:45:03","December 26, 2025, 11:45 am",credit,61.87,1021
+Hawksnest,"2025-12-24 12:02:10","December 24, 2025, 11:59 am",cash,77,1021
+Hawksnest,"2025-12-23 13:13:28","December 23, 2025, 1:10 pm",cash,11,1021
+Hawksnest,"2025-12-22 13:40:04","December 22, 2025, 1:39 pm",cash,35,1021
+Hawksnest,"2025-12-21 13:08:14","December 21, 2025, 1:08 pm",credit,22.1,1021
+Hawksnest,"2025-12-20 12:00:11","December 20, 2025, 11:59 am",cash,35,1021
+Hawksnest,"2025-12-16 13:45:06","December 16, 2025, 1:45 pm",credit,27.73,1021
+Hawksnest,"2025-12-13 13:14:16","December 13, 2025, 1:14 pm",credit,44.37,1021
+Hawksnest,"2025-12-12 13:24:07","December 12, 2025, 1:24 pm",credit,36.6,1021
+Hawksnest,"2025-12-07 14:05:31","2025/12/07 14:05:31",credit,36.25,1021
+Hawksnest,"2025-12-06 13:43:20","2025/12/06 13:43:20",credit,46.14,1021
+Hawksnest,"2026-01-12 15:45:17","January 12, 2026, 3:44 pm",cash,58,1022
+Hawksnest,"2026-01-09 13:59:12","January 9, 2026, 1:58 pm",cash,24,1022
+Hawksnest,"2026-01-05 13:47:16","January 5, 2026, 1:47 pm",credit,35.36,1022
+Hawksnest,"2026-01-04 12:07:13","January 4, 2026, 12:07 pm",credit,33.15,1022
+Hawksnest,"2026-01-03 12:48:23","January 3, 2026, 12:48 pm",credit,45.3,1022
+Hawksnest,"2026-01-02 13:24:28","January 2, 2026, 1:23 pm",cash,24,1022
+Hawksnest,"2026-01-01 16:03:03","January 1, 2026, 4:03 pm",credit,77.34,1022
+Hawksnest,"2025-12-31 11:11:07","December 31, 2025, 11:07 am",cash,12,1022
+Hawksnest,"2025-12-30 17:17:37","December 30, 2025, 5:17 pm",credit,17.68,1022
+Hawksnest,"2025-12-28 11:59:20","December 28, 2025, 11:59 am",credit,27.62,1022
+Hawksnest,"2025-12-27 12:03:05","December 27, 2025, 12:02 pm",cash,45,1022
+Hawksnest,"2025-12-26 11:47:10","December 26, 2025, 11:47 am",credit,26.52,1022
+Hawksnest,"2025-12-24 12:01:15","December 24, 2025, 12:01 pm",credit,27.62,1022
+Hawksnest,"2025-12-23 13:19:40","December 23, 2025, 1:19 pm",credit,27.62,1022
+Hawksnest,"2025-12-22 13:41:19","December 22, 2025, 1:41 pm",credit,26.52,1022
+Hawksnest,"2025-12-21 13:08:54","December 21, 2025, 1:08 pm",credit,16.57,1022
+Hawksnest,"2025-12-20 11:59:45","December 20, 2025, 11:59 am",credit,54.14,1022
+Hawksnest,"2025-12-16 13:51:10","December 16, 2025, 1:51 pm",credit,90.95,1022
+Hawksnest,"2025-12-13 13:16:26","December 13, 2025, 1:16 pm",cash,8,1022
+Hawksnest,"2025-12-12 13:44:44","December 12, 2025, 1:44 pm",credit,27.73,1022
+Hawksnest,"2025-12-06 13:44:48","2025/12/06 13:44:48",credit,26.36,1022
+Hawksnest,"2025-12-05 16:02:41","2025/12/05 16:02:41",credit,38.45,1022
+Hawksnest,"2026-01-12 15:46:08","January 12, 2026, 3:46 pm",credit,27.62,1023
+Hawksnest,"2026-01-09 14:00:28","January 9, 2026, 2:00 pm",credit,61.87,1023
+Hawksnest,"2026-01-05 13:48:08","January 5, 2026, 1:48 pm",credit,27.62,1023
+Hawksnest,"2026-01-04 12:07:44","January 4, 2026, 12:07 pm",credit,13.26,1023
+Hawksnest,"2026-01-03 13:05:07","January 3, 2026, 1:05 pm",credit,33.15,1023
+Hawksnest,"2026-01-02 13:25:46","January 2, 2026, 1:25 pm",credit,8.84,1023
+Hawksnest,"2026-01-01 16:06:21","January 1, 2026, 4:03 pm",cash,37.49,1023
+Hawksnest,"2025-12-31 11:11:08","December 31, 2025, 11:07 am",cash,12,1023
+Hawksnest,"2025-12-30 17:23:46","December 30, 2025, 5:21 pm",cash,42,1023
+Hawksnest,"2025-12-28 12:00:11","December 28, 2025, 12:00 pm",credit,66.29,1023
+Hawksnest,"2025-12-27 12:03:02","December 27, 2025, 12:03 pm",credit,27.62,1023
+Hawksnest,"2025-12-26 11:49:35","December 26, 2025, 11:49 am",credit,27.62,1023
+Hawksnest,"2025-12-24 12:04:12","December 24, 2025, 12:04 pm",credit,27.62,1023
+Hawksnest,"2025-12-23 13:24:26","December 23, 2025, 1:24 pm",credit,49.72,1023
+Hawksnest,"2025-12-22 13:41:47","December 22, 2025, 1:41 pm",credit,26.52,1023
+Hawksnest,"2025-12-21 13:13:32","December 21, 2025, 1:09 pm",cash,8,1023
+Hawksnest,"2025-12-20 12:01:48","December 20, 2025, 12:01 pm",credit,38.67,1023
+Hawksnest,"2025-12-16 13:54:36","December 16, 2025, 1:54 pm",credit,36.88,1023
+Hawksnest,"2025-12-13 13:25:22","December 13, 2025, 1:23 pm",cash,8,1023
+Hawksnest,"2025-12-12 13:47:59","December 12, 2025, 1:47 pm",credit,40.33,1023
+Hawksnest,"2025-12-07 15:41:14","2025/12/07 15:41:14",credit,17.58,1023
+Hawksnest,"2025-12-06 13:45:43","2025/12/06 13:45:43",credit,27.46,1023
+Hawksnest,"2025-12-05 16:03:45","2025/12/05 16:03:45",credit,27.46,1023
+Hawksnest,"2026-01-12 15:55:08","January 12, 2026, 3:54 pm",cash,30,1024
+Hawksnest,"2026-01-09 14:03:16","January 9, 2026, 2:02 pm",cash,49,1024
+Hawksnest,"2026-01-05 13:48:54","January 5, 2026, 1:48 pm",credit,27.62,1024
+Hawksnest,"2026-01-04 12:09:05","January 4, 2026, 12:09 pm",credit,27.62,1024
+Hawksnest,"2026-01-03 13:09:10","January 3, 2026, 1:09 pm",credit,24.31,1024
+Hawksnest,"2026-01-02 13:26:51","January 2, 2026, 1:26 pm",credit,121.53,1024
+Hawksnest,"2026-01-01 16:07:50","January 1, 2026, 4:06 pm",cash,70,1024
+Hawksnest,"2025-12-31 11:11:13","December 31, 2025, 11:07 am",cash,12,1024
+Hawksnest,"2025-12-30 17:22:59","December 30, 2025, 5:21 pm",cash,42,1024
+Hawksnest,"2025-12-28 12:01:39","December 28, 2025, 12:01 pm",credit,38.67,1024
+Hawksnest,"2025-12-27 13:00:08","December 27, 2025, 12:59 pm",cash,20,1024
+Hawksnest,"2025-12-26 11:49:47","December 26, 2025, 11:49 am",credit,55.24,1024
+Hawksnest,"2025-12-24 12:06:58","December 24, 2025, 12:06 pm",credit,26.52,1024
+Hawksnest,"2025-12-23 13:26:22","December 23, 2025, 1:24 pm",cash,82,1024
+Hawksnest,"2025-12-22 13:42:56","December 22, 2025, 1:42 pm",cash,41,1024
+Hawksnest,"2025-12-21 13:11:31","December 21, 2025, 1:10 pm",cash,25,1024
+Hawksnest,"2025-12-20 12:02:18","December 20, 2025, 12:02 pm",credit,38.67,1024
+Hawksnest,"2025-12-16 13:56:46","December 16, 2025, 1:56 pm",cash,33,1024
+Hawksnest,"2025-12-13 13:27:15","December 13, 2025, 1:27 pm",credit,12.2,1024
+Hawksnest,"2025-12-12 13:51:53","December 12, 2025, 1:49 pm",cash,12,1024
+Hawksnest,"2025-12-06 13:46:07","2025/12/06 13:46:07",credit,27.46,1024
+Hawksnest,"2025-12-05 16:04:13","2025/12/05 16:04:13",credit,27.46,1024
+Hawksnest,"2026-01-12 16:00:22","January 12, 2026, 4:00 pm",credit,27.62,1025
+Hawksnest,"2026-01-09 14:08:28","January 9, 2026, 2:08 pm",credit,17.68,1025
+Hawksnest,"2026-01-05 13:51:30","January 5, 2026, 1:51 pm",cash,25,1025
+Hawksnest,"2026-01-04 12:13:19","January 4, 2026, 12:12 pm",cash,50,1025
+Hawksnest,"2026-01-03 13:18:49","January 3, 2026, 1:16 pm",cash,15,1025
+Hawksnest,"2026-01-02 13:31:44","January 2, 2026, 1:31 pm",credit,13.26,1025
+Hawksnest,"2026-01-01 16:10:22","January 1, 2026, 4:09 pm",cash,48,1025
+Hawksnest,"2025-12-31 11:12:30","December 31, 2025, 11:07 am",cash,12,1025
+Hawksnest,"2025-12-30 17:23:01","December 30, 2025, 5:21 pm",cash,42,1025
+Hawksnest,"2025-12-28 12:02:59","December 28, 2025, 12:01 pm",cash,11,1025
+Hawksnest,"2025-12-27 13:00:36","December 27, 2025, 1:00 pm",cash,12,1025
+Hawksnest,"2025-12-26 11:50:43","December 26, 2025, 11:50 am",credit,48.61,1025
+Hawksnest,"2025-12-24 12:11:31","December 24, 2025, 12:09 pm",cash,15,1025
+Hawksnest,"2025-12-23 13:33:10","December 23, 2025, 1:33 pm",credit,28.59,1025
+Hawksnest,"2025-12-22 13:42:59","December 22, 2025, 1:42 pm",credit,8.84,1025
+Hawksnest,"2025-12-21 13:28:57","December 21, 2025, 1:15 pm",cash,33,1025
+Hawksnest,"2025-12-20 12:02:52","December 20, 2025, 12:02 pm",credit,30.94,1025
+Hawksnest,"2025-12-16 13:58:12","December 16, 2025, 1:58 pm",credit,46.58,1025
+Hawksnest,"2025-12-13 13:29:42","December 13, 2025, 1:29 pm",credit,35.49,1025
+Hawksnest,"2025-12-12 13:51:54","December 12, 2025, 1:51 pm",credit,12.2,1025
+Hawksnest,"2025-12-06 13:46:38","2025/12/06 13:46:38",credit,40.71,1025
+Hawksnest,"2025-12-05 16:04:36","2025/12/05 16:04:35",credit,27.46,1025
+Hawksnest,"2026-01-12 16:03:35","January 12, 2026, 4:03 pm",credit,46.4,1026
+Hawksnest,"2026-01-09 14:10:47","January 9, 2026, 2:10 pm",credit,27.62,1026
+Hawksnest,"2026-01-05 13:58:03","January 5, 2026, 1:58 pm",credit,24.31,1026
+Hawksnest,"2026-01-04 12:16:40","January 4, 2026, 12:16 pm",credit,27.62,1026
+Hawksnest,"2026-01-03 13:17:21","January 3, 2026, 1:17 pm",credit,17.68,1026
+Hawksnest,"2026-01-02 13:36:37","January 2, 2026, 1:36 pm",credit,45.3,1026
+Hawksnest,"2026-01-01 16:11:58","January 1, 2026, 4:10 pm",cash,27,1026
+Hawksnest,"2025-12-31 11:14:33","December 31, 2025, 11:10 am",cash,16,1026
+Hawksnest,"2025-12-30 17:23:03","December 30, 2025, 5:21 pm",cash,42,1026
+Hawksnest,"2025-12-28 12:03:41","December 28, 2025, 12:03 pm",credit,54.14,1026
+Hawksnest,"2025-12-27 13:05:31","December 27, 2025, 1:05 pm",credit,17.68,1026
+Hawksnest,"2025-12-26 11:52:10","December 26, 2025, 11:52 am",credit,38.67,1026
+Hawksnest,"2025-12-24 12:12:13","December 24, 2025, 12:10 pm",cash,65,1026
+Hawksnest,"2025-12-23 13:37:55","December 23, 2025, 1:37 pm",credit,17.68,1026
+Hawksnest,"2025-12-22 13:44:32","December 22, 2025, 1:44 pm",credit,27.62,1026
+Hawksnest,"2025-12-21 13:27:05","December 21, 2025, 1:27 pm",credit,27.62,1026
+Hawksnest,"2025-12-20 12:05:28","December 20, 2025, 12:05 pm",credit,54.14,1026
+Hawksnest,"2025-12-16 14:19:18","December 16, 2025, 2:19 pm",credit,54.35,1026
+Hawksnest,"2025-12-13 13:35:33","December 13, 2025, 1:33 pm",cash,53,1026
+Hawksnest,"2025-12-12 13:54:49","December 12, 2025, 1:53 pm",cash,35,1026
+Hawksnest,"2025-12-07 15:49:56","2025/12/07 15:49:56",credit,27.46,1026
+Hawksnest,"2025-12-06 13:46:49","2025/12/06 13:46:49",credit,9.04,1026
+Hawksnest,"2026-01-12 17:13:48","January 12, 2026, 5:13 pm",credit,8.84,1027
+Hawksnest,"2026-01-09 14:45:40","January 9, 2026, 2:43 pm",cash,24,1027
+Hawksnest,"2026-01-05 13:58:18","January 5, 2026, 1:58 pm",credit,54.14,1027
+Hawksnest,"2026-01-04 13:09:27","January 4, 2026, 1:09 pm",credit,33.15,1027
+Hawksnest,"2026-01-03 13:21:39","January 3, 2026, 1:20 pm",cash,53,1027
+Hawksnest,"2026-01-02 13:38:42","January 2, 2026, 1:38 pm",cash,60,1027
+Hawksnest,"2026-01-01 16:11:40","January 1, 2026, 4:11 pm",credit,24.31,1027
+Hawksnest,"2025-12-31 11:24:40","December 31, 2025, 11:24 am",cash,24,1027
+Hawksnest,"2025-12-30 17:25:08","December 30, 2025, 5:23 pm",cash,30,1027
+Hawksnest,"2025-12-28 12:04:22","December 28, 2025, 12:04 pm",credit,38.67,1027
+Hawksnest,"2025-12-27 13:16:58","December 27, 2025, 1:16 pm",credit,27.62,1027
+Hawksnest,"2025-12-26 11:58:00","December 26, 2025, 11:56 am",cash,35,1027
+Hawksnest,"2025-12-24 12:19:12","December 24, 2025, 12:19 pm",credit,35.36,1027
+Hawksnest,"2025-12-23 13:38:42","December 23, 2025, 1:38 pm",credit,8.84,1027
+Hawksnest,"2025-12-22 13:47:02","December 22, 2025, 1:47 pm",credit,17.68,1027
+Hawksnest,"2025-12-21 13:29:46","December 21, 2025, 1:29 pm",credit,26.52,1027
+Hawksnest,"2025-12-20 12:07:44","December 20, 2025, 12:06 pm",cash,45,1027
+Hawksnest,"2025-12-16 14:48:22","December 16, 2025, 2:48 pm",credit,8.87,1027
+Hawksnest,"2025-12-13 13:33:28","December 13, 2025, 1:33 pm",credit,17.75,1027
+Hawksnest,"2025-12-12 13:56:22","December 12, 2025, 1:56 pm",credit,55.46,1027
+Hawksnest,"2025-12-07 15:53:18","2025/12/07 15:53:18",credit,61.51,1027
+Hawksnest,"2025-12-06 13:53:04","2025/12/06 13:53:04",credit,27.46,1027
+Hawksnest,"2026-01-09 14:45:41","January 9, 2026, 2:45 pm",cash,24,1028
+Hawksnest,"2026-01-05 13:59:23","January 5, 2026, 1:59 pm",credit,46.4,1028
+Hawksnest,"2026-01-04 13:16:40","January 4, 2026, 1:16 pm",credit,59.66,1028
+Hawksnest,"2026-01-03 13:28:18","January 3, 2026, 1:27 pm",cash,16,1028
+Hawksnest,"2026-01-02 13:39:43","January 2, 2026, 1:39 pm",cash,16,1028
+Hawksnest,"2026-01-01 17:21:38","January 1, 2026, 5:21 pm",credit,48.03,1028
+Hawksnest,"2025-12-31 11:33:18","December 31, 2025, 11:33 am",credit,24.31,1028
+Hawksnest,"2025-12-30 17:41:05","December 30, 2025, 5:23 pm",cash,42,1028
+Hawksnest,"2025-12-28 12:04:55","December 28, 2025, 12:04 pm",credit,45.3,1028
+Hawksnest,"2025-12-27 13:25:42","December 27, 2025, 1:24 pm",cash,24,1028
+Hawksnest,"2025-12-26 11:57:12","December 26, 2025, 11:57 am",credit,54.14,1028
+Hawksnest,"2025-12-24 13:19:53","December 24, 2025, 1:19 pm",credit,30.94,1028
+Hawksnest,"2025-12-23 13:40:58","December 23, 2025, 1:40 pm",credit,48.61,1028
+Hawksnest,"2025-12-22 13:49:51","December 22, 2025, 1:49 pm",credit,8.84,1028
+Hawksnest,"2025-12-21 13:45:09","December 21, 2025, 1:45 pm",credit,9.47,1028
+Hawksnest,"2025-12-20 12:08:10","December 20, 2025, 12:06 pm",cash,32,1028
+Hawksnest,"2025-12-16 14:51:31","December 16, 2025, 2:51 pm",credit,27.73,1028
+Hawksnest,"2025-12-13 13:35:55","December 13, 2025, 1:35 pm",credit,35.49,1028
+Hawksnest,"2025-12-12 13:59:30","December 12, 2025, 1:59 pm",credit,38.82,1028
+Hawksnest,"2025-12-06 13:54:55","2025/12/06 13:54:55",credit,8.79,1028
+Hawksnest,"2025-12-05 17:37:59","2025/12/05 17:37:59",credit,32.95,1028
+Hawksnest,"2026-01-09 14:47:42","January 9, 2026, 2:47 pm",credit,69.61,1029
+Hawksnest,"2026-01-05 14:02:29","January 5, 2026, 2:02 pm",credit,38.67,1029
+Hawksnest,"2026-01-04 13:26:47","January 4, 2026, 1:26 pm",credit,26.52,1029
+Hawksnest,"2026-01-03 13:30:06","January 3, 2026, 1:29 pm",cash,16,1029
+Hawksnest,"2026-01-02 13:39:34","January 2, 2026, 1:39 pm",credit,30.94,1029
+Hawksnest,"2026-01-01 17:21:58","January 1, 2026, 5:21 pm",credit,17.68,1029
+Hawksnest,"2025-12-31 11:35:04","December 31, 2025, 11:35 am",credit,38.67,1029
+Hawksnest,"2025-12-30 17:27:36","December 30, 2025, 5:23 pm",cash,42,1029
+Hawksnest,"2025-12-28 12:06:03","December 28, 2025, 12:06 pm",credit,54.14,1029
+Hawksnest,"2025-12-27 13:27:23","December 27, 2025, 1:27 pm",credit,81.76,1029
+Hawksnest,"2025-12-26 11:57:39","December 26, 2025, 11:57 am",credit,54.14,1029
+Hawksnest,"2025-12-24 13:26:22","December 24, 2025, 1:26 pm",credit,44.19,1029
+Hawksnest,"2025-12-23 13:43:43","December 23, 2025, 1:43 pm",credit,8.84,1029
+Hawksnest,"2025-12-22 13:50:33","December 22, 2025, 1:50 pm",credit,33.15,1029
+Hawksnest,"2025-12-21 13:45:31","December 21, 2025, 1:45 pm",credit,119.33,1029
+Hawksnest,"2025-12-20 12:29:16","December 20, 2025, 12:29 pm",credit,108.28,1029
+Hawksnest,"2025-12-16 15:18:12","December 16, 2025, 3:18 pm",credit,17.75,1029
+Hawksnest,"2025-12-13 13:37:13","December 13, 2025, 1:37 pm",credit,42.15,1029
+Hawksnest,"2025-12-12 14:05:06","December 12, 2025, 2:05 pm",credit,73.2,1029
+Hawksnest,"2025-12-06 13:56:24","2025/12/06 13:56:24",credit,28.26,1029
+Hawksnest,"2025-12-05 17:42:39","2025/12/05 17:42:39",credit,27.46,1029
+Hawksnest,"2026-01-09 14:49:25","January 9, 2026, 2:47 pm",cash,16,1030
+Hawksnest,"2026-01-05 14:03:01","January 5, 2026, 2:02 pm",cash,41,1030
+Hawksnest,"2026-01-04 13:30:21","January 4, 2026, 1:30 pm",credit,38.67,1030
+Hawksnest,"2026-01-03 13:29:51","January 3, 2026, 1:29 pm",credit,45.3,1030
+Hawksnest,"2026-01-02 13:44:46","January 2, 2026, 1:44 pm",credit,33.15,1030
+Hawksnest,"2026-01-01 17:32:03","January 1, 2026, 5:32 pm",credit,13.26,1030
+Hawksnest,"2025-12-31 11:36:28","December 31, 2025, 11:36 am",credit,35.36,1030
+Hawksnest,"2025-12-30 17:31:17","December 30, 2025, 5:31 pm",credit,37.87,1030
+Hawksnest,"2025-12-28 12:08:56","December 28, 2025, 12:08 pm",credit,8.84,1030
+Hawksnest,"2025-12-27 13:33:00","December 27, 2025, 1:33 pm",credit,49.72,1030
+Hawksnest,"2025-12-26 11:59:16","December 26, 2025, 11:57 am",cash,16,1030
+Hawksnest,"2025-12-24 13:29:49","December 24, 2025, 1:29 pm",credit,33.15,1030
+Hawksnest,"2025-12-23 13:44:19","December 23, 2025, 1:44 pm",credit,16.57,1030
+Hawksnest,"2025-12-22 13:52:39","December 22, 2025, 1:52 pm",credit,13.26,1030
+Hawksnest,"2025-12-21 13:50:35","December 21, 2025, 1:48 pm",cash,25.88,1030
+Hawksnest,"2025-12-20 13:25:26","December 20, 2025, 1:25 pm",credit,69.61,1030
+Hawksnest,"2025-12-16 15:18:21","December 16, 2025, 3:18 pm",credit,13.31,1030
+Hawksnest,"2025-12-13 13:37:23","December 13, 2025, 1:37 pm",credit,27.73,1030
+Hawksnest,"2025-12-12 14:08:41","December 12, 2025, 2:05 pm",cash,25,1030
+Hawksnest,"2025-12-07 15:57:13","2025/12/07 15:57:13",credit,13.18,1030
+Hawksnest,"2025-12-05 17:50:27","2025/12/05 17:50:27",credit,26.36,1030
+Hawksnest,"2026-01-09 14:59:06","January 9, 2026, 2:59 pm",credit,38.67,1031
+Hawksnest,"2026-01-05 14:05:30","January 5, 2026, 2:04 pm",cash,37,1031
+Hawksnest,"2026-01-04 13:31:42","January 4, 2026, 1:31 pm",credit,13.26,1031
+Hawksnest,"2026-01-03 13:31:19","January 3, 2026, 1:31 pm",credit,8.84,1031
+Hawksnest,"2026-01-02 13:45:31","January 2, 2026, 1:45 pm",credit,33.15,1031
+Hawksnest,"2026-01-01 17:37:00","January 1, 2026, 5:34 pm",cash,25,1031
+Hawksnest,"2025-12-31 11:43:15","December 31, 2025, 11:42 am",cash,8,1031
+Hawksnest,"2025-12-30 17:38:01","December 30, 2025, 5:37 pm",credit,26.52,1031
+Hawksnest,"2025-12-28 12:14:25","December 28, 2025, 12:14 pm",credit,85.07,1031
+Hawksnest,"2025-12-27 13:34:40","December 27, 2025, 1:33 pm",cash,8,1031
+Hawksnest,"2025-12-26 11:59:58","December 26, 2025, 11:58 am",cash,32,1031
+Hawksnest,"2025-12-24 13:32:12","December 24, 2025, 1:32 pm",credit,36.46,1031
+Hawksnest,"2025-12-23 13:46:10","December 23, 2025, 1:45 pm",cash,35,1031
+Hawksnest,"2025-12-22 13:52:48","December 22, 2025, 1:52 pm",credit,26.52,1031
+Hawksnest,"2025-12-21 13:49:04","December 21, 2025, 1:49 pm",credit,61.87,1031
+Hawksnest,"2025-12-20 13:35:33","December 20, 2025, 1:35 pm",credit,8.84,1031
+Hawksnest,"2025-12-16 15:20:41","December 16, 2025, 3:20 pm",credit,33.27,1031
+Hawksnest,"2025-12-13 13:38:18","December 13, 2025, 1:38 pm",credit,64.33,1031
+Hawksnest,"2025-12-12 14:17:06","December 12, 2025, 2:15 pm",cash,56,1031
+Hawksnest,"2025-12-07 15:57:34","2025/12/07 15:57:34",credit,109.85,1031
+Hawksnest,"2025-12-06 13:57:35","2025/12/06 13:57:35",credit,65.91,1031
+Hawksnest,"2026-01-09 15:02:18","January 9, 2026, 3:01 pm",cash,41,1032
+Hawksnest,"2026-01-05 15:11:21","January 5, 2026, 3:11 pm",credit,8.84,1032
+Hawksnest,"2026-01-04 13:36:19","January 4, 2026, 1:35 pm",cash,25,1032
+Hawksnest,"2026-01-03 13:31:57","January 3, 2026, 1:31 pm",credit,8.84,1032
+Hawksnest,"2026-01-02 13:46:00","January 2, 2026, 1:45 pm",credit,27.62,1032
+Hawksnest,"2026-01-01 17:37:01","January 1, 2026, 5:36 pm",cash,16,1032
+Hawksnest,"2025-12-31 11:42:31","December 31, 2025, 11:42 am",credit,22.1,1032
+Hawksnest,"2025-12-30 17:41:07","December 30, 2025, 5:38 pm",cash,30,1032
+Hawksnest,"2025-12-28 12:20:52","December 28, 2025, 12:20 pm",credit,46.4,1032
+Hawksnest,"2025-12-27 13:34:45","December 27, 2025, 1:34 pm",cash,24,1032
+Hawksnest,"2025-12-26 11:58:44","December 26, 2025, 11:58 am",credit,17.68,1032
+Hawksnest,"2025-12-24 13:33:10","December 24, 2025, 1:33 pm",credit,46.4,1032
+Hawksnest,"2025-12-23 13:47:54","December 23, 2025, 1:47 pm",credit,27.62,1032
+Hawksnest,"2025-12-22 14:09:48","December 22, 2025, 1:53 pm",cash,30,1032
+Hawksnest,"2025-12-21 13:49:14","December 21, 2025, 1:49 pm",credit,54.14,1032
+Hawksnest,"2025-12-20 13:36:28","December 20, 2025, 1:36 pm",credit,8.84,1032
+Hawksnest,"2025-12-16 15:21:24","December 16, 2025, 3:21 pm",credit,13.31,1032
+Hawksnest,"2025-12-13 13:40:08","December 13, 2025, 1:40 pm",credit,49.91,1032
+Hawksnest,"2025-12-12 14:16:50","December 12, 2025, 2:16 pm",credit,33.27,1032
+Hawksnest,"2025-12-07 15:59:18","2025/12/07 15:59:18",credit,36.25,1032
+Hawksnest,"2025-12-06 13:57:55","2025/12/06 13:57:55",credit,26.36,1032
+Hawksnest,"2026-01-09 15:03:20","January 9, 2026, 3:03 pm",credit,85.07,1033
+Hawksnest,"2026-01-05 15:26:58","January 5, 2026, 3:25 pm",cash,49,1033
+Hawksnest,"2026-01-04 13:36:52","January 4, 2026, 1:36 pm",credit,17.68,1033
+Hawksnest,"2026-01-03 13:35:40","January 3, 2026, 1:34 pm",cash,15,1033
+Hawksnest,"2026-01-02 13:46:02","January 2, 2026, 1:46 pm",credit,57.18,1033
+Hawksnest,"2026-01-01 17:36:38","January 1, 2026, 5:36 pm",credit,12.15,1033
+Hawksnest,"2025-12-31 11:42:45","December 31, 2025, 11:42 am",credit,38.67,1033
+Hawksnest,"2025-12-28 13:27:30","December 28, 2025, 1:27 pm",credit,18.3,1033
+Hawksnest,"2025-12-27 13:34:46","December 27, 2025, 1:34 pm",credit,33.15,1033
+Hawksnest,"2025-12-26 11:58:50","December 26, 2025, 11:58 am",credit,17.68,1033
+Hawksnest,"2025-12-24 13:39:24","December 24, 2025, 1:39 pm",credit,54.14,1033
+Hawksnest,"2025-12-23 13:48:08","December 23, 2025, 1:48 pm",credit,18.3,1033
+Hawksnest,"2025-12-22 13:56:46","December 22, 2025, 1:56 pm",cash,25,1033
+Hawksnest,"2025-12-21 13:53:21","December 21, 2025, 1:53 pm",credit,54.14,1033
+Hawksnest,"2025-12-20 13:36:43","December 20, 2025, 1:36 pm",credit,50.82,1033
+Hawksnest,"2025-12-16 15:27:47","December 16, 2025, 3:27 pm",credit,27.73,1033
+Hawksnest,"2025-12-13 13:42:16","December 13, 2025, 1:42 pm",credit,27.73,1033
+Hawksnest,"2025-12-12 15:12:08","December 12, 2025, 3:12 pm",credit,17.75,1033
+Hawksnest,"2025-12-06 13:59:08","2025/12/06 13:59:08",credit,21.97,1033
+Hawksnest,"2026-01-09 15:12:32","January 9, 2026, 3:12 pm",credit,33.15,1034
+Hawksnest,"2026-01-05 15:27:43","January 5, 2026, 3:27 pm",cash,24,1034
+Hawksnest,"2026-01-04 13:41:14","January 4, 2026, 1:39 pm",cash,8,1034
+Hawksnest,"2026-01-03 13:42:31","January 3, 2026, 1:42 pm",credit,62.98,1034
+Hawksnest,"2026-01-02 13:46:19","January 2, 2026, 1:46 pm",credit,33.15,1034
+Hawksnest,"2026-01-01 17:39:09","January 1, 2026, 5:38 pm",cash,12,1034
+Hawksnest,"2025-12-31 11:44:23","December 31, 2025, 11:44 am",credit,26.52,1034
+Hawksnest,"2025-12-28 13:32:00","December 28, 2025, 1:31 pm",cash,25,1034
+Hawksnest,"2025-12-27 13:36:37","December 27, 2025, 1:36 pm",cash,24,1034
+Hawksnest,"2025-12-26 12:00:03","December 26, 2025, 11:59 am",cash,25,1034
+Hawksnest,"2025-12-24 13:40:12","December 24, 2025, 1:40 pm",credit,26.52,1034
+Hawksnest,"2025-12-23 13:50:04","December 23, 2025, 1:50 pm",credit,26.52,1034
+Hawksnest,"2025-12-22 13:57:44","December 22, 2025, 1:57 pm",credit,24.31,1034
+Hawksnest,"2025-12-21 13:55:00","December 21, 2025, 1:54 pm",cash,42,1034
+Hawksnest,"2025-12-20 13:38:35","December 20, 2025, 1:38 pm",credit,33.15,1034
+Hawksnest,"2025-12-16 15:29:42","December 16, 2025, 3:29 pm",cash,42,1034
+Hawksnest,"2025-12-13 13:45:55","December 13, 2025, 1:45 pm",credit,33.27,1034
+Hawksnest,"2025-12-12 15:14:58","December 12, 2025, 3:14 pm",credit,16.64,1034
+Hawksnest,"2025-12-07 16:01:04","2025/12/07 16:01:04",credit,54.26,1034
+Hawksnest,"2026-01-09 15:23:40","January 9, 2026, 3:23 pm",cash,16,1035
+Hawksnest,"2026-01-05 15:53:30","January 5, 2026, 3:53 pm",credit,26.52,1035
+Hawksnest,"2026-01-04 13:42:22","January 4, 2026, 1:40 pm",cash,8,1035
+Hawksnest,"2026-01-03 13:48:26","January 3, 2026, 1:46 pm",cash,77,1035
+Hawksnest,"2026-01-02 13:47:57","January 2, 2026, 1:47 pm",credit,34.25,1035
+Hawksnest,"2026-01-01 17:43:11","January 1, 2026, 5:43 pm",credit,46.4,1035
+Hawksnest,"2025-12-31 11:49:38","December 31, 2025, 11:49 am",credit,44.19,1035
+Hawksnest,"2025-12-28 13:32:46","December 28, 2025, 1:31 pm",cash,8,1035
+Hawksnest,"2025-12-27 13:37:48","December 27, 2025, 1:37 pm",credit,24.31,1035
+Hawksnest,"2025-12-26 12:00:08","December 26, 2025, 12:00 pm",credit,55.24,1035
+Hawksnest,"2025-12-24 13:42:08","December 24, 2025, 1:42 pm",credit,70.71,1035
+Hawksnest,"2025-12-23 13:54:41","December 23, 2025, 1:53 pm",cash,24,1035
+Hawksnest,"2025-12-22 13:59:29","December 22, 2025, 1:59 pm",credit,26.52,1035
+Hawksnest,"2025-12-21 13:56:11","December 21, 2025, 1:56 pm",credit,17.68,1035
+Hawksnest,"2025-12-20 13:40:35","December 20, 2025, 1:40 pm",credit,36.46,1035
+Hawksnest,"2025-12-16 15:34:47","December 16, 2025, 3:34 pm",credit,86.51,1035
+Hawksnest,"2025-12-13 13:46:27","December 13, 2025, 1:46 pm",credit,61,1035
+Hawksnest,"2025-12-12 15:19:19","December 12, 2025, 3:19 pm",credit,38.82,1035
+Hawksnest,"2025-12-07 16:04:37","2025/12/07 16:04:36",credit,45.04,1035
+Hawksnest,"2025-12-06 14:04:11","2025/12/06 14:04:11",credit,36.25,1035
+Hawksnest,"2026-01-09 15:51:51","January 9, 2026, 3:51 pm",credit,69.61,1036
+Hawksnest,"2026-01-05 15:55:10","January 5, 2026, 3:55 pm",credit,38.67,1036
+Hawksnest,"2026-01-04 13:45:17","January 4, 2026, 1:45 pm",credit,30.94,1036
+Hawksnest,"2026-01-03 13:47:16","January 3, 2026, 1:47 pm",credit,8.84,1036
+Hawksnest,"2026-01-02 13:48:27","January 2, 2026, 1:48 pm",credit,40.02,1036
+Hawksnest,"2026-01-01 17:46:34","January 1, 2026, 5:46 pm",credit,8.84,1036
+Hawksnest,"2025-12-31 11:50:00","December 31, 2025, 11:49 am",credit,13.26,1036
+Hawksnest,"2025-12-28 13:31:49","December 28, 2025, 1:31 pm",credit,22.1,1036
+Hawksnest,"2025-12-27 13:40:13","December 27, 2025, 1:40 pm",credit,36.46,1036
+Hawksnest,"2025-12-26 12:02:30","December 26, 2025, 12:01 pm",cash,24,1036
+Hawksnest,"2025-12-24 13:44:31","December 24, 2025, 1:44 pm",cash,40,1036
+Hawksnest,"2025-12-23 14:01:29","December 23, 2025, 1:55 pm",cash,25,1036
+Hawksnest,"2025-12-22 13:59:40","December 22, 2025, 1:59 pm",credit,38.67,1036
+Hawksnest,"2025-12-21 13:58:56","December 21, 2025, 1:58 pm",cash,8,1036
+Hawksnest,"2025-12-20 13:44:13","December 20, 2025, 1:44 pm",credit,16.57,1036
+Hawksnest,"2025-12-16 15:41:29","December 16, 2025, 3:41 pm",credit,46.58,1036
+Hawksnest,"2025-12-13 13:46:45","December 13, 2025, 1:46 pm",credit,26.62,1036
+Hawksnest,"2025-12-12 15:26:37","December 12, 2025, 3:25 pm",cash,35,1036
+Hawksnest,"2025-12-06 14:06:47","2025/12/06 14:06:47",credit,138.41,1036
+Hawksnest,"2026-01-05 15:56:21","January 5, 2026, 3:55 pm",cash,30,1037
+Hawksnest,"2026-01-04 13:52:52","January 4, 2026, 1:49 pm",cash,12,1037
+Hawksnest,"2026-01-03 13:49:16","January 3, 2026, 1:48 pm",cash,84,1037
+Hawksnest,"2026-01-02 13:51:00","January 2, 2026, 1:50 pm",credit,27.62,1037
+Hawksnest,"2026-01-01 17:46:58","January 1, 2026, 5:46 pm",credit,49.72,1037
+Hawksnest,"2025-12-31 11:50:16","December 31, 2025, 11:50 am",credit,26.52,1037
+Hawksnest,"2025-12-28 13:34:02","December 28, 2025, 1:34 pm",credit,114.91,1037
+Hawksnest,"2025-12-27 13:42:16","December 27, 2025, 1:41 pm",cash,8,1037
+Hawksnest,"2025-12-26 12:43:26","December 26, 2025, 12:01 pm",cash,16,1037
+Hawksnest,"2025-12-24 13:47:12","December 24, 2025, 1:47 pm",credit,17.68,1037
+Hawksnest,"2025-12-23 13:56:57","December 23, 2025, 1:56 pm",credit,17.68,1037
+Hawksnest,"2025-12-22 13:59:49","December 22, 2025, 1:59 pm",credit,53.03,1037
+Hawksnest,"2025-12-21 13:58:36","December 21, 2025, 1:58 pm",credit,54.14,1037
+Hawksnest,"2025-12-20 13:45:03","December 20, 2025, 1:45 pm",credit,33.15,1037
+Hawksnest,"2025-12-16 15:49:59","December 16, 2025, 3:48 pm",cash,40,1037
+Hawksnest,"2025-12-13 13:49:57","December 13, 2025, 1:49 pm",cash,25,1037
+Hawksnest,"2025-12-12 15:30:26","December 12, 2025, 3:30 pm",credit,8.87,1037
+Hawksnest,"2025-12-06 14:08:07","2025/12/06 14:08:07",credit,8.79,1037
+Hawksnest,"2026-01-05 15:56:08","January 5, 2026, 3:56 pm",credit,33.15,1038
+Hawksnest,"2026-01-04 13:51:16","January 4, 2026, 1:51 pm",credit,27.62,1038
+Hawksnest,"2026-01-03 13:49:38","January 3, 2026, 1:49 pm",credit,36.59,1038
+Hawksnest,"2026-01-02 13:51:49","January 2, 2026, 1:51 pm",credit,17.75,1038
+Hawksnest,"2026-01-01 17:48:21","January 1, 2026, 5:48 pm",credit,66.29,1038
+Hawksnest,"2025-12-31 11:50:25","December 31, 2025, 11:50 am",credit,45.3,1038
+Hawksnest,"2025-12-28 13:35:13","December 28, 2025, 1:35 pm",credit,17.68,1038
+Hawksnest,"2025-12-27 13:46:34","December 27, 2025, 1:46 pm",credit,61.87,1038
+Hawksnest,"2025-12-26 12:01:37","December 26, 2025, 12:01 pm",credit,112.7,1038
+Hawksnest,"2025-12-24 13:48:19","December 24, 2025, 1:48 pm",credit,64.08,1038
+Hawksnest,"2025-12-23 13:57:19","December 23, 2025, 1:57 pm",credit,27.62,1038
+Hawksnest,"2025-12-22 14:00:53","December 22, 2025, 1:59 pm",cash,12,1038
+Hawksnest,"2025-12-21 14:02:16","December 21, 2025, 2:02 pm",credit,66.29,1038
+Hawksnest,"2025-12-20 13:47:01","December 20, 2025, 1:47 pm",credit,33.15,1038
+Hawksnest,"2025-12-16 17:27:49","December 16, 2025, 5:27 pm",credit,38.82,1038
+Hawksnest,"2025-12-13 13:53:21","December 13, 2025, 1:53 pm",credit,27.73,1038
+Hawksnest,"2025-12-12 15:47:38","December 12, 2025, 3:32 pm",cash,196,1038
+Hawksnest,"2025-12-06 14:12:38","2025/12/06 14:12:38",credit,32.95,1038
+Hawksnest,"2026-01-05 15:57:22","January 5, 2026, 3:57 pm",credit,26.52,1039
+Hawksnest,"2026-01-04 13:52:25","January 4, 2026, 1:51 pm",cash,25,1039
+Hawksnest,"2026-01-03 13:52:32","January 3, 2026, 1:52 pm",credit,27.62,1039
+Hawksnest,"2026-01-02 13:53:53","January 2, 2026, 1:53 pm",credit,36.46,1039
+Hawksnest,"2026-01-01 17:50:30","January 1, 2026, 5:49 pm",cash,30,1039
+Hawksnest,"2025-12-31 11:52:41","December 31, 2025, 11:52 am",credit,46.4,1039
+Hawksnest,"2025-12-28 13:36:16","December 28, 2025, 1:36 pm",credit,14.2,1039
+Hawksnest,"2025-12-27 13:50:01","December 27, 2025, 1:49 pm",cash,51,1039
+Hawksnest,"2025-12-26 12:02:30","December 26, 2025, 12:02 pm",credit,69.61,1039
+Hawksnest,"2025-12-24 13:50:36","December 24, 2025, 1:50 pm",credit,45.3,1039
+Hawksnest,"2025-12-23 13:58:44","December 23, 2025, 1:58 pm",credit,27.62,1039
+Hawksnest,"2025-12-22 14:01:01","December 22, 2025, 2:00 pm",cash,25,1039
+Hawksnest,"2025-12-21 14:02:24","December 21, 2025, 2:02 pm",credit,59.66,1039
+Hawksnest,"2025-12-20 13:50:37","December 20, 2025, 1:47 pm",cash,30,1039
+Hawksnest,"2025-12-16 17:29:04","December 16, 2025, 5:29 pm",credit,62.11,1039
+Hawksnest,"2025-12-13 13:54:22","December 13, 2025, 1:53 pm",cash,12,1039
+Hawksnest,"2025-12-12 15:33:32","December 12, 2025, 3:33 pm",credit,117.57,1039
+Hawksnest,"2025-12-06 14:47:12","2025/12/06 14:47:12",credit,8.79,1039
+Hawksnest,"2026-01-05 16:02:10","January 5, 2026, 3:58 pm",cash,41,1040
+Hawksnest,"2026-01-04 13:52:10","January 4, 2026, 1:52 pm",credit,17.68,1040
+Hawksnest,"2026-01-03 14:01:30","January 3, 2026, 1:52 pm",cash,51,1040
+Hawksnest,"2026-01-02 13:54:12","January 2, 2026, 1:54 pm",credit,8.84,1040
+Hawksnest,"2026-01-01 17:52:23","January 1, 2026, 5:50 pm",cash,35,1040
+Hawksnest,"2025-12-31 11:56:52","December 31, 2025, 11:55 am",cash,30,1040
+Hawksnest,"2025-12-28 13:38:48","December 28, 2025, 1:37 pm",cash,35,1040
+Hawksnest,"2025-12-27 13:51:16","December 27, 2025, 1:51 pm",credit,17.68,1040
+Hawksnest,"2025-12-26 12:05:10","December 26, 2025, 12:05 pm",credit,61.87,1040
+Hawksnest,"2025-12-24 13:53:31","December 24, 2025, 1:52 pm",cash,16,1040
+Hawksnest,"2025-12-23 14:00:43","December 23, 2025, 2:00 pm",cash,38,1040
+Hawksnest,"2025-12-22 14:02:37","December 22, 2025, 2:02 pm",credit,38.67,1040
+Hawksnest,"2025-12-21 14:03:14","December 21, 2025, 2:03 pm",credit,43.09,1040
+Hawksnest,"2025-12-20 13:48:24","December 20, 2025, 1:48 pm",credit,30.94,1040
+Hawksnest,"2025-12-16 17:58:18","December 16, 2025, 5:57 pm",cash,25,1040
+Hawksnest,"2025-12-13 13:56:05","December 13, 2025, 1:56 pm",credit,38.82,1040
+Hawksnest,"2025-12-12 15:34:42","December 12, 2025, 3:34 pm",credit,27.73,1040
+Hawksnest,"2025-12-06 15:36:53","2025/12/06 15:36:53",credit,84.58,1040
+Hawksnest,"2026-01-05 16:00:28","January 5, 2026, 4:00 pm",credit,64.08,1041
+Hawksnest,"2026-01-04 13:55:05","January 4, 2026, 1:54 pm",cash,32,1041
+Hawksnest,"2026-01-03 13:54:03","January 3, 2026, 1:54 pm",credit,17.68,1041
+Hawksnest,"2026-01-02 13:56:26","January 2, 2026, 1:54 pm",cash,56,1041
+Hawksnest,"2026-01-01 17:51:35","January 1, 2026, 5:51 pm",credit,49.72,1041
+Hawksnest,"2025-12-31 12:05:49","December 31, 2025, 12:03 pm",cash,49,1041
+Hawksnest,"2025-12-28 13:38:35","December 28, 2025, 1:38 pm",credit,61.87,1041
+Hawksnest,"2025-12-27 13:54:29","December 27, 2025, 1:54 pm",credit,26.52,1041
+Hawksnest,"2025-12-26 12:05:28","December 26, 2025, 12:05 pm",credit,33.15,1041
+Hawksnest,"2025-12-24 13:54:51","December 24, 2025, 1:54 pm",credit,26.52,1041
+Hawksnest,"2025-12-23 14:04:18","December 23, 2025, 2:01 pm",cash,25,1041
+Hawksnest,"2025-12-22 14:03:23","December 22, 2025, 2:03 pm",credit,8.84,1041
+Hawksnest,"2025-12-21 14:08:24","December 21, 2025, 2:08 pm",credit,45.3,1041
+Hawksnest,"2025-12-20 13:51:47","December 20, 2025, 1:48 pm",cash,12,1041
+Hawksnest,"2025-12-16 17:59:52","December 16, 2025, 5:59 pm",credit,25.51,1041
+Hawksnest,"2025-12-13 13:57:57","December 13, 2025, 1:57 pm",credit,13.31,1041
+Hawksnest,"2025-12-12 15:36:22","December 12, 2025, 3:36 pm",credit,82.08,1041
+Hawksnest,"2025-12-06 15:38:01","2025/12/06 15:38:00",credit,27.46,1041
+Hawksnest,"2026-01-05 16:02:15","January 5, 2026, 4:02 pm",credit,22.1,1042
+Hawksnest,"2026-01-04 13:56:08","January 4, 2026, 1:56 pm",credit,8.84,1042
+Hawksnest,"2026-01-03 13:59:52","January 3, 2026, 1:54 pm",cash,58,1042
+Hawksnest,"2026-01-02 13:57:20","January 2, 2026, 1:56 pm",cash,15,1042
+Hawksnest,"2026-01-01 17:53:03","January 1, 2026, 5:53 pm",credit,33.15,1042
+Hawksnest,"2025-12-31 12:07:52","December 31, 2025, 12:03 pm",cash,49,1042
+Hawksnest,"2025-12-28 13:40:31","December 28, 2025, 1:39 pm",cash,40,1042
+Hawksnest,"2025-12-27 13:55:33","December 27, 2025, 1:55 pm",credit,26.52,1042
+Hawksnest,"2025-12-26 12:09:15","December 26, 2025, 12:09 pm",credit,35.36,1042
+Hawksnest,"2025-12-24 13:56:41","December 24, 2025, 1:55 pm",cash,25,1042
+Hawksnest,"2025-12-23 14:03:03","December 23, 2025, 2:03 pm",credit,44.19,1042
+Hawksnest,"2025-12-22 14:05:43","December 22, 2025, 2:05 pm",credit,54.14,1042
+Hawksnest,"2025-12-21 14:10:55","December 21, 2025, 2:10 pm",cash,25,1042
+Hawksnest,"2025-12-20 13:49:28","December 20, 2025, 1:49 pm",credit,33.15,1042
+Hawksnest,"2025-12-16 18:06:32","December 16, 2025, 6:06 pm",credit,41.04,1042
+Hawksnest,"2025-12-13 13:58:01","December 13, 2025, 1:58 pm",credit,108.69,1042
+Hawksnest,"2025-12-12 15:36:44","December 12, 2025, 3:36 pm",credit,45.47,1042
+Hawksnest,"2025-12-06 15:38:18","2025/12/06 15:38:18",credit,8.79,1042
+Hawksnest,"2026-01-05 16:05:00","January 5, 2026, 4:03 pm",cash,25,1043
+Hawksnest,"2026-01-04 13:56:17","January 4, 2026, 1:56 pm",credit,41.98,1043
+Hawksnest,"2026-01-03 13:56:39","January 3, 2026, 1:54 pm",cash,70.38,1043
+Hawksnest,"2026-01-02 13:59:13","January 2, 2026, 1:59 pm",credit,27.62,1043
+Hawksnest,"2026-01-01 17:54:45","January 1, 2026, 5:54 pm",cash,16,1043
+Hawksnest,"2025-12-31 12:07:17","December 31, 2025, 12:05 pm",cash,42,1043
+Hawksnest,"2025-12-28 13:40:42","December 28, 2025, 1:40 pm",credit,22.1,1043
+Hawksnest,"2025-12-27 13:57:23","December 27, 2025, 1:57 pm",credit,27.62,1043
+Hawksnest,"2025-12-26 12:12:06","December 26, 2025, 12:12 pm",credit,38.67,1043
+Hawksnest,"2025-12-24 13:55:30","December 24, 2025, 1:55 pm",credit,155.79,1043
+Hawksnest,"2025-12-23 14:03:36","December 23, 2025, 2:03 pm",credit,38.67,1043
+Hawksnest,"2025-12-22 14:15:13","December 22, 2025, 2:15 pm",credit,27.62,1043
+Hawksnest,"2025-12-21 15:05:55","December 21, 2025, 3:04 pm",cash,35.48,1043
+Hawksnest,"2025-12-20 13:50:58","December 20, 2025, 1:50 pm",credit,8.84,1043
+Hawksnest,"2025-12-13 13:59:07","December 13, 2025, 1:58 pm",cash,16,1043
+Hawksnest,"2025-12-12 15:38:31","December 12, 2025, 3:38 pm",credit,33.27,1043
+Hawksnest,"2026-01-05 16:05:27","January 5, 2026, 4:05 pm",credit,45.3,1044
+Hawksnest,"2026-01-04 14:02:26","January 4, 2026, 2:02 pm",credit,46.4,1044
+Hawksnest,"2026-01-03 13:56:42","January 3, 2026, 1:56 pm",credit,27.62,1044
+Hawksnest,"2026-01-02 14:00:36","January 2, 2026, 2:00 pm",credit,38.67,1044
+Hawksnest,"2026-01-01 17:57:08","January 1, 2026, 5:57 pm",credit,27.62,1044
+Hawksnest,"2025-12-31 12:16:52","December 31, 2025, 12:16 pm",credit,38.67,1044
+Hawksnest,"2025-12-28 13:44:35","December 28, 2025, 1:44 pm",credit,17.68,1044
+Hawksnest,"2025-12-27 14:00:17","December 27, 2025, 2:00 pm",credit,8.84,1044
+Hawksnest,"2025-12-26 12:14:43","December 26, 2025, 12:13 pm",cash,16,1044
+Hawksnest,"2025-12-24 13:55:58","December 24, 2025, 1:55 pm",credit,26.52,1044
+Hawksnest,"2025-12-23 14:04:01","December 23, 2025, 2:04 pm",credit,109.38,1044
+Hawksnest,"2025-12-22 14:20:07","December 22, 2025, 2:16 pm",cash,106,1044
+Hawksnest,"2025-12-21 15:16:02","December 21, 2025, 3:16 pm",credit,17.68,1044
+Hawksnest,"2025-12-20 13:54:03","December 20, 2025, 1:52 pm",cash,49,1044
+Hawksnest,"2025-12-13 13:58:47","December 13, 2025, 1:58 pm",credit,35.49,1044
+Hawksnest,"2025-12-12 15:43:59","December 12, 2025, 3:40 pm",cash,8,1044
+Hawksnest,"2026-01-05 16:05:41","January 5, 2026, 4:05 pm",credit,44.19,1045
+Hawksnest,"2026-01-04 14:02:43","January 4, 2026, 2:02 pm",credit,26.52,1045
+Hawksnest,"2026-01-03 13:57:13","January 3, 2026, 1:57 pm",credit,35.36,1045
+Hawksnest,"2026-01-02 14:01:02","January 2, 2026, 2:01 pm",credit,27.62,1045
+Hawksnest,"2026-01-01 17:57:59","January 1, 2026, 5:57 pm",credit,33.15,1045
+Hawksnest,"2025-12-31 13:08:31","December 31, 2025, 1:08 pm",credit,38.67,1045
+Hawksnest,"2025-12-28 13:46:08","December 28, 2025, 1:45 pm",cash,25,1045
+Hawksnest,"2025-12-27 14:00:37","December 27, 2025, 2:00 pm",credit,38.67,1045
+Hawksnest,"2025-12-26 12:19:24","December 26, 2025, 12:19 pm",credit,53.03,1045
+Hawksnest,"2025-12-24 13:57:37","December 24, 2025, 1:57 pm",credit,61.87,1045
+Hawksnest,"2025-12-23 14:06:34","December 23, 2025, 2:06 pm",cash,16,1045
+Hawksnest,"2025-12-22 14:28:13","December 22, 2025, 2:28 pm",credit,38.67,1045
+Hawksnest,"2025-12-21 15:19:56","December 21, 2025, 3:19 pm",cash,53,1045
+Hawksnest,"2025-12-20 13:53:05","December 20, 2025, 1:53 pm",credit,27.62,1045
+Hawksnest,"2025-12-13 14:01:27","December 13, 2025, 2:00 pm",cash,44,1045
+Hawksnest,"2025-12-12 15:46:17","December 12, 2025, 3:46 pm",credit,16.64,1045
+Hawksnest,"2025-12-06 15:49:54","2025/12/06 15:49:54",credit,39.54,1045
+Hawksnest,"2026-01-05 17:07:08","January 5, 2026, 5:01 pm",cash,56,1046
+Hawksnest,"2026-01-04 14:03:19","January 4, 2026, 2:03 pm",credit,13.26,1046
+Hawksnest,"2026-01-03 13:57:18","January 3, 2026, 1:57 pm",credit,26.52,1046
+Hawksnest,"2026-01-02 14:01:47","January 2, 2026, 2:01 pm",credit,27.62,1046
+Hawksnest,"2026-01-01 18:00:02","January 1, 2026, 6:00 pm",credit,55.24,1046
+Hawksnest,"2025-12-31 13:28:48","December 31, 2025, 1:28 pm",credit,17.68,1046
+Hawksnest,"2025-12-28 13:48:29","December 28, 2025, 1:48 pm",credit,13.26,1046
+Hawksnest,"2025-12-27 14:04:38","December 27, 2025, 2:03 pm",cash,35,1046
+Hawksnest,"2025-12-26 13:12:44","December 26, 2025, 1:09 pm",cash,25,1046
+Hawksnest,"2025-12-24 13:58:40","December 24, 2025, 1:58 pm",credit,26.52,1046
+Hawksnest,"2025-12-23 14:07:00","December 23, 2025, 2:07 pm",credit,104.96,1046
+Hawksnest,"2025-12-22 15:27:57","December 22, 2025, 3:27 pm",credit,27.62,1046
+Hawksnest,"2025-12-21 15:20:09","December 21, 2025, 3:20 pm",credit,17.68,1046
+Hawksnest,"2025-12-20 13:54:40","December 20, 2025, 1:54 pm",credit,26.52,1046
+Hawksnest,"2025-12-13 14:00:42","December 13, 2025, 2:00 pm",credit,38.82,1046
+Hawksnest,"2025-12-12 15:48:14","December 12, 2025, 3:48 pm",credit,13.17,1046
+Hawksnest,"2025-12-06 15:50:46","2025/12/06 15:50:46",credit,38.45,1046
+Hawksnest,"2026-01-05 17:20:05","January 5, 2026, 5:20 pm",credit,17.68,1047
+Hawksnest,"2026-01-04 14:05:09","January 4, 2026, 2:05 pm",credit,17.68,1047
+Hawksnest,"2026-01-03 14:01:54","January 3, 2026, 1:57 pm",cash,25,1047
+Hawksnest,"2026-01-02 14:06:52","January 2, 2026, 2:06 pm",cash,33,1047
+Hawksnest,"2026-01-01 18:00:26","January 1, 2026, 6:00 pm",credit,38.67,1047
+Hawksnest,"2025-12-31 13:34:33","December 31, 2025, 1:34 pm",credit,27.62,1047
+Hawksnest,"2025-12-28 13:51:28","December 28, 2025, 1:50 pm",cash,49,1047
+Hawksnest,"2025-12-27 14:05:50","December 27, 2025, 2:05 pm",cash,27.72,1047
+Hawksnest,"2025-12-26 13:15:59","December 26, 2025, 1:15 pm",credit,36.46,1047
+Hawksnest,"2025-12-24 13:59:39","December 24, 2025, 1:59 pm",credit,13.26,1047
+Hawksnest,"2025-12-23 14:08:09","December 23, 2025, 2:08 pm",credit,17.68,1047
+Hawksnest,"2025-12-22 15:32:08","December 22, 2025, 3:32 pm",credit,66.29,1047
+Hawksnest,"2025-12-21 15:23:06","December 21, 2025, 3:22 pm",cash,8,1047
+Hawksnest,"2025-12-20 13:55:25","December 20, 2025, 1:55 pm",credit,112.7,1047
+Hawksnest,"2025-12-13 14:01:21","December 13, 2025, 2:01 pm",credit,29.93,1047
+Hawksnest,"2026-01-04 14:09:40","January 4, 2026, 2:06 pm",cash,24,1048
+Hawksnest,"2026-01-03 13:58:28","January 3, 2026, 1:58 pm",credit,26.52,1048
+Hawksnest,"2026-01-02 14:09:24","January 2, 2026, 2:09 pm",credit,26.52,1048
+Hawksnest,"2026-01-01 18:02:21","January 1, 2026, 6:02 pm",credit,46.4,1048
+Hawksnest,"2025-12-31 13:37:13","December 31, 2025, 1:35 pm",cash,38.81,1048
+Hawksnest,"2025-12-28 13:52:05","December 28, 2025, 1:50 pm",cash,25,1048
+Hawksnest,"2025-12-27 14:11:34","December 27, 2025, 2:11 pm",credit,16.57,1048
+Hawksnest,"2025-12-26 13:21:37","December 26, 2025, 1:21 pm",credit,46.4,1048
+Hawksnest,"2025-12-24 13:59:49","December 24, 2025, 1:59 pm",credit,36.46,1048
+Hawksnest,"2025-12-23 15:10:08","December 23, 2025, 3:10 pm",credit,33.15,1048
+Hawksnest,"2025-12-22 15:34:39","December 22, 2025, 3:34 pm",credit,39.78,1048
+Hawksnest,"2025-12-21 15:29:52","December 21, 2025, 3:29 pm",credit,46.4,1048
+Hawksnest,"2025-12-20 13:57:39","December 20, 2025, 1:56 pm",cash,25,1048
+Hawksnest,"2025-12-13 14:03:01","December 13, 2025, 2:03 pm",credit,27.73,1048
+Hawksnest,"2025-12-06 15:53:25","2025/12/06 15:53:25",credit,16.48,1048
+Hawksnest,"2026-01-04 14:08:03","January 4, 2026, 2:08 pm",credit,46.4,1049
+Hawksnest,"2026-01-03 14:01:32","January 3, 2026, 2:01 pm",credit,27.62,1049
+Hawksnest,"2026-01-02 14:27:15","January 2, 2026, 2:25 pm",cash,35,1049
+Hawksnest,"2026-01-01 18:04:16","January 1, 2026, 6:04 pm",credit,26.52,1049
+Hawksnest,"2025-12-31 13:40:16","December 31, 2025, 1:40 pm",credit,38.67,1049
+Hawksnest,"2025-12-28 13:51:00","December 28, 2025, 1:51 pm",credit,27.62,1049
+Hawksnest,"2025-12-27 14:12:26","December 27, 2025, 2:12 pm",credit,8.84,1049
+Hawksnest,"2025-12-26 13:25:41","December 26, 2025, 1:25 pm",credit,17.68,1049
+Hawksnest,"2025-12-24 14:00:02","December 24, 2025, 2:00 pm",credit,27.62,1049
+Hawksnest,"2025-12-23 15:13:09","December 23, 2025, 3:13 pm",credit,17.68,1049
+Hawksnest,"2025-12-22 15:35:37","December 22, 2025, 3:35 pm",credit,22.1,1049
+Hawksnest,"2025-12-21 15:36:15","December 21, 2025, 3:35 pm",cash,45,1049
+Hawksnest,"2025-12-20 13:56:57","December 20, 2025, 1:56 pm",credit,13.26,1049
+Hawksnest,"2025-12-13 14:10:33","December 13, 2025, 2:10 pm",credit,22.18,1049
+Hawksnest,"2026-01-04 14:20:59","January 4, 2026, 2:19 pm",cash,77,1050
+Hawksnest,"2026-01-03 14:01:52","January 3, 2026, 2:01 pm",credit,38.67,1050
+Hawksnest,"2026-01-02 14:35:26","January 2, 2026, 2:34 pm",cash,59,1050
+Hawksnest,"2026-01-01 18:13:49","January 1, 2026, 6:13 pm",credit,16.57,1050
+Hawksnest,"2025-12-31 13:40:21","December 31, 2025, 1:40 pm",credit,49.72,1050
+Hawksnest,"2025-12-28 13:51:00","December 28, 2025, 1:51 pm",credit,12.15,1050
+Hawksnest,"2025-12-27 14:13:36","December 27, 2025, 2:13 pm",credit,8.84,1050
+Hawksnest,"2025-12-26 13:29:24","December 26, 2025, 1:27 pm",cash,15,1050
+Hawksnest,"2025-12-24 14:00:34","December 24, 2025, 2:00 pm",credit,27.62,1050
+Hawksnest,"2025-12-23 15:13:13","December 23, 2025, 3:13 pm",credit,17.68,1050
+Hawksnest,"2025-12-22 15:39:42","December 22, 2025, 3:38 pm",cash,16,1050
+Hawksnest,"2025-12-21 15:35:40","December 21, 2025, 3:35 pm",credit,8.84,1050
+Hawksnest,"2025-12-20 13:57:15","December 20, 2025, 1:57 pm",credit,26.52,1050
+Hawksnest,"2025-12-13 15:14:02","December 13, 2025, 3:13 pm",credit,35.92,1050
+Hawksnest,"2026-01-04 14:22:09","January 4, 2026, 2:22 pm",credit,38.67,1051
+Hawksnest,"2026-01-03 14:31:20","January 3, 2026, 2:31 pm",credit,17.68,1051
+Hawksnest,"2026-01-02 15:02:50","January 2, 2026, 3:02 pm",credit,35.36,1051
+Hawksnest,"2026-01-01 18:19:58","January 1, 2026, 6:19 pm",cash,24,1051
+Hawksnest,"2025-12-31 13:41:21","December 31, 2025, 1:41 pm",credit,66.29,1051
+Hawksnest,"2025-12-28 13:51:08","December 28, 2025, 1:51 pm",credit,12.15,1051
+Hawksnest,"2025-12-27 14:15:27","December 27, 2025, 2:15 pm",credit,46.4,1051
+Hawksnest,"2025-12-26 13:28:25","December 26, 2025, 1:28 pm",credit,66.29,1051
+Hawksnest,"2025-12-24 14:07:40","December 24, 2025, 2:06 pm",cash,35,1051
+Hawksnest,"2025-12-23 15:19:54","December 23, 2025, 3:19 pm",credit,90.6,1051
+Hawksnest,"2025-12-22 15:45:57","December 22, 2025, 3:45 pm",credit,26.52,1051
+Hawksnest,"2025-12-21 15:38:42","December 21, 2025, 3:38 pm",credit,66.29,1051
+Hawksnest,"2025-12-20 14:00:40","December 20, 2025, 1:58 pm",cash,25,1051
+Hawksnest,"2025-12-13 15:32:17","December 13, 2025, 3:32 pm",credit,8.87,1051
+Hawksnest,"2026-01-04 15:01:24","January 4, 2026, 3:00 pm",cash,15,1052
+Hawksnest,"2026-01-03 15:09:12","January 3, 2026, 3:09 pm",credit,27.62,1052
+Hawksnest,"2026-01-02 15:04:40","January 2, 2026, 3:04 pm",credit,17.68,1052
+Hawksnest,"2026-01-01 18:22:29","January 1, 2026, 6:21 pm",cash,35,1052
+Hawksnest,"2025-12-31 13:44:28","December 31, 2025, 1:42 pm",cash,28,1052
+Hawksnest,"2025-12-28 13:52:51","December 28, 2025, 1:52 pm",credit,35.36,1052
+Hawksnest,"2025-12-27 14:55:30","December 27, 2025, 2:55 pm",credit,17.15,1052
+Hawksnest,"2025-12-26 13:28:37","December 26, 2025, 1:28 pm",credit,8.84,1052
+Hawksnest,"2025-12-24 14:07:49","December 24, 2025, 2:07 pm",credit,27.62,1052
+Hawksnest,"2025-12-23 15:21:05","December 23, 2025, 3:20 pm",cash,15,1052
+Hawksnest,"2025-12-22 15:45:58","December 22, 2025, 3:45 pm",credit,49.72,1052
+Hawksnest,"2025-12-21 15:40:42","December 21, 2025, 3:40 pm",credit,27.62,1052
+Hawksnest,"2025-12-20 14:03:04","December 20, 2025, 2:01 pm",cash,24,1052
+Hawksnest,"2025-12-13 15:45:47","December 13, 2025, 3:37 pm",cash,16,1052
+Hawksnest,"2026-01-04 15:29:17","January 4, 2026, 3:29 pm",credit,17.68,1053
+Hawksnest,"2026-01-03 15:09:15","January 3, 2026, 3:09 pm",credit,26.52,1053
+Hawksnest,"2026-01-02 15:12:13","January 2, 2026, 3:12 pm",credit,45.3,1053
+Hawksnest,"2026-01-01 19:07:59","January 1, 2026, 7:07 pm",credit,26.52,1053
+Hawksnest,"2025-12-31 13:43:46","December 31, 2025, 1:43 pm",credit,39.78,1053
+Hawksnest,"2025-12-28 13:54:14","December 28, 2025, 1:54 pm",credit,27.62,1053
+Hawksnest,"2025-12-27 14:56:08","December 27, 2025, 2:56 pm",credit,8.84,1053
+Hawksnest,"2025-12-26 13:29:46","December 26, 2025, 1:29 pm",credit,27.62,1053
+Hawksnest,"2025-12-24 14:25:46","December 24, 2025, 2:25 pm",credit,35.36,1053
+Hawksnest,"2025-12-23 15:22:39","December 23, 2025, 3:22 pm",credit,17.68,1053
+Hawksnest,"2025-12-22 15:47:31","December 22, 2025, 3:47 pm",credit,17.68,1053
+Hawksnest,"2025-12-21 15:48:19","December 21, 2025, 3:48 pm",credit,22.1,1053
+Hawksnest,"2025-12-20 14:08:36","December 20, 2025, 2:07 pm",cash,25,1053
+Hawksnest,"2025-12-13 15:45:50","December 13, 2025, 3:45 pm",credit,8.87,1053
+Hawksnest,"2026-01-04 15:34:48","January 4, 2026, 3:34 pm",credit,96.12,1054
+Hawksnest,"2026-01-03 15:14:32","January 3, 2026, 3:14 pm",credit,8.84,1054
+Hawksnest,"2026-01-02 15:18:27","January 2, 2026, 3:12 pm",cash,32,1054
+Hawksnest,"2026-01-01 19:14:09","January 1, 2026, 7:14 pm",credit,16.57,1054
+Hawksnest,"2025-12-31 13:48:49","December 31, 2025, 1:47 pm",cash,35,1054
+Hawksnest,"2025-12-28 13:54:21","December 28, 2025, 1:54 pm",credit,61.87,1054
+Hawksnest,"2025-12-27 15:03:20","December 27, 2025, 3:01 pm",cash,60,1054
+Hawksnest,"2025-12-26 13:31:23","December 26, 2025, 1:30 pm",cash,16,1054
+Hawksnest,"2025-12-24 14:34:01","December 24, 2025, 2:27 pm",cash,15,1054
+Hawksnest,"2025-12-23 15:24:32","December 23, 2025, 3:24 pm",cash,16,1054
+Hawksnest,"2025-12-22 15:47:52","December 22, 2025, 3:47 pm",credit,17.68,1054
+Hawksnest,"2025-12-21 15:49:33","December 21, 2025, 3:49 pm",credit,27.62,1054
+Hawksnest,"2025-12-20 14:11:09","December 20, 2025, 2:11 pm",credit,27.62,1054
+Hawksnest,"2025-12-13 15:50:05","December 13, 2025, 3:50 pm",credit,48.8,1054
+Hawksnest,"2026-01-04 15:38:14","January 4, 2026, 3:38 pm",credit,26.52,1055
+Hawksnest,"2026-01-03 15:27:29","January 3, 2026, 3:26 pm",cash,35,1055
+Hawksnest,"2026-01-02 15:21:08","January 2, 2026, 3:21 pm",credit,8.84,1055
+Hawksnest,"2026-01-01 19:16:19","January 1, 2026, 7:15 pm",cash,15,1055
+Hawksnest,"2025-12-31 13:49:47","December 31, 2025, 1:49 pm",cash,30,1055
+Hawksnest,"2025-12-28 13:55:04","December 28, 2025, 1:55 pm",credit,38.67,1055
+Hawksnest,"2025-12-27 15:04:56","December 27, 2025, 3:04 pm",credit,17.68,1055
+Hawksnest,"2025-12-26 13:35:10","December 26, 2025, 1:35 pm",credit,8.84,1055
+Hawksnest,"2025-12-24 14:45:38","December 24, 2025, 2:45 pm",credit,8.84,1055
+Hawksnest,"2025-12-23 15:24:48","December 23, 2025, 3:24 pm",credit,38.67,1055
+Hawksnest,"2025-12-22 15:51:05","December 22, 2025, 3:49 pm",cash,56,1055
+Hawksnest,"2025-12-21 15:49:58","December 21, 2025, 3:49 pm",credit,27.62,1055
+Hawksnest,"2025-12-20 14:14:16","December 20, 2025, 2:14 pm",credit,8.84,1055
+Hawksnest,"2025-12-13 15:50:51","December 13, 2025, 3:50 pm",credit,12.2,1055
+Hawksnest,"2026-01-04 15:38:48","January 4, 2026, 3:38 pm",credit,38.67,1056
+Hawksnest,"2026-01-03 15:29:00","January 3, 2026, 3:28 pm",credit,27.62,1056
+Hawksnest,"2026-01-02 15:21:30","January 2, 2026, 3:21 pm",credit,26.52,1056
+Hawksnest,"2026-01-01 19:23:23","January 1, 2026, 7:23 pm",credit,26.52,1056
+Hawksnest,"2025-12-31 13:51:39","December 31, 2025, 1:51 pm",credit,29.83,1056
+Hawksnest,"2025-12-28 13:57:39","December 28, 2025, 1:57 pm",credit,27.62,1056
+Hawksnest,"2025-12-27 15:15:52","December 27, 2025, 3:13 pm",cash,57,1056
+Hawksnest,"2025-12-26 13:36:37","December 26, 2025, 1:36 pm",credit,46.4,1056
+Hawksnest,"2025-12-24 15:10:33","December 24, 2025, 3:10 pm",cash,24,1056
+Hawksnest,"2025-12-23 15:26:13","December 23, 2025, 3:26 pm",credit,62.98,1056
+Hawksnest,"2025-12-22 15:49:59","December 22, 2025, 3:49 pm",credit,8.84,1056
+Hawksnest,"2025-12-21 15:53:08","December 21, 2025, 3:53 pm",credit,66.29,1056
+Hawksnest,"2025-12-20 14:17:06","December 20, 2025, 2:16 pm",cash,24,1056
+Hawksnest,"2025-12-13 15:53:35","December 13, 2025, 3:53 pm",credit,66.55,1056
+Hawksnest,"2025-12-06 16:06:59","2025/12/06 16:06:59",credit,46.14,1056
+Hawksnest,"2026-01-04 15:42:08","January 4, 2026, 3:42 pm",credit,38.67,1057
+Hawksnest,"2026-01-03 15:36:08","January 3, 2026, 3:35 pm",cash,25,1057
+Hawksnest,"2026-01-02 15:27:02","January 2, 2026, 3:25 pm",cash,35,1057
+Hawksnest,"2026-01-01 19:25:40","January 1, 2026, 7:25 pm",credit,17.68,1057
+Hawksnest,"2025-12-31 13:53:32","December 31, 2025, 1:53 pm",credit,33.15,1057
+Hawksnest,"2025-12-28 13:58:27","December 28, 2025, 1:58 pm",credit,33.15,1057
+Hawksnest,"2025-12-27 15:19:55","December 27, 2025, 3:19 pm",credit,41.42,1057
+Hawksnest,"2025-12-26 13:37:10","December 26, 2025, 1:37 pm",credit,59.66,1057
+Hawksnest,"2025-12-24 15:11:18","December 24, 2025, 3:11 pm",credit,8.84,1057
+Hawksnest,"2025-12-23 15:37:13","December 23, 2025, 3:26 pm",cash,41,1057
+Hawksnest,"2025-12-22 15:50:43","December 22, 2025, 3:50 pm",credit,46.4,1057
+Hawksnest,"2025-12-21 15:53:31","December 21, 2025, 3:53 pm",credit,35.36,1057
+Hawksnest,"2025-12-20 14:17:28","December 20, 2025, 2:17 pm",credit,36.46,1057
+Hawksnest,"2025-12-13 15:54:18","December 13, 2025, 3:54 pm",credit,54.35,1057
+Hawksnest,"2025-12-06 16:10:30","2025/12/06 16:10:30",credit,16.48,1057
+Hawksnest,"2026-01-04 15:43:54","January 4, 2026, 3:43 pm",cash,8,1058
+Hawksnest,"2026-01-03 15:41:09","January 3, 2026, 3:41 pm",credit,86.18,1058
+Hawksnest,"2026-01-02 15:26:09","January 2, 2026, 3:26 pm",credit,13.26,1058
+Hawksnest,"2026-01-01 19:27:41","January 1, 2026, 7:27 pm",credit,13.26,1058
+Hawksnest,"2025-12-31 13:55:08","December 31, 2025, 1:55 pm",credit,8.84,1058
+Hawksnest,"2025-12-28 14:00:42","December 28, 2025, 2:00 pm",credit,8.84,1058
+Hawksnest,"2025-12-27 15:21:48","December 27, 2025, 3:21 pm",credit,17.68,1058
+Hawksnest,"2025-12-26 13:38:37","December 26, 2025, 1:38 pm",credit,33.15,1058
+Hawksnest,"2025-12-24 15:15:36","December 24, 2025, 3:15 pm",credit,30.94,1058
+Hawksnest,"2025-12-23 15:31:28","December 23, 2025, 3:31 pm",credit,16.57,1058
+Hawksnest,"2025-12-22 15:51:34","December 22, 2025, 3:51 pm",credit,26.52,1058
+Hawksnest,"2025-12-21 15:54:23","December 21, 2025, 3:54 pm",credit,38.67,1058
+Hawksnest,"2025-12-20 15:23:52","December 20, 2025, 3:23 pm",credit,49.72,1058
+Hawksnest,"2025-12-13 15:55:11","December 13, 2025, 3:55 pm",credit,33.27,1058
+Hawksnest,"2025-12-06 16:13:01","2025/12/06 16:13:01",credit,35.15,1058
+Hawksnest,"2026-01-04 15:43:18","January 4, 2026, 3:43 pm",credit,49.72,1059
+Hawksnest,"2026-01-03 15:45:03","January 3, 2026, 3:45 pm",credit,45.3,1059
+Hawksnest,"2026-01-02 15:29:07","January 2, 2026, 3:29 pm",credit,27.62,1059
+Hawksnest,"2026-01-01 19:29:55","January 1, 2026, 7:29 pm",credit,46.4,1059
+Hawksnest,"2025-12-31 13:55:33","December 31, 2025, 1:55 pm",credit,8.84,1059
+Hawksnest,"2025-12-28 14:01:38","December 28, 2025, 2:01 pm",credit,27.62,1059
+Hawksnest,"2025-12-27 15:22:47","December 27, 2025, 3:22 pm",cash,8,1059
+Hawksnest,"2025-12-26 13:39:23","December 26, 2025, 1:39 pm",credit,38.67,1059
+Hawksnest,"2025-12-24 15:18:22","December 24, 2025, 3:18 pm",credit,27.62,1059
+Hawksnest,"2025-12-23 15:37:07","December 23, 2025, 3:37 pm",credit,26.52,1059
+Hawksnest,"2025-12-22 15:53:22","December 22, 2025, 3:53 pm",credit,8.84,1059
+Hawksnest,"2025-12-21 15:54:56","December 21, 2025, 3:54 pm",credit,33.15,1059
+Hawksnest,"2025-12-20 15:25:18","December 20, 2025, 3:24 pm",cash,12,1059
+Hawksnest,"2025-12-13 15:56:39","December 13, 2025, 3:56 pm",credit,8.87,1059
+Hawksnest,"2025-12-06 17:24:06","2025/12/06 17:24:06",credit,12.08,1059
+Hawksnest,"2026-01-04 15:48:58","January 4, 2026, 3:48 pm",credit,35.36,1060
+Hawksnest,"2026-01-03 15:45:32","January 3, 2026, 3:45 pm",credit,24.31,1060
+Hawksnest,"2026-01-02 15:32:40","January 2, 2026, 3:32 pm",cash,60,1060
+Hawksnest,"2026-01-01 19:30:55","January 1, 2026, 7:30 pm",credit,13.26,1060
+Hawksnest,"2025-12-31 13:56:18","December 31, 2025, 1:56 pm",credit,17.68,1060
+Hawksnest,"2025-12-28 14:27:49","December 28, 2025, 2:27 pm",credit,46.4,1060
+Hawksnest,"2025-12-27 15:25:48","December 27, 2025, 3:25 pm",credit,12.15,1060
+Hawksnest,"2025-12-26 13:42:33","December 26, 2025, 1:42 pm",credit,33.15,1060
+Hawksnest,"2025-12-24 15:27:52","December 24, 2025, 3:27 pm",credit,26.52,1060
+Hawksnest,"2025-12-23 15:46:20","December 23, 2025, 3:46 pm",credit,26.52,1060
+Hawksnest,"2025-12-22 15:53:47","December 22, 2025, 3:53 pm",credit,46.4,1060
+Hawksnest,"2025-12-21 15:55:27","December 21, 2025, 3:55 pm",credit,8.84,1060
+Hawksnest,"2025-12-20 15:26:47","December 20, 2025, 3:26 pm",cash,27.72,1060
+Hawksnest,"2025-12-13 15:59:10","December 13, 2025, 3:58 pm",cash,16,1060
+Hawksnest,"2025-12-06 17:25:10","2025/12/06 17:25:10",credit,13.18,1060
+Hawksnest,"2026-01-04 15:50:10","January 4, 2026, 3:50 pm",credit,56.35,1061
+Hawksnest,"2026-01-03 15:47:22","January 3, 2026, 3:45 pm",cash,8,1061
+Hawksnest,"2026-01-02 15:37:17","January 2, 2026, 3:35 pm",cash,30,1061
+Hawksnest,"2026-01-01 19:33:57","January 1, 2026, 7:33 pm",credit,26.52,1061
+Hawksnest,"2025-12-31 13:56:23","December 31, 2025, 1:56 pm",credit,54.14,1061
+Hawksnest,"2025-12-28 14:50:27","December 28, 2025, 2:50 pm",credit,12.15,1061
+Hawksnest,"2025-12-27 15:26:08","December 27, 2025, 3:26 pm",credit,79.55,1061
+Hawksnest,"2025-12-26 13:43:51","December 26, 2025, 1:43 pm",credit,17.68,1061
+Hawksnest,"2025-12-24 15:28:39","December 24, 2025, 3:28 pm",credit,49.72,1061
+Hawksnest,"2025-12-23 15:48:30","December 23, 2025, 3:48 pm",credit,77.34,1061
+Hawksnest,"2025-12-22 15:53:53","December 22, 2025, 3:53 pm",credit,8.84,1061
+Hawksnest,"2025-12-21 15:58:37","December 21, 2025, 3:57 pm",cash,16.63,1061
+Hawksnest,"2025-12-20 15:32:43","December 20, 2025, 3:32 pm",credit,8.84,1061
+Hawksnest,"2025-12-13 16:00:22","December 13, 2025, 3:58 pm",cash,45,1061
+Hawksnest,"2026-01-04 15:50:35","January 4, 2026, 3:50 pm",credit,17.68,1062
+Hawksnest,"2026-01-03 15:51:30","January 3, 2026, 3:50 pm",cash,24,1062
+Hawksnest,"2026-01-02 15:40:14","January 2, 2026, 3:36 pm",cash,35,1062
+Hawksnest,"2026-01-01 19:34:50","January 1, 2026, 7:34 pm",credit,26.52,1062
+Hawksnest,"2025-12-31 14:02:10","December 31, 2025, 1:56 pm",cash,55,1062
+Hawksnest,"2025-12-28 14:54:00","December 28, 2025, 2:54 pm",credit,34.25,1062
+Hawksnest,"2025-12-27 15:31:42","December 27, 2025, 3:31 pm",credit,26.52,1062
+Hawksnest,"2025-12-26 13:45:31","December 26, 2025, 1:44 pm",cash,55,1062
+Hawksnest,"2025-12-24 15:29:38","December 24, 2025, 3:29 pm",credit,16.57,1062
+Hawksnest,"2025-12-23 15:49:03","December 23, 2025, 3:49 pm",credit,27.62,1062
+Hawksnest,"2025-12-22 16:00:33","December 22, 2025, 4:00 pm",credit,27.62,1062
+Hawksnest,"2025-12-21 15:58:44","December 21, 2025, 3:58 pm",credit,27.62,1062
+Hawksnest,"2025-12-20 15:33:39","December 20, 2025, 3:33 pm",credit,24.31,1062
+Hawksnest,"2025-12-13 15:59:28","December 13, 2025, 3:59 pm",credit,59.87,1062
+Hawksnest,"2025-12-06 17:40:38","2025/12/06 17:40:38",credit,27.46,1062
+Hawksnest,"2026-01-04 15:50:59","January 4, 2026, 3:50 pm",credit,8.84,1063
+Hawksnest,"2026-01-03 15:53:42","January 3, 2026, 3:51 pm",cash,8,1063
+Hawksnest,"2026-01-02 15:40:51","January 2, 2026, 3:36 pm",cash,35,1063
+Hawksnest,"2026-01-01 19:35:06","January 1, 2026, 7:35 pm",credit,13.26,1063
+Hawksnest,"2025-12-31 13:56:54","December 31, 2025, 1:56 pm",credit,38.67,1063
+Hawksnest,"2025-12-28 14:55:50","December 28, 2025, 2:55 pm",credit,8.84,1063
+Hawksnest,"2025-12-27 15:32:43","December 27, 2025, 3:32 pm",cash,25,1063
+Hawksnest,"2025-12-26 13:48:26","December 26, 2025, 1:48 pm",credit,8.84,1063
+Hawksnest,"2025-12-24 15:33:35","December 24, 2025, 3:33 pm",credit,27.62,1063
+Hawksnest,"2025-12-23 15:49:25","December 23, 2025, 3:49 pm",credit,24.31,1063
+Hawksnest,"2025-12-22 16:02:22","December 22, 2025, 4:02 pm",credit,17.68,1063
+Hawksnest,"2025-12-21 16:00:01","December 21, 2025, 4:00 pm",credit,26.52,1063
+Hawksnest,"2025-12-20 15:38:30","December 20, 2025, 3:38 pm",credit,12.15,1063
+Hawksnest,"2025-12-13 16:00:27","December 13, 2025, 4:00 pm",credit,80.67,1063
+Hawksnest,"2026-01-04 15:51:53","January 4, 2026, 3:51 pm",credit,8.84,1064
+Hawksnest,"2026-01-03 15:54:01","January 3, 2026, 3:52 pm",cash,25,1064
+Hawksnest,"2026-01-02 15:47:06","January 2, 2026, 3:47 pm",credit,16.57,1064
+Hawksnest,"2026-01-01 19:38:26","January 1, 2026, 7:38 pm",credit,17.68,1064
+Hawksnest,"2025-12-31 13:58:58","December 31, 2025, 1:57 pm",cash,54,1064
+Hawksnest,"2025-12-28 15:25:33","December 28, 2025, 3:25 pm",credit,59.66,1064
+Hawksnest,"2025-12-27 15:33:10","December 27, 2025, 3:33 pm",credit,13.26,1064
+Hawksnest,"2025-12-26 13:49:29","December 26, 2025, 1:48 pm",cash,50,1064
+Hawksnest,"2025-12-24 15:35:35","December 24, 2025, 3:35 pm",credit,17.68,1064
+Hawksnest,"2025-12-23 15:50:37","December 23, 2025, 3:50 pm",credit,62.98,1064
+Hawksnest,"2025-12-22 16:02:28","December 22, 2025, 4:02 pm",credit,8.84,1064
+Hawksnest,"2025-12-21 16:02:37","December 21, 2025, 4:00 pm",cash,30,1064
+Hawksnest,"2025-12-20 15:39:07","December 20, 2025, 3:39 pm",credit,46.4,1064
+Hawksnest,"2025-12-13 16:01:53","December 13, 2025, 4:01 pm",credit,26.62,1064
+Hawksnest,"2026-01-04 15:52:06","January 4, 2026, 3:52 pm",credit,36.46,1065
+Hawksnest,"2026-01-03 15:52:21","January 3, 2026, 3:52 pm",credit,27.62,1065
+Hawksnest,"2026-01-02 15:48:59","January 2, 2026, 3:48 pm",credit,27.62,1065
+Hawksnest,"2026-01-01 19:39:25","January 1, 2026, 7:39 pm",credit,46.4,1065
+Hawksnest,"2025-12-31 13:59:42","December 31, 2025, 1:59 pm",credit,22.1,1065
+Hawksnest,"2025-12-28 15:26:49","December 28, 2025, 3:25 pm",cash,25,1065
+Hawksnest,"2025-12-27 15:38:08","December 27, 2025, 3:37 pm",cash,8,1065
+Hawksnest,"2025-12-26 13:49:18","December 26, 2025, 1:49 pm",credit,8.84,1065
+Hawksnest,"2025-12-24 15:36:01","December 24, 2025, 3:36 pm",credit,68.5,1065
+Hawksnest,"2025-12-23 15:52:06","December 23, 2025, 3:52 pm",credit,13.26,1065
+Hawksnest,"2025-12-22 16:05:45","December 22, 2025, 4:05 pm",credit,58.56,1065
+Hawksnest,"2025-12-21 16:00:45","December 21, 2025, 4:00 pm",credit,45.3,1065
+Hawksnest,"2025-12-20 15:40:14","December 20, 2025, 3:40 pm",credit,27.62,1065
+Hawksnest,"2025-12-13 16:02:33","December 13, 2025, 4:02 pm",credit,33.27,1065
+Hawksnest,"2026-01-04 15:53:11","January 4, 2026, 3:53 pm",credit,26.52,1066
+Hawksnest,"2026-01-03 15:57:22","January 3, 2026, 3:57 pm",credit,26.52,1066
+Hawksnest,"2026-01-02 15:52:05","January 2, 2026, 3:52 pm",credit,38.67,1066
+Hawksnest,"2026-01-01 19:40:05","January 1, 2026, 7:40 pm",credit,26.52,1066
+Hawksnest,"2025-12-31 14:00:32","December 31, 2025, 2:00 pm",credit,26.52,1066
+Hawksnest,"2025-12-28 15:29:07","December 28, 2025, 3:28 pm",cash,25,1066
+Hawksnest,"2025-12-27 15:39:58","December 27, 2025, 3:39 pm",credit,26.52,1066
+Hawksnest,"2025-12-26 13:49:47","December 26, 2025, 1:49 pm",credit,12.15,1066
+Hawksnest,"2025-12-24 15:40:21","December 24, 2025, 3:40 pm",credit,26.52,1066
+Hawksnest,"2025-12-23 15:52:30","December 23, 2025, 3:52 pm",credit,16.57,1066
+Hawksnest,"2025-12-22 16:57:49","December 22, 2025, 4:57 pm",credit,26.52,1066
+Hawksnest,"2025-12-21 16:01:04","December 21, 2025, 4:01 pm",credit,66.29,1066
+Hawksnest,"2025-12-20 15:49:31","December 20, 2025, 3:45 pm",cash,16,1066
+Hawksnest,"2025-12-13 16:03:04","December 13, 2025, 4:03 pm",credit,92.06,1066
+Hawksnest,"2025-12-06 17:47:24","2025/12/06 17:47:24",credit,56.99,1066
+Hawksnest,"2026-01-04 15:54:55","January 4, 2026, 3:54 pm",credit,26.52,1067
+Hawksnest,"2026-01-03 15:57:39","January 3, 2026, 3:57 pm",credit,54.14,1067
+Hawksnest,"2026-01-02 15:54:15","January 2, 2026, 3:54 pm",credit,38.67,1067
+Hawksnest,"2026-01-01 19:41:42","January 1, 2026, 7:41 pm",credit,46.4,1067
+Hawksnest,"2025-12-31 14:00:47","December 31, 2025, 2:00 pm",credit,13.26,1067
+Hawksnest,"2025-12-28 15:29:18","December 28, 2025, 3:28 pm",cash,33,1067
+Hawksnest,"2025-12-27 15:44:37","December 27, 2025, 3:44 pm",cash,25,1067
+Hawksnest,"2025-12-26 13:50:50","December 26, 2025, 1:50 pm",credit,38.67,1067
+Hawksnest,"2025-12-24 15:42:14","December 24, 2025, 3:41 pm",cash,42,1067
+Hawksnest,"2025-12-23 15:52:36","December 23, 2025, 3:52 pm",credit,27.62,1067
+Hawksnest,"2025-12-22 17:03:57","December 22, 2025, 5:03 pm",credit,8.84,1067
+Hawksnest,"2025-12-21 16:03:27","December 21, 2025, 4:01 pm",cash,24,1067
+Hawksnest,"2025-12-20 15:46:50","December 20, 2025, 3:46 pm",credit,8.84,1067
+Hawksnest,"2025-12-13 16:04:38","December 13, 2025, 4:04 pm",credit,38.82,1067
+Hawksnest,"2025-12-06 17:49:52","2025/12/06 17:49:52",credit,13.18,1067
+Hawksnest,"2026-01-04 15:56:12","January 4, 2026, 3:56 pm",credit,26.52,1068
+Hawksnest,"2026-01-03 16:01:03","January 3, 2026, 4:01 pm",credit,69.61,1068
+Hawksnest,"2026-01-02 15:54:24","January 2, 2026, 3:54 pm",credit,22.1,1068
+Hawksnest,"2026-01-01 19:45:27","January 1, 2026, 7:45 pm",credit,17.68,1068
+Hawksnest,"2025-12-31 14:03:02","December 31, 2025, 2:01 pm",cash,16,1068
+Hawksnest,"2025-12-28 15:38:54","December 28, 2025, 3:38 pm",cash,39,1068
+Hawksnest,"2025-12-27 15:45:53","December 27, 2025, 3:45 pm",credit,54.14,1068
+Hawksnest,"2025-12-26 13:55:12","December 26, 2025, 1:55 pm",credit,46.4,1068
+Hawksnest,"2025-12-24 15:41:35","December 24, 2025, 3:41 pm",cash,32,1068
+Hawksnest,"2025-12-23 15:53:23","December 23, 2025, 3:53 pm",credit,27.62,1068
+Hawksnest,"2025-12-22 17:22:44","December 22, 2025, 5:22 pm",credit,33.15,1068
+Hawksnest,"2025-12-21 16:02:41","December 21, 2025, 4:02 pm",credit,62.98,1068
+Hawksnest,"2025-12-20 15:49:34","December 20, 2025, 3:47 pm",cash,16.56,1068
+Hawksnest,"2025-12-13 16:06:48","December 13, 2025, 4:05 pm",cash,24,1068
+Hawksnest,"2025-12-06 17:53:40","2025/12/06 17:53:40",credit,17.58,1068
+Hawksnest,"2026-01-04 15:56:29","January 4, 2026, 3:56 pm",credit,27.62,1069
+Hawksnest,"2026-01-03 16:02:33","January 3, 2026, 4:02 pm",credit,33.15,1069
+Hawksnest,"2026-01-02 15:54:48","January 2, 2026, 3:54 pm",credit,24.31,1069
+Hawksnest,"2026-01-01 19:45:47","January 1, 2026, 7:45 pm",credit,17.68,1069
+Hawksnest,"2025-12-31 14:02:34","December 31, 2025, 2:02 pm",credit,8.84,1069
+Hawksnest,"2025-12-28 15:39:22","December 28, 2025, 3:39 pm",credit,8.84,1069
+Hawksnest,"2025-12-27 15:47:33","December 27, 2025, 3:47 pm",credit,27.62,1069
+Hawksnest,"2025-12-26 13:56:55","December 26, 2025, 1:56 pm",credit,62.98,1069
+Hawksnest,"2025-12-24 15:43:14","December 24, 2025, 3:41 pm",cash,39,1069
+Hawksnest,"2025-12-23 15:54:18","December 23, 2025, 3:54 pm",credit,38.67,1069
+Hawksnest,"2025-12-22 17:38:27","December 22, 2025, 5:37 pm",cash,35,1069
+Hawksnest,"2025-12-21 16:03:35","December 21, 2025, 4:03 pm",credit,17.68,1069
+Hawksnest,"2025-12-20 15:47:36","December 20, 2025, 3:47 pm",credit,13.26,1069
+Hawksnest,"2025-12-13 16:07:10","December 13, 2025, 4:06 pm",cash,49,1069
+Hawksnest,"2025-12-06 17:54:19","2025/12/06 17:54:19",credit,34.89,1069
+Hawksnest,"2026-01-04 15:56:40","January 4, 2026, 3:56 pm",credit,61.87,1070
+Hawksnest,"2026-01-03 16:02:43","January 3, 2026, 4:02 pm",credit,77.34,1070
+Hawksnest,"2026-01-02 15:54:52","January 2, 2026, 3:54 pm",credit,33.15,1070
+Hawksnest,"2026-01-01 19:47:57","January 1, 2026, 7:47 pm",credit,17.68,1070
+Hawksnest,"2025-12-31 14:05:49","December 31, 2025, 2:05 pm",credit,49.72,1070
+Hawksnest,"2025-12-28 15:41:01","December 28, 2025, 3:40 pm",cash,30,1070
+Hawksnest,"2025-12-27 15:49:38","December 27, 2025, 3:47 pm",cash,32,1070
+Hawksnest,"2025-12-26 13:56:57","December 26, 2025, 1:56 pm",credit,17.68,1070
+Hawksnest,"2025-12-24 15:42:08","December 24, 2025, 3:42 pm",credit,17.68,1070
+Hawksnest,"2025-12-23 15:56:05","December 23, 2025, 3:56 pm",credit,33.15,1070
+Hawksnest,"2025-12-22 17:40:08","December 22, 2025, 5:39 pm",cash,16,1070
+Hawksnest,"2025-12-21 16:04:08","December 21, 2025, 4:04 pm",credit,45.3,1070
+Hawksnest,"2025-12-20 15:47:54","December 20, 2025, 3:47 pm",credit,33.15,1070
+Hawksnest,"2025-12-13 17:18:17","December 13, 2025, 4:18 pm",cash,119,1070
+Hawksnest,"2026-01-04 15:59:13","January 4, 2026, 3:59 pm",credit,45.3,1071
+Hawksnest,"2026-01-03 16:02:48","January 3, 2026, 4:02 pm",credit,33.15,1071
+Hawksnest,"2026-01-02 15:55:11","January 2, 2026, 3:55 pm",credit,17.68,1071
+Hawksnest,"2026-01-01 19:48:45","January 1, 2026, 7:48 pm",credit,13.26,1071
+Hawksnest,"2025-12-31 14:08:49","December 31, 2025, 2:08 pm",credit,27.62,1071
+Hawksnest,"2025-12-28 15:44:08","December 28, 2025, 3:44 pm",credit,26.52,1071
+Hawksnest,"2025-12-27 15:50:21","December 27, 2025, 3:47 pm",cash,25,1071
+Hawksnest,"2025-12-26 14:00:14","December 26, 2025, 1:58 pm",cash,52,1071
+Hawksnest,"2025-12-24 15:42:36","December 24, 2025, 3:42 pm",credit,66.29,1071
+Hawksnest,"2025-12-23 15:58:15","December 23, 2025, 3:58 pm",credit,36.46,1071
+Hawksnest,"2025-12-22 17:41:06","December 22, 2025, 5:41 pm",credit,92.81,1071
+Hawksnest,"2025-12-21 16:06:37","December 21, 2025, 4:05 pm",cash,11,1071
+Hawksnest,"2025-12-20 15:50:53","December 20, 2025, 3:50 pm",credit,24.31,1071
+Hawksnest,"2025-12-13 16:26:29","December 13, 2025, 4:26 pm",credit,8.87,1071
+Hawksnest,"2026-01-04 16:02:06","January 4, 2026, 4:02 pm",credit,43.09,1072
+Hawksnest,"2026-01-03 16:06:41","January 3, 2026, 4:06 pm",credit,77.34,1072
+Hawksnest,"2026-01-02 15:55:19","January 2, 2026, 3:55 pm",credit,8.84,1072
+Hawksnest,"2026-01-01 19:50:00","January 1, 2026, 7:49 pm",credit,36.46,1072
+Hawksnest,"2025-12-31 14:09:00","December 31, 2025, 2:08 pm",credit,82.86,1072
+Hawksnest,"2025-12-28 15:44:57","December 28, 2025, 3:44 pm",credit,27.62,1072
+Hawksnest,"2025-12-27 15:52:35","December 27, 2025, 3:52 pm",cash,25,1072
+Hawksnest,"2025-12-26 13:59:50","December 26, 2025, 1:58 pm",cash,50,1072
+Hawksnest,"2025-12-24 15:43:08","December 24, 2025, 3:43 pm",credit,35.36,1072
+Hawksnest,"2025-12-23 15:58:30","December 23, 2025, 3:58 pm",credit,72.92,1072
+Hawksnest,"2025-12-22 17:43:40","December 22, 2025, 5:43 pm",credit,38.67,1072
+Hawksnest,"2025-12-21 16:07:55","December 21, 2025, 4:07 pm",cash,8,1072
+Hawksnest,"2025-12-20 15:51:22","December 20, 2025, 3:51 pm",credit,30.94,1072
+Hawksnest,"2025-12-13 17:18:20","December 13, 2025, 5:18 pm",credit,17.75,1072
+Hawksnest,"2026-01-04 16:04:21","January 4, 2026, 4:03 pm",cash,25,1073
+Hawksnest,"2026-01-03 16:07:37","January 3, 2026, 4:07 pm",credit,36.46,1073
+Hawksnest,"2026-01-02 15:56:41","January 2, 2026, 3:56 pm",cash,15,1073
+Hawksnest,"2026-01-01 19:52:27","January 1, 2026, 7:52 pm",credit,77.34,1073
+Hawksnest,"2025-12-31 14:09:09","December 31, 2025, 2:09 pm",credit,26.52,1073
+Hawksnest,"2025-12-28 15:48:20","December 28, 2025, 3:48 pm",credit,30.94,1073
+Hawksnest,"2025-12-27 15:53:35","December 27, 2025, 3:52 pm",cash,8,1073
+Hawksnest,"2025-12-26 13:58:45","December 26, 2025, 1:58 pm",credit,69.61,1073
+Hawksnest,"2025-12-24 15:48:36","December 24, 2025, 3:44 pm",cash,49,1073
+Hawksnest,"2025-12-23 16:00:37","December 23, 2025, 4:00 pm",credit,17.68,1073
+Hawksnest,"2025-12-22 17:45:54","December 22, 2025, 5:45 pm",credit,8.84,1073
+Hawksnest,"2025-12-21 16:09:13","December 21, 2025, 4:08 pm",cash,8,1073
+Hawksnest,"2025-12-20 16:15:42","December 20, 2025, 3:52 pm",cash,12,1073
+Hawksnest,"2025-12-13 17:31:35","December 13, 2025, 5:31 pm",credit,17.75,1073
+Hawksnest,"2026-01-04 16:05:30","January 4, 2026, 4:05 pm",credit,35.36,1074
+Hawksnest,"2026-01-03 16:11:23","January 3, 2026, 4:10 pm",cash,24,1074
+Hawksnest,"2026-01-02 15:59:22","January 2, 2026, 3:59 pm",credit,8.84,1074
+Hawksnest,"2026-01-01 19:54:14","January 1, 2026, 7:54 pm",credit,38.67,1074
+Hawksnest,"2025-12-31 14:09:32","December 31, 2025, 2:09 pm",credit,16.57,1074
+Hawksnest,"2025-12-28 15:51:52","December 28, 2025, 3:51 pm",credit,69.61,1074
+Hawksnest,"2025-12-27 15:54:22","December 27, 2025, 3:53 pm",cash,24,1074
+Hawksnest,"2025-12-26 13:59:21","December 26, 2025, 1:59 pm",credit,27.62,1074
+Hawksnest,"2025-12-24 15:44:21","December 24, 2025, 3:44 pm",credit,54.14,1074
+Hawksnest,"2025-12-23 16:01:39","December 23, 2025, 4:01 pm",credit,8.84,1074
+Hawksnest,"2025-12-22 17:47:22","December 22, 2025, 5:46 pm",cash,31,1074
+Hawksnest,"2025-12-21 16:11:32","December 21, 2025, 4:11 pm",credit,16.57,1074
+Hawksnest,"2025-12-20 15:52:58","December 20, 2025, 3:52 pm",credit,48.61,1074
+Hawksnest,"2025-12-13 17:32:11","December 13, 2025, 5:32 pm",credit,17.75,1074
+Hawksnest,"2026-01-04 16:08:39","January 4, 2026, 4:07 pm",cash,36,1075
+Hawksnest,"2026-01-03 16:19:54","January 3, 2026, 4:18 pm",cash,55,1075
+Hawksnest,"2026-01-02 16:01:26","January 2, 2026, 4:01 pm",credit,17.68,1075
+Hawksnest,"2026-01-01 19:54:45","January 1, 2026, 7:54 pm",credit,38.67,1075
+Hawksnest,"2025-12-31 14:19:40","December 31, 2025, 2:19 pm",credit,8.84,1075
+Hawksnest,"2025-12-28 15:57:41","December 28, 2025, 3:57 pm",credit,54.14,1075
+Hawksnest,"2025-12-27 15:54:21","December 27, 2025, 3:54 pm",credit,17.68,1075
+Hawksnest,"2025-12-26 13:59:27","December 26, 2025, 1:59 pm",credit,45.3,1075
+Hawksnest,"2025-12-24 15:46:22","December 24, 2025, 3:45 pm",cash,28,1075
+Hawksnest,"2025-12-23 16:04:15","December 23, 2025, 4:04 pm",credit,22.1,1075
+Hawksnest,"2025-12-22 17:47:43","December 22, 2025, 5:47 pm",credit,27.62,1075
+Hawksnest,"2025-12-21 16:21:39","December 21, 2025, 4:21 pm",credit,8.84,1075
+Hawksnest,"2025-12-20 15:56:05","December 20, 2025, 3:56 pm",credit,33.15,1075
+Hawksnest,"2025-12-13 17:32:55","December 13, 2025, 5:32 pm",credit,26.62,1075
+Hawksnest,"2026-01-03 16:22:11","January 3, 2026, 4:20 pm",cash,58,1076
+Hawksnest,"2026-01-02 16:02:46","January 2, 2026, 4:02 pm",credit,66.29,1076
+Hawksnest,"2026-01-01 19:56:17","January 1, 2026, 7:55 pm",cash,15,1076
+Hawksnest,"2025-12-31 14:19:41","December 31, 2025, 2:19 pm",credit,54.14,1076
+Hawksnest,"2025-12-28 15:59:14","December 28, 2025, 3:58 pm",cash,24.84,1076
+Hawksnest,"2025-12-27 15:56:07","December 27, 2025, 3:56 pm",credit,8.84,1076
+Hawksnest,"2025-12-26 13:59:56","December 26, 2025, 1:59 pm",credit,56.35,1076
+Hawksnest,"2025-12-24 15:46:12","December 24, 2025, 3:46 pm",credit,8.84,1076
+Hawksnest,"2025-12-23 16:08:29","December 23, 2025, 4:08 pm",credit,38.67,1076
+Hawksnest,"2025-12-22 17:50:30","December 22, 2025, 5:50 pm",credit,54.14,1076
+Hawksnest,"2025-12-21 16:35:06","December 21, 2025, 4:35 pm",credit,17.68,1076
+Hawksnest,"2025-12-20 16:00:10","December 20, 2025, 4:00 pm",credit,237.55,1076
+Hawksnest,"2025-12-13 17:33:27","December 13, 2025, 5:33 pm",credit,8.87,1076
+Hawksnest,"2026-01-03 16:53:05","January 3, 2026, 4:53 pm",credit,38.67,1077
+Hawksnest,"2026-01-02 16:06:39","January 2, 2026, 4:06 pm",credit,48.03,1077
+Hawksnest,"2026-01-01 19:56:52","January 1, 2026, 7:55 pm",cash,25,1077
+Hawksnest,"2025-12-31 14:54:47","December 31, 2025, 2:41 pm",cash,35,1077
+Hawksnest,"2025-12-28 15:59:50","December 28, 2025, 3:58 pm",cash,35,1077
+Hawksnest,"2025-12-27 15:57:46","December 27, 2025, 3:57 pm",credit,12.15,1077
+Hawksnest,"2025-12-26 14:00:20","December 26, 2025, 2:00 pm",credit,33.15,1077
+Hawksnest,"2025-12-24 15:46:56","December 24, 2025, 3:46 pm",credit,17.68,1077
+Hawksnest,"2025-12-22 17:51:50","December 22, 2025, 5:51 pm",credit,54.14,1077
+Hawksnest,"2025-12-21 17:00:09","December 21, 2025, 5:00 pm",credit,38.67,1077
+Hawksnest,"2025-12-20 16:00:33","December 20, 2025, 4:00 pm",credit,8.84,1077
+Hawksnest,"2025-12-13 17:35:54","December 13, 2025, 5:35 pm",credit,35.49,1077
+Hawksnest,"2026-01-03 17:20:15","January 3, 2026, 5:20 pm",credit,44.19,1078
+Hawksnest,"2026-01-02 16:09:08","January 2, 2026, 4:09 pm",credit,22.1,1078
+Hawksnest,"2026-01-01 19:57:55","January 1, 2026, 7:57 pm",credit,27.62,1078
+Hawksnest,"2025-12-31 14:49:48","December 31, 2025, 2:49 pm",credit,46.4,1078
+Hawksnest,"2025-12-28 16:00:43","December 28, 2025, 3:58 pm",cash,30,1078
+Hawksnest,"2025-12-27 15:58:34","December 27, 2025, 3:58 pm",cash,16,1078
+Hawksnest,"2025-12-26 14:00:42","December 26, 2025, 2:00 pm",credit,27.62,1078
+Hawksnest,"2025-12-24 15:47:16","December 24, 2025, 3:47 pm",credit,12.15,1078
+Hawksnest,"2025-12-22 17:52:09","December 22, 2025, 5:52 pm",credit,17.68,1078
+Hawksnest,"2025-12-21 17:01:48","December 21, 2025, 5:00 pm",cash,8,1078
+Hawksnest,"2025-12-20 16:02:34","December 20, 2025, 4:02 pm",credit,24.31,1078
+Hawksnest,"2025-12-13 17:41:06","December 13, 2025, 5:39 pm",cash,58,1078
+Hawksnest,"2026-01-03 17:20:54","January 3, 2026, 5:20 pm",credit,46.4,1079
+Hawksnest,"2026-01-02 16:12:20","January 2, 2026, 4:12 pm",credit,69.61,1079
+Hawksnest,"2026-01-01 19:58:43","January 1, 2026, 7:58 pm",credit,12.15,1079
+Hawksnest,"2025-12-31 15:04:11","December 31, 2025, 3:04 pm",credit,170.15,1079
+Hawksnest,"2025-12-28 16:00:06","December 28, 2025, 3:58 pm",cash,44.35,1079
+Hawksnest,"2025-12-27 16:00:46","December 27, 2025, 4:00 pm",cash,24,1079
+Hawksnest,"2025-12-26 14:04:28","December 26, 2025, 2:04 pm",credit,26.52,1079
+Hawksnest,"2025-12-24 15:53:35","December 24, 2025, 3:47 pm",cash,35,1079
+Hawksnest,"2025-12-22 17:57:06","December 22, 2025, 5:56 pm",cash,12,1079
+Hawksnest,"2025-12-21 17:07:49","December 21, 2025, 5:07 pm",credit,49.72,1079
+Hawksnest,"2025-12-20 17:19:45","December 20, 2025, 5:19 pm",credit,49.72,1079
+Hawksnest,"2025-12-13 17:40:41","December 13, 2025, 5:40 pm",credit,13.31,1079
+Hawksnest,"2026-01-03 17:22:58","January 3, 2026, 5:22 pm",credit,8.84,1080
+Hawksnest,"2026-01-02 16:45:54","January 2, 2026, 4:45 pm",credit,26.52,1080
+Hawksnest,"2026-01-01 20:04:32","January 1, 2026, 8:00 pm",cash,24,1080
+Hawksnest,"2025-12-31 15:12:11","December 31, 2025, 3:12 pm",credit,27.62,1080
+Hawksnest,"2025-12-28 15:59:53","December 28, 2025, 3:59 pm",credit,16.57,1080
+Hawksnest,"2025-12-27 16:01:38","December 27, 2025, 4:01 pm",credit,48.61,1080
+Hawksnest,"2025-12-26 14:06:11","December 26, 2025, 2:05 pm",cash,25,1080
+Hawksnest,"2025-12-24 15:51:33","December 24, 2025, 3:51 pm",credit,16.57,1080
+Hawksnest,"2025-12-22 17:58:06","December 22, 2025, 5:58 pm",credit,38.67,1080
+Hawksnest,"2025-12-21 17:12:40","December 21, 2025, 5:12 pm",credit,26.52,1080
+Hawksnest,"2025-12-20 17:20:31","December 20, 2025, 5:20 pm",cash,8,1080
+Hawksnest,"2025-12-13 17:41:08","December 13, 2025, 5:41 pm",credit,54.35,1080
+Hawksnest,"2026-01-03 17:23:07","January 3, 2026, 5:23 pm",credit,17.68,1081
+Hawksnest,"2026-01-02 17:07:54","January 2, 2026, 5:07 pm",credit,26.52,1081
+Hawksnest,"2026-01-01 20:01:01","January 1, 2026, 8:00 pm",credit,72.92,1081
+Hawksnest,"2025-12-31 15:13:52","December 31, 2025, 3:13 pm",credit,17.68,1081
+Hawksnest,"2025-12-28 16:00:58","December 28, 2025, 4:00 pm",credit,33.15,1081
+Hawksnest,"2025-12-27 16:02:32","December 27, 2025, 4:02 pm",credit,38.67,1081
+Hawksnest,"2025-12-26 14:06:11","December 26, 2025, 2:06 pm",credit,30.94,1081
+Hawksnest,"2025-12-24 15:54:23","December 24, 2025, 3:54 pm",credit,27.62,1081
+Hawksnest,"2025-12-22 17:59:31","December 22, 2025, 5:59 pm",cash,16,1081
+Hawksnest,"2025-12-21 17:12:46","December 21, 2025, 5:12 pm",credit,16.57,1081
+Hawksnest,"2025-12-20 17:23:26","December 20, 2025, 5:23 pm",credit,13.26,1081
+Hawksnest,"2025-12-13 17:42:11","December 13, 2025, 5:42 pm",cash,32,1081
+Hawksnest,"2026-01-03 17:24:35","January 3, 2026, 5:24 pm",credit,49.72,1082
+Hawksnest,"2026-01-02 17:08:50","January 2, 2026, 5:08 pm",credit,46.4,1082
+Hawksnest,"2026-01-01 20:01:06","January 1, 2026, 8:01 pm",credit,24.31,1082
+Hawksnest,"2025-12-31 15:15:18","December 31, 2025, 3:15 pm",credit,26.52,1082
+Hawksnest,"2025-12-28 16:02:14","December 28, 2025, 4:02 pm",credit,13.26,1082
+Hawksnest,"2025-12-27 16:04:44","December 27, 2025, 4:04 pm",credit,17.68,1082
+Hawksnest,"2025-12-26 14:07:46","December 26, 2025, 2:07 pm",cash,25,1082
+Hawksnest,"2025-12-24 15:56:37","December 24, 2025, 3:56 pm",credit,24.31,1082
+Hawksnest,"2025-12-22 17:59:53","December 22, 2025, 5:59 pm",credit,8.84,1082
+Hawksnest,"2025-12-21 17:13:59","December 21, 2025, 5:13 pm",credit,54.14,1082
+Hawksnest,"2025-12-20 17:27:25","December 20, 2025, 5:27 pm",credit,17.68,1082
+Hawksnest,"2025-12-13 17:46:00","December 13, 2025, 5:46 pm",credit,27.73,1082
+Hawksnest,"2026-01-03 17:26:51","January 3, 2026, 5:26 pm",credit,16.57,1083
+Hawksnest,"2026-01-02 17:11:47","January 2, 2026, 5:11 pm",credit,8.84,1083
+Hawksnest,"2026-01-01 20:02:00","January 1, 2026, 8:01 pm",credit,46.4,1083
+Hawksnest,"2025-12-31 15:15:22","December 31, 2025, 3:15 pm",credit,36.46,1083
+Hawksnest,"2025-12-28 16:06:26","December 28, 2025, 4:06 pm",credit,13.26,1083
+Hawksnest,"2025-12-27 16:06:10","December 27, 2025, 4:06 pm",credit,61.87,1083
+Hawksnest,"2025-12-26 14:43:36","December 26, 2025, 2:42 pm",cash,26.78,1083
+Hawksnest,"2025-12-24 15:57:25","December 24, 2025, 3:57 pm",credit,17.68,1083
+Hawksnest,"2025-12-22 18:00:01","December 22, 2025, 6:00 pm",credit,27.62,1083
+Hawksnest,"2025-12-21 17:20:14","December 21, 2025, 5:19 pm",cash,25,1083
+Hawksnest,"2025-12-20 17:30:00","December 20, 2025, 5:30 pm",credit,17.68,1083
+Hawksnest,"2025-12-13 17:47:32","December 13, 2025, 5:46 pm",cash,25,1083
+Hawksnest,"2026-01-03 17:27:53","January 3, 2026, 5:27 pm",cash,25,1084
+Hawksnest,"2026-01-02 17:24:51","January 2, 2026, 5:24 pm",credit,16.57,1084
+Hawksnest,"2026-01-01 20:05:01","January 1, 2026, 8:04 pm",credit,49.72,1084
+Hawksnest,"2025-12-31 15:34:39","December 31, 2025, 3:34 pm",credit,38.67,1084
+Hawksnest,"2025-12-28 19:40:06","December 28, 2025, 4:09 pm",cash,70,1084
+Hawksnest,"2025-12-27 16:11:11","December 27, 2025, 4:11 pm",credit,64.08,1084
+Hawksnest,"2025-12-26 14:46:14","December 26, 2025, 2:46 pm",credit,13.26,1084
+Hawksnest,"2025-12-24 16:02:21","December 24, 2025, 4:02 pm",credit,8.84,1084
+Hawksnest,"2025-12-22 18:20:46","December 22, 2025, 6:19 pm",cash,99,1084
+Hawksnest,"2025-12-21 17:24:51","December 21, 2025, 5:24 pm",credit,17.68,1084
+Hawksnest,"2025-12-20 17:30:00","December 20, 2025, 5:30 pm",credit,22.1,1084
+Hawksnest,"2025-12-13 17:52:47","December 13, 2025, 5:52 pm",credit,55.46,1084
+Hawksnest,"2026-01-03 17:30:30","January 3, 2026, 5:30 pm",credit,45.3,1085
+Hawksnest,"2026-01-02 17:28:50","January 2, 2026, 5:28 pm",credit,49.72,1085
+Hawksnest,"2026-01-01 20:07:02","January 1, 2026, 8:05 pm",cash,35,1085
+Hawksnest,"2025-12-31 15:41:52","December 31, 2025, 3:41 pm",credit,27.62,1085
+Hawksnest,"2025-12-28 16:09:48","December 28, 2025, 4:09 pm",credit,38.67,1085
+Hawksnest,"2025-12-27 16:19:49","December 27, 2025, 4:19 pm",credit,139.21,1085
+Hawksnest,"2025-12-26 14:55:54","December 26, 2025, 2:55 pm",credit,16.57,1085
+Hawksnest,"2025-12-24 16:02:41","December 24, 2025, 4:02 pm",credit,17.68,1085
+Hawksnest,"2025-12-22 19:12:47","December 22, 2025, 7:12 pm",credit,22.1,1085
+Hawksnest,"2025-12-21 17:40:52","December 21, 2025, 5:40 pm",credit,38.67,1085
+Hawksnest,"2025-12-20 17:33:17","December 20, 2025, 5:31 pm",cash,41,1085
+Hawksnest,"2025-12-13 17:53:07","December 13, 2025, 5:53 pm",credit,27.73,1085
+Hawksnest,"2026-01-03 17:33:42","January 3, 2026, 5:33 pm",credit,33.15,1086
+Hawksnest,"2026-01-02 17:30:05","January 2, 2026, 5:30 pm",credit,35.36,1086
+Hawksnest,"2026-01-01 20:08:06","January 1, 2026, 8:08 pm",credit,46.4,1086
+Hawksnest,"2025-12-31 15:43:17","December 31, 2025, 3:43 pm",credit,17.68,1086
+Hawksnest,"2025-12-28 16:11:25","December 28, 2025, 4:09 pm",cash,25,1086
+Hawksnest,"2025-12-27 17:06:09","December 27, 2025, 5:06 pm",credit,66.29,1086
+Hawksnest,"2025-12-26 15:24:18","December 26, 2025, 3:24 pm",credit,33.15,1086
+Hawksnest,"2025-12-24 16:09:42","December 24, 2025, 4:09 pm",credit,26.52,1086
+Hawksnest,"2025-12-22 19:14:25","December 22, 2025, 7:14 pm",credit,44.19,1086
+Hawksnest,"2025-12-21 17:41:02","December 21, 2025, 5:41 pm",credit,123.74,1086
+Hawksnest,"2025-12-20 17:33:58","December 20, 2025, 5:33 pm",cash,16,1086
+Hawksnest,"2025-12-13 17:53:51","December 13, 2025, 5:53 pm",credit,27.73,1086
+Hawksnest,"2026-01-03 17:34:52","January 3, 2026, 5:34 pm",credit,27.62,1087
+Hawksnest,"2026-01-02 17:33:08","January 2, 2026, 5:33 pm",credit,41.98,1087
+Hawksnest,"2026-01-01 20:09:59","January 1, 2026, 8:09 pm",credit,86.18,1087
+Hawksnest,"2025-12-31 15:44:30","December 31, 2025, 3:44 pm",credit,54.14,1087
+Hawksnest,"2025-12-28 16:16:38","December 28, 2025, 4:16 pm",credit,27.62,1087
+Hawksnest,"2025-12-27 17:34:11","December 27, 2025, 5:18 pm",cash,42,1087
+Hawksnest,"2025-12-26 15:25:13","December 26, 2025, 3:25 pm",credit,27.62,1087
+Hawksnest,"2025-12-24 16:11:25","December 24, 2025, 4:11 pm",credit,26.52,1087
+Hawksnest,"2025-12-22 19:15:28","December 22, 2025, 7:15 pm",credit,26.52,1087
+Hawksnest,"2025-12-21 17:41:09","December 21, 2025, 5:41 pm",credit,29.59,1087
+Hawksnest,"2025-12-20 17:35:00","December 20, 2025, 5:34 pm",cash,40,1087
+Hawksnest,"2025-12-13 17:54:00","December 13, 2025, 5:54 pm",credit,33.27,1087
+Hawksnest,"2026-01-03 17:36:33","January 3, 2026, 5:36 pm",credit,8.84,1088
+Hawksnest,"2026-01-02 17:36:09","January 2, 2026, 5:36 pm",credit,38.67,1088
+Hawksnest,"2025-12-31 15:45:42","December 31, 2025, 3:45 pm",credit,26.52,1088
+Hawksnest,"2025-12-28 16:18:27","December 28, 2025, 4:18 pm",credit,55.24,1088
+Hawksnest,"2025-12-27 17:20:14","December 27, 2025, 5:20 pm",credit,33.15,1088
+Hawksnest,"2025-12-26 15:35:02","December 26, 2025, 3:33 pm",cash,22,1088
+Hawksnest,"2025-12-22 19:16:04","December 22, 2025, 7:16 pm",credit,17.68,1088
+Hawksnest,"2025-12-21 17:41:54","December 21, 2025, 5:41 pm",credit,46.4,1088
+Hawksnest,"2025-12-20 17:37:17","December 20, 2025, 5:37 pm",credit,35.36,1088
+Hawksnest,"2025-12-13 17:55:30","December 13, 2025, 5:55 pm",credit,37.71,1088
+Hawksnest,"2026-01-03 17:42:59","January 3, 2026, 5:42 pm",credit,8.84,1089
+Hawksnest,"2026-01-02 17:36:24","January 2, 2026, 5:36 pm",credit,33.15,1089
+Hawksnest,"2025-12-31 15:49:25","December 31, 2025, 3:48 pm",cash,30,1089
+Hawksnest,"2025-12-28 16:19:32","December 28, 2025, 4:19 pm",credit,27.62,1089
+Hawksnest,"2025-12-27 17:24:57","December 27, 2025, 5:24 pm",credit,66.29,1089
+Hawksnest,"2025-12-26 15:36:00","December 26, 2025, 3:36 pm",credit,13.26,1089
+Hawksnest,"2025-12-22 19:34:22","December 22, 2025, 7:33 pm",cash,30,1089
+Hawksnest,"2025-12-21 17:42:47","December 21, 2025, 5:42 pm",credit,13.26,1089
+Hawksnest,"2025-12-20 17:38:39","December 20, 2025, 5:38 pm",credit,16.57,1089
+Hawksnest,"2025-12-13 17:56:02","December 13, 2025, 5:56 pm",credit,17.75,1089
+Hawksnest,"2026-01-03 17:43:50","January 3, 2026, 5:43 pm",credit,25.41,1090
+Hawksnest,"2026-01-02 17:39:42","January 2, 2026, 5:39 pm",credit,85.07,1090
+Hawksnest,"2025-12-31 15:48:46","December 31, 2025, 3:48 pm",credit,17.68,1090
+Hawksnest,"2025-12-28 16:29:49","December 28, 2025, 4:29 pm",cash,25,1090
+Hawksnest,"2025-12-27 17:26:57","December 27, 2025, 5:26 pm",credit,36.46,1090
+Hawksnest,"2025-12-26 15:36:45","December 26, 2025, 3:36 pm",credit,17.68,1090
+Hawksnest,"2025-12-22 19:37:58","December 22, 2025, 7:36 pm",cash,91,1090
+Hawksnest,"2025-12-21 17:48:31","December 21, 2025, 5:48 pm",credit,69.61,1090
+Hawksnest,"2025-12-20 17:40:22","December 20, 2025, 5:39 pm",cash,49,1090
+Hawksnest,"2025-12-13 17:58:01","December 13, 2025, 5:58 pm",credit,54.35,1090
+Hawksnest,"2026-01-03 17:45:25","January 3, 2026, 5:44 pm",cash,16,1091
+Hawksnest,"2026-01-02 17:40:48","January 2, 2026, 5:40 pm",credit,8.84,1091
+Hawksnest,"2025-12-31 15:49:36","December 31, 2025, 3:49 pm",credit,26.52,1091
+Hawksnest,"2025-12-28 16:58:16","December 28, 2025, 4:57 pm",cash,15,1091
+Hawksnest,"2025-12-27 17:29:53","December 27, 2025, 5:28 pm",cash,8,1091
+Hawksnest,"2025-12-26 15:42:07","December 26, 2025, 3:42 pm",credit,13.26,1091
+Hawksnest,"2025-12-22 19:38:48","December 22, 2025, 7:38 pm",credit,66.29,1091
+Hawksnest,"2025-12-21 17:52:04","December 21, 2025, 5:52 pm",credit,77.34,1091
+Hawksnest,"2025-12-20 17:41:21","December 20, 2025, 5:41 pm",credit,24.31,1091
+Hawksnest,"2025-12-13 17:59:59","December 13, 2025, 5:59 pm",credit,27.73,1091
+Hawksnest,"2026-01-03 17:45:48","January 3, 2026, 5:45 pm",credit,26.52,1092
+Hawksnest,"2026-01-02 17:42:22","January 2, 2026, 5:42 pm",credit,38.67,1092
+Hawksnest,"2025-12-31 15:50:54","December 31, 2025, 3:50 pm",credit,8.84,1092
+Hawksnest,"2025-12-28 17:12:58","December 28, 2025, 5:12 pm",credit,22.1,1092
+Hawksnest,"2025-12-27 17:30:18","December 27, 2025, 5:30 pm",credit,36.46,1092
+Hawksnest,"2025-12-26 15:44:02","December 26, 2025, 3:43 pm",cash,25,1092
+Hawksnest,"2025-12-22 19:43:56","December 22, 2025, 7:43 pm",credit,27.62,1092
+Hawksnest,"2025-12-21 17:55:28","December 21, 2025, 5:55 pm",credit,35.36,1092
+Hawksnest,"2025-12-20 17:41:46","December 20, 2025, 5:41 pm",credit,62.98,1092
+Hawksnest,"2025-12-13 18:00:34","December 13, 2025, 6:00 pm",credit,17.75,1092
+Hawksnest,"2026-01-03 17:46:05","January 3, 2026, 5:46 pm",credit,35.36,1093
+Hawksnest,"2026-01-02 17:42:32","January 2, 2026, 5:42 pm",credit,27.62,1093
+Hawksnest,"2025-12-31 15:52:54","December 31, 2025, 3:51 pm",cash,12,1093
+Hawksnest,"2025-12-28 17:18:19","December 28, 2025, 5:18 pm",credit,38.67,1093
+Hawksnest,"2025-12-27 17:31:23","December 27, 2025, 5:31 pm",credit,22.1,1093
+Hawksnest,"2025-12-26 15:47:30","December 26, 2025, 3:47 pm",credit,64.08,1093
+Hawksnest,"2025-12-21 17:57:05","December 21, 2025, 5:57 pm",credit,79.55,1093
+Hawksnest,"2025-12-20 17:42:02","December 20, 2025, 5:42 pm",credit,16.57,1093
+Hawksnest,"2025-12-13 18:00:36","December 13, 2025, 6:00 pm",credit,17.75,1093
+Hawksnest,"2026-01-03 17:47:58","January 3, 2026, 5:47 pm",credit,26.52,1094
+Hawksnest,"2026-01-02 17:44:06","January 2, 2026, 5:44 pm",credit,22.1,1094
+Hawksnest,"2025-12-31 15:54:48","December 31, 2025, 3:53 pm",cash,25,1094
+Hawksnest,"2025-12-28 17:20:46","December 28, 2025, 5:20 pm",credit,45.3,1094
+Hawksnest,"2025-12-27 17:32:17","December 27, 2025, 5:32 pm",credit,30.94,1094
+Hawksnest,"2025-12-26 15:48:35","December 26, 2025, 3:48 pm",credit,27.62,1094
+Hawksnest,"2025-12-21 18:01:04","December 21, 2025, 6:01 pm",credit,27.62,1094
+Hawksnest,"2025-12-20 17:53:04","December 20, 2025, 5:42 pm",cash,33,1094
+Hawksnest,"2025-12-13 18:01:01","December 13, 2025, 6:01 pm",credit,38.82,1094
+Hawksnest,"2026-01-03 17:49:50","January 3, 2026, 5:49 pm",credit,12.15,1095
+Hawksnest,"2026-01-02 17:46:55","January 2, 2026, 5:46 pm",cash,30,1095
+Hawksnest,"2025-12-31 15:53:27","December 31, 2025, 3:53 pm",credit,27.62,1095
+Hawksnest,"2025-12-28 17:23:05","December 28, 2025, 5:21 pm",cash,30,1095
+Hawksnest,"2025-12-27 17:34:13","December 27, 2025, 5:33 pm",cash,15,1095
+Hawksnest,"2025-12-26 15:49:20","December 26, 2025, 3:49 pm",credit,9.15,1095
+Hawksnest,"2025-12-21 18:08:10","December 21, 2025, 6:08 pm",credit,13.26,1095
+Hawksnest,"2025-12-20 17:43:38","December 20, 2025, 5:43 pm",credit,45.3,1095
+Hawksnest,"2025-12-13 18:02:40","December 13, 2025, 6:02 pm",credit,16.64,1095
+Hawksnest,"2026-01-03 17:49:59","January 3, 2026, 5:49 pm",credit,8.84,1096
+Hawksnest,"2026-01-02 17:47:07","January 2, 2026, 5:47 pm",credit,16.57,1096
+Hawksnest,"2025-12-31 15:53:38","December 31, 2025, 3:53 pm",credit,27.62,1096
+Hawksnest,"2025-12-28 17:22:23","December 28, 2025, 5:22 pm",credit,26.52,1096
+Hawksnest,"2025-12-27 17:34:10","December 27, 2025, 5:33 pm",cash,25,1096
+Hawksnest,"2025-12-26 15:50:22","December 26, 2025, 3:50 pm",credit,26.52,1096
+Hawksnest,"2025-12-21 18:11:16","December 21, 2025, 6:11 pm",credit,13.26,1096
+Hawksnest,"2025-12-20 17:54:16","December 20, 2025, 5:44 pm",cash,42,1096
+Hawksnest,"2026-01-03 17:50:33","January 3, 2026, 5:50 pm",credit,16.57,1097
+Hawksnest,"2026-01-02 17:48:06","January 2, 2026, 5:48 pm",credit,49.72,1097
+Hawksnest,"2025-12-31 15:54:31","December 31, 2025, 3:54 pm",credit,17.68,1097
+Hawksnest,"2025-12-28 17:24:44","December 28, 2025, 5:24 pm",credit,26.52,1097
+Hawksnest,"2025-12-27 17:37:16","December 27, 2025, 5:36 pm",cash,35,1097
+Hawksnest,"2025-12-26 15:50:31","December 26, 2025, 3:50 pm",credit,26.52,1097
+Hawksnest,"2025-12-21 19:14:45","December 21, 2025, 7:14 pm",credit,33.15,1097
+Hawksnest,"2025-12-20 17:47:21","December 20, 2025, 5:47 pm",credit,49.72,1097
+Hawksnest,"2026-01-03 17:52:32","January 3, 2026, 5:52 pm",credit,27.62,1098
+Hawksnest,"2026-01-02 17:49:08","January 2, 2026, 5:48 pm",cash,25,1098
+Hawksnest,"2025-12-31 15:58:31","December 31, 2025, 3:58 pm",credit,43.3,1098
+Hawksnest,"2025-12-28 17:26:34","December 28, 2025, 5:25 pm",cash,11,1098
+Hawksnest,"2025-12-27 17:44:50","December 27, 2025, 5:44 pm",credit,46.4,1098
+Hawksnest,"2025-12-26 15:55:54","December 26, 2025, 3:54 pm",cash,22,1098
+Hawksnest,"2025-12-21 19:29:52","December 21, 2025, 7:29 pm",credit,27.62,1098
+Hawksnest,"2025-12-20 17:47:57","December 20, 2025, 5:47 pm",credit,16.57,1098
+Hawksnest,"2026-01-03 17:52:45","January 3, 2026, 5:52 pm",credit,20.99,1099
+Hawksnest,"2026-01-02 17:49:38","January 2, 2026, 5:49 pm",credit,30.94,1099
+Hawksnest,"2025-12-31 16:00:55","December 31, 2025, 4:00 pm",credit,54.14,1099
+Hawksnest,"2025-12-28 17:29:48","December 28, 2025, 5:29 pm",credit,27.62,1099
+Hawksnest,"2025-12-27 17:46:33","December 27, 2025, 5:46 pm",credit,38.67,1099
+Hawksnest,"2025-12-26 15:57:25","December 26, 2025, 3:57 pm",credit,46.4,1099
+Hawksnest,"2025-12-21 19:37:50","December 21, 2025, 7:37 pm",credit,38.67,1099
+Hawksnest,"2025-12-20 17:55:53","December 20, 2025, 5:48 pm",cash,12,1099
+Hawksnest,"2026-01-03 17:53:28","January 3, 2026, 5:53 pm",credit,12.15,1100
+Hawksnest,"2026-01-02 17:50:06","January 2, 2026, 5:50 pm",credit,17.68,1100
+Hawksnest,"2025-12-31 16:03:26","December 31, 2025, 4:03 pm",credit,54.14,1100
+Hawksnest,"2025-12-28 17:32:48","December 28, 2025, 5:32 pm",credit,16.57,1100
+Hawksnest,"2025-12-27 17:49:02","December 27, 2025, 5:49 pm",credit,45.3,1100
+Hawksnest,"2025-12-26 15:58:11","December 26, 2025, 3:58 pm",credit,26.52,1100
+Hawksnest,"2025-12-21 19:38:02","December 21, 2025, 7:38 pm",credit,8.84,1100
+Hawksnest,"2025-12-20 17:53:19","December 20, 2025, 5:53 pm",credit,54.14,1100
+Hawksnest,"2026-01-03 17:55:43","January 3, 2026, 5:55 pm",credit,38.67,1101
+Hawksnest,"2026-01-02 17:56:39","January 2, 2026, 5:56 pm",credit,33.15,1101
+Hawksnest,"2025-12-31 16:04:51","December 31, 2025, 4:04 pm",credit,54.14,1101
+Hawksnest,"2025-12-28 17:36:55","December 28, 2025, 5:36 pm",credit,8.84,1101
+Hawksnest,"2025-12-27 17:49:26","December 27, 2025, 5:49 pm",credit,33.15,1101
+Hawksnest,"2025-12-26 15:58:30","December 26, 2025, 3:58 pm",credit,26.52,1101
+Hawksnest,"2025-12-21 19:38:29","December 21, 2025, 7:38 pm",credit,8.84,1101
+Hawksnest,"2025-12-20 17:55:14","December 20, 2025, 5:55 pm",credit,27.62,1101
+Hawksnest,"2026-01-03 17:58:21","January 3, 2026, 5:58 pm",credit,66.29,1102
+Hawksnest,"2026-01-02 17:57:07","January 2, 2026, 5:57 pm",credit,27.62,1102
+Hawksnest,"2025-12-31 16:08:49","December 31, 2025, 4:08 pm",credit,41.98,1102
+Hawksnest,"2025-12-28 17:40:51","December 28, 2025, 5:40 pm",cash,12,1102
+Hawksnest,"2025-12-27 17:50:59","December 27, 2025, 5:50 pm",credit,27.62,1102
+Hawksnest,"2025-12-26 15:59:09","December 26, 2025, 3:59 pm",credit,27.62,1102
+Hawksnest,"2025-12-21 19:42:50","December 21, 2025, 7:42 pm",credit,59.66,1102
+Hawksnest,"2025-12-20 17:55:46","December 20, 2025, 5:55 pm",credit,38.67,1102
+Hawksnest,"2026-01-03 18:01:03","January 3, 2026, 6:01 pm",credit,27.62,1103
+Hawksnest,"2026-01-02 17:58:09","January 2, 2026, 5:58 pm",credit,13.26,1103
+Hawksnest,"2025-12-31 16:13:24","December 31, 2025, 4:13 pm",credit,77.34,1103
+Hawksnest,"2025-12-28 17:49:16","December 28, 2025, 5:48 pm",cash,16,1103
+Hawksnest,"2025-12-27 17:51:41","December 27, 2025, 5:51 pm",credit,38.67,1103
+Hawksnest,"2025-12-26 15:59:36","December 26, 2025, 3:59 pm",credit,36.46,1103
+Hawksnest,"2025-12-21 19:44:48","December 21, 2025, 7:44 pm",credit,38.67,1103
+Hawksnest,"2025-12-20 17:56:12","December 20, 2025, 5:56 pm",credit,54.14,1103
+Hawksnest,"2026-01-03 18:03:25","January 3, 2026, 6:03 pm",credit,38.67,1104
+Hawksnest,"2026-01-02 17:58:46","January 2, 2026, 5:58 pm",cash,25,1104
+Hawksnest,"2025-12-31 17:04:01","December 31, 2025, 5:03 pm",credit,17.68,1104
+Hawksnest,"2025-12-28 17:49:07","December 28, 2025, 5:49 pm",credit,46.4,1104
+Hawksnest,"2025-12-27 17:51:49","December 27, 2025, 5:51 pm",credit,79.55,1104
+Hawksnest,"2025-12-26 15:59:55","December 26, 2025, 3:59 pm",credit,49.72,1104
+Hawksnest,"2025-12-20 17:57:05","December 20, 2025, 5:56 pm",cash,72,1104
+Hawksnest,"2026-01-03 18:04:27","January 3, 2026, 6:04 pm",credit,36.46,1105
+Hawksnest,"2026-01-02 17:58:47","January 2, 2026, 5:58 pm",credit,35.36,1105
+Hawksnest,"2025-12-31 17:20:57","December 31, 2025, 5:19 pm",cash,19,1105
+Hawksnest,"2025-12-28 17:49:33","December 28, 2025, 5:49 pm",credit,27.62,1105
+Hawksnest,"2025-12-27 17:52:06","December 27, 2025, 5:52 pm",credit,8.84,1105
+Hawksnest,"2025-12-26 16:00:05","December 26, 2025, 4:00 pm",credit,54.14,1105
+Hawksnest,"2025-12-20 18:01:21","December 20, 2025, 6:01 pm",credit,59.66,1105
+Hawksnest,"2026-01-03 18:04:49","January 3, 2026, 6:04 pm",credit,27.62,1106
+Hawksnest,"2026-01-02 17:59:39","January 2, 2026, 5:59 pm",cash,15,1106
+Hawksnest,"2025-12-31 17:21:00","December 31, 2025, 5:20 pm",cash,19,1106
+Hawksnest,"2025-12-28 17:50:31","December 28, 2025, 5:50 pm",credit,26.52,1106
+Hawksnest,"2025-12-27 17:53:20","December 27, 2025, 5:53 pm",credit,30.94,1106
+Hawksnest,"2025-12-26 16:00:29","December 26, 2025, 4:00 pm",credit,27.62,1106
+Hawksnest,"2025-12-20 18:02:35","December 20, 2025, 6:02 pm",credit,16.57,1106
+Hawksnest,"2026-01-03 18:06:28","January 3, 2026, 6:06 pm",credit,33.15,1107
+Hawksnest,"2026-01-02 18:00:36","January 2, 2026, 5:59 pm",cash,25,1107
+Hawksnest,"2025-12-31 17:20:18","December 31, 2025, 5:20 pm",credit,8.84,1107
+Hawksnest,"2025-12-28 17:52:39","December 28, 2025, 5:52 pm",credit,33.15,1107
+Hawksnest,"2025-12-27 17:56:08","December 27, 2025, 5:54 pm",cash,8,1107
+Hawksnest,"2025-12-26 16:01:49","December 26, 2025, 4:01 pm",credit,35.36,1107
+Hawksnest,"2025-12-20 19:29:45","December 20, 2025, 7:28 pm",cash,12.85,1107
+Hawksnest,"2026-01-03 18:06:45","January 3, 2026, 6:06 pm",credit,38.67,1108
+Hawksnest,"2026-01-02 17:59:39","January 2, 2026, 5:59 pm",credit,16.57,1108
+Hawksnest,"2025-12-31 17:29:45","December 31, 2025, 5:29 pm",credit,38.67,1108
+Hawksnest,"2025-12-28 17:57:04","December 28, 2025, 5:57 pm",credit,13.26,1108
+Hawksnest,"2025-12-27 17:56:39","December 27, 2025, 5:56 pm",credit,85.07,1108
+Hawksnest,"2025-12-26 16:03:23","December 26, 2025, 4:03 pm",credit,17.68,1108
+Hawksnest,"2025-12-20 19:39:48","December 20, 2025, 7:39 pm",credit,17.68,1108
+Hawksnest,"2026-01-03 18:07:19","January 3, 2026, 6:07 pm",credit,27.62,1109
+Hawksnest,"2026-01-02 18:01:34","January 2, 2026, 6:00 pm",cash,24,1109
+Hawksnest,"2025-12-31 17:44:52","December 31, 2025, 5:44 pm",cash,25,1109
+Hawksnest,"2025-12-28 17:59:40","December 28, 2025, 5:59 pm",credit,38.67,1109
+Hawksnest,"2025-12-27 18:53:51","December 27, 2025, 6:53 pm",credit,33.15,1109
+Hawksnest,"2025-12-26 16:03:29","December 26, 2025, 4:03 pm",credit,46.4,1109
+Hawksnest,"2025-12-20 19:41:07","December 20, 2025, 7:41 pm",credit,17.68,1109
+Hawksnest,"2026-01-03 18:20:00","January 3, 2026, 6:12 pm",cash,59,1110
+Hawksnest,"2026-01-02 18:01:04","January 2, 2026, 6:01 pm",credit,17.68,1110
+Hawksnest,"2025-12-31 17:48:09","December 31, 2025, 5:47 pm",cash,25,1110
+Hawksnest,"2025-12-28 18:01:03","December 28, 2025, 6:01 pm",credit,26.52,1110
+Hawksnest,"2025-12-27 19:04:34","December 27, 2025, 7:04 pm",credit,17.68,1110
+Hawksnest,"2025-12-26 16:10:51","December 26, 2025, 4:10 pm",credit,27.62,1110
+Hawksnest,"2025-12-20 19:42:47","December 20, 2025, 7:42 pm",credit,55.24,1110
+Hawksnest,"2026-01-03 18:20:33","January 3, 2026, 6:20 pm",credit,39.78,1111
+Hawksnest,"2026-01-02 18:02:09","January 2, 2026, 6:02 pm",credit,38.67,1111
+Hawksnest,"2025-12-31 17:50:11","December 31, 2025, 5:50 pm",credit,12.15,1111
+Hawksnest,"2025-12-28 18:02:34","December 28, 2025, 6:02 pm",credit,38.67,1111
+Hawksnest,"2025-12-27 19:11:35","December 27, 2025, 7:11 pm",credit,61.87,1111
+Hawksnest,"2025-12-26 16:17:31","December 26, 2025, 4:17 pm",credit,36.46,1111
+Hawksnest,"2025-12-20 19:48:43","December 20, 2025, 7:48 pm",cash,25,1111
+Hawksnest,"2026-01-03 19:03:41","January 3, 2026, 7:03 pm",credit,8.84,1112
+Hawksnest,"2026-01-02 19:07:06","January 2, 2026, 7:07 pm",credit,33.15,1112
+Hawksnest,"2025-12-31 17:53:20","December 31, 2025, 5:53 pm",credit,12.15,1112
+Hawksnest,"2025-12-28 18:07:14","December 28, 2025, 6:07 pm",credit,27.62,1112
+Hawksnest,"2025-12-27 19:15:38","December 27, 2025, 7:15 pm",credit,44.19,1112
+Hawksnest,"2025-12-26 16:28:05","December 26, 2025, 4:26 pm",cash,15,1112
+Hawksnest,"2025-12-20 19:51:49","December 20, 2025, 7:51 pm",cash,25,1112
+Hawksnest,"2026-01-03 19:07:23","January 3, 2026, 7:07 pm",credit,16.57,1113
+Hawksnest,"2026-01-02 19:12:48","January 2, 2026, 7:12 pm",credit,26.52,1113
+Hawksnest,"2025-12-31 17:54:02","December 31, 2025, 5:53 pm",cash,25,1113
+Hawksnest,"2025-12-28 18:13:49","December 28, 2025, 6:13 pm",credit,67.4,1113
+Hawksnest,"2025-12-27 19:18:49","December 27, 2025, 7:18 pm",credit,54.14,1113
+Hawksnest,"2025-12-26 16:29:46","December 26, 2025, 4:28 pm",cash,41,1113
+Hawksnest,"2025-12-20 19:53:33","December 20, 2025, 7:51 pm",cash,25,1113
+Hawksnest,"2026-01-03 19:17:30","January 3, 2026, 7:17 pm",credit,26.52,1114
+Hawksnest,"2026-01-02 19:20:18","January 2, 2026, 7:20 pm",credit,33.15,1114
+Hawksnest,"2025-12-31 17:59:03","December 31, 2025, 5:59 pm",credit,56.35,1114
+Hawksnest,"2025-12-28 18:15:25","December 28, 2025, 6:15 pm",credit,61.87,1114
+Hawksnest,"2025-12-27 19:27:43","December 27, 2025, 7:24 pm",cash,25,1114
+Hawksnest,"2025-12-26 16:39:17","December 26, 2025, 4:39 pm",credit,201.08,1114
+Hawksnest,"2025-12-20 19:52:58","December 20, 2025, 7:52 pm",cash,35,1114
+Hawksnest,"2026-01-03 19:35:05","January 3, 2026, 7:35 pm",credit,35.36,1115
+Hawksnest,"2026-01-02 19:25:02","January 2, 2026, 7:21 pm",cash,15,1115
+Hawksnest,"2025-12-31 18:04:34","December 31, 2025, 6:04 pm",credit,38.67,1115
+Hawksnest,"2025-12-28 19:07:15","December 28, 2025, 7:05 pm",cash,36,1115
+Hawksnest,"2025-12-27 19:25:06","December 27, 2025, 7:24 pm",cash,25,1115
+Hawksnest,"2025-12-26 16:53:09","December 26, 2025, 4:53 pm",credit,36.46,1115
+Hawksnest,"2025-12-20 19:52:51","December 20, 2025, 7:52 pm",credit,59.66,1115
+Hawksnest,"2026-01-03 19:35:44","January 3, 2026, 7:35 pm",credit,17.68,1116
+Hawksnest,"2026-01-02 19:22:09","January 2, 2026, 7:22 pm",credit,17.68,1116
+Hawksnest,"2025-12-31 18:04:48","December 31, 2025, 6:04 pm",credit,38.67,1116
+Hawksnest,"2025-12-28 19:14:28","December 28, 2025, 7:14 pm",credit,38.67,1116
+Hawksnest,"2025-12-27 19:26:53","December 27, 2025, 7:26 pm",credit,27.44,1116
+Hawksnest,"2025-12-26 17:21:43","December 26, 2025, 5:21 pm",credit,8.84,1116
+Hawksnest,"2025-12-20 19:54:12","December 20, 2025, 7:53 pm",cash,41,1116
+Hawksnest,"2026-01-03 19:36:06","January 3, 2026, 7:36 pm",credit,17.68,1117
+Hawksnest,"2026-01-02 19:22:57","January 2, 2026, 7:22 pm",credit,22.1,1117
+Hawksnest,"2025-12-31 18:10:12","December 31, 2025, 6:10 pm",credit,38.67,1117
+Hawksnest,"2025-12-28 19:16:14","December 28, 2025, 7:16 pm",credit,17.68,1117
+Hawksnest,"2025-12-27 19:27:21","December 27, 2025, 7:27 pm",credit,27.62,1117
+Hawksnest,"2025-12-26 17:22:37","December 26, 2025, 5:22 pm",credit,27.62,1117
+Hawksnest,"2025-12-20 19:57:39","December 20, 2025, 7:57 pm",credit,43.09,1117
+Hawksnest,"2026-01-03 19:36:18","January 3, 2026, 7:36 pm",credit,16.57,1118
+Hawksnest,"2026-01-02 19:28:51","January 2, 2026, 7:25 pm",cash,24,1118
+Hawksnest,"2025-12-31 18:16:59","December 31, 2025, 6:16 pm",credit,46.4,1118
+Hawksnest,"2025-12-28 19:20:17","December 28, 2025, 7:20 pm",credit,26.52,1118
+Hawksnest,"2025-12-27 19:27:39","December 27, 2025, 7:27 pm",credit,26.52,1118
+Hawksnest,"2025-12-26 17:24:43","December 26, 2025, 5:24 pm",credit,27.62,1118
+Hawksnest,"2025-12-20 20:01:06","December 20, 2025, 8:00 pm",cash,24,1118
+Hawksnest,"2026-01-03 19:37:52","January 3, 2026, 7:37 pm",credit,17.15,1119
+Hawksnest,"2026-01-02 19:29:25","January 2, 2026, 7:27 pm",cash,35,1119
+Hawksnest,"2025-12-31 19:06:41","December 31, 2025, 7:06 pm",credit,16.57,1119
+Hawksnest,"2025-12-28 19:22:33","December 28, 2025, 7:22 pm",credit,27.62,1119
+Hawksnest,"2025-12-27 19:30:13","December 27, 2025, 7:30 pm",credit,38.67,1119
+Hawksnest,"2025-12-26 17:39:31","December 26, 2025, 5:38 pm",cash,33,1119
+Hawksnest,"2025-12-20 20:02:18","December 20, 2025, 8:00 pm",cash,45,1119
+Hawksnest,"2026-01-03 19:40:39","January 3, 2026, 7:39 pm",cash,24,1120
+Hawksnest,"2026-01-02 19:31:02","January 2, 2026, 7:30 pm",cash,15,1120
+Hawksnest,"2025-12-31 19:11:18","December 31, 2025, 7:11 pm",credit,26.52,1120
+Hawksnest,"2025-12-28 19:25:51","December 28, 2025, 7:25 pm",credit,37.74,1120
+Hawksnest,"2025-12-27 19:31:11","December 27, 2025, 7:31 pm",credit,12.15,1120
+Hawksnest,"2025-12-26 17:39:24","December 26, 2025, 5:39 pm",credit,13.02,1120
+Hawksnest,"2025-12-20 20:06:10","December 20, 2025, 8:05 pm",cash,24,1120
+Hawksnest,"2026-01-03 19:43:11","January 3, 2026, 7:43 pm",credit,27.62,1121
+Hawksnest,"2026-01-02 19:33:26","January 2, 2026, 7:32 pm",cash,16,1121
+Hawksnest,"2025-12-31 19:15:36","December 31, 2025, 7:15 pm",credit,8.84,1121
+Hawksnest,"2025-12-28 19:26:54","December 28, 2025, 7:26 pm",credit,27.62,1121
+Hawksnest,"2025-12-27 19:32:24","December 27, 2025, 7:32 pm",credit,38.67,1121
+Hawksnest,"2025-12-26 17:42:26","December 26, 2025, 5:42 pm",credit,26.52,1121
+Hawksnest,"2025-12-20 20:10:42","December 20, 2025, 8:10 pm",credit,37.74,1121
+Hawksnest,"2026-01-03 19:43:29","January 3, 2026, 7:43 pm",credit,38.67,1122
+Hawksnest,"2026-01-02 19:33:42","January 2, 2026, 7:33 pm",credit,27.62,1122
+Hawksnest,"2025-12-31 19:16:27","December 31, 2025, 7:16 pm",credit,8.84,1122
+Hawksnest,"2025-12-28 19:29:24","December 28, 2025, 7:29 pm",credit,48.61,1122
+Hawksnest,"2025-12-27 19:34:52","December 27, 2025, 7:34 pm",credit,27.62,1122
+Hawksnest,"2025-12-26 17:51:46","December 26, 2025, 5:43 pm",cash,77,1122
+Hawksnest,"2025-12-20 20:10:43","December 20, 2025, 8:10 pm",credit,12.15,1122
+Hawksnest,"2026-01-03 19:45:02","January 3, 2026, 7:45 pm",credit,33.15,1123
+Hawksnest,"2026-01-02 19:34:55","January 2, 2026, 7:34 pm",credit,17.68,1123
+Hawksnest,"2025-12-31 19:17:44","December 31, 2025, 7:17 pm",credit,26.52,1123
+Hawksnest,"2025-12-28 19:33:18","December 28, 2025, 7:33 pm",credit,27.62,1123
+Hawksnest,"2025-12-27 19:38:36","December 27, 2025, 7:37 pm",cash,24,1123
+Hawksnest,"2025-12-26 17:45:09","December 26, 2025, 5:43 pm",cash,82,1123
+Hawksnest,"2026-01-03 19:50:21","January 3, 2026, 7:49 pm",cash,15,1124
+Hawksnest,"2026-01-02 19:37:14","January 2, 2026, 7:36 pm",cash,33,1124
+Hawksnest,"2025-12-31 19:19:46","December 31, 2025, 7:18 pm",cash,49,1124
+Hawksnest,"2025-12-28 19:37:03","December 28, 2025, 7:35 pm",cash,70,1124
+Hawksnest,"2025-12-27 19:38:22","December 27, 2025, 7:38 pm",credit,36.46,1124
+Hawksnest,"2025-12-26 17:44:54","December 26, 2025, 5:44 pm",credit,46.4,1124
+Hawksnest,"2026-01-03 19:50:01","January 3, 2026, 7:49 pm",credit,16.57,1125
+Hawksnest,"2026-01-02 19:41:01","January 2, 2026, 7:41 pm",credit,13.26,1125
+Hawksnest,"2025-12-31 19:19:27","December 31, 2025, 7:19 pm",credit,18.3,1125
+Hawksnest,"2025-12-28 19:38:45","December 28, 2025, 7:38 pm",credit,12.15,1125
+Hawksnest,"2025-12-27 19:40:40","December 27, 2025, 7:38 pm",cash,24,1125
+Hawksnest,"2025-12-26 17:46:16","December 26, 2025, 5:45 pm",cash,15,1125
+Hawksnest,"2026-01-03 19:53:32","January 3, 2026, 7:53 pm",credit,17.68,1126
+Hawksnest,"2026-01-02 19:42:21","January 2, 2026, 7:42 pm",credit,88.39,1126
+Hawksnest,"2025-12-31 19:27:12","December 31, 2025, 7:27 pm",credit,22.1,1126
+Hawksnest,"2025-12-28 19:40:08","December 28, 2025, 7:40 pm",credit,48.61,1126
+Hawksnest,"2025-12-27 19:39:46","December 27, 2025, 7:38 pm",cash,50,1126
+Hawksnest,"2025-12-26 17:47:34","December 26, 2025, 5:47 pm",credit,26.52,1126
+Hawksnest,"2026-01-03 19:53:50","January 3, 2026, 7:53 pm",credit,36.46,1127
+Hawksnest,"2026-01-02 19:43:11","January 2, 2026, 7:43 pm",credit,17.68,1127
+Hawksnest,"2025-12-31 19:30:41","December 31, 2025, 7:28 pm",cash,15,1127
+Hawksnest,"2025-12-28 19:42:42","December 28, 2025, 7:42 pm",credit,64.08,1127
+Hawksnest,"2025-12-27 19:40:36","December 27, 2025, 7:39 pm",cash,25,1127
+Hawksnest,"2025-12-26 17:47:50","December 26, 2025, 5:47 pm",credit,55.24,1127
+Hawksnest,"2026-01-03 19:54:22","January 3, 2026, 7:54 pm",credit,16.57,1128
+Hawksnest,"2026-01-02 19:46:04","January 2, 2026, 7:46 pm",credit,26.52,1128
+Hawksnest,"2025-12-31 19:32:08","December 31, 2025, 7:32 pm",credit,16.57,1128
+Hawksnest,"2025-12-28 19:45:15","December 28, 2025, 7:45 pm",credit,16.57,1128
+Hawksnest,"2025-12-27 19:41:19","December 27, 2025, 7:41 pm",credit,35.36,1128
+Hawksnest,"2025-12-26 17:49:09","December 26, 2025, 5:49 pm",credit,44.19,1128
+Hawksnest,"2026-01-03 19:54:46","January 3, 2026, 7:54 pm",credit,27.62,1129
+Hawksnest,"2026-01-02 19:46:16","January 2, 2026, 7:46 pm",credit,27.62,1129
+Hawksnest,"2025-12-31 19:33:18","December 31, 2025, 7:33 pm",credit,16.57,1129
+Hawksnest,"2025-12-28 19:50:57","December 28, 2025, 7:50 pm",credit,13.26,1129
+Hawksnest,"2025-12-27 19:42:33","December 27, 2025, 7:42 pm",credit,27.62,1129
+Hawksnest,"2025-12-26 17:49:43","December 26, 2025, 5:49 pm",credit,26.52,1129
+Hawksnest,"2026-01-03 19:55:06","January 3, 2026, 7:55 pm",credit,45.3,1130
+Hawksnest,"2026-01-02 19:49:00","January 2, 2026, 7:48 pm",credit,27.62,1130
+Hawksnest,"2025-12-31 19:34:15","December 31, 2025, 7:34 pm",credit,54.14,1130
+Hawksnest,"2025-12-28 19:51:49","December 28, 2025, 7:51 pm",credit,35.36,1130
+Hawksnest,"2025-12-27 19:45:03","December 27, 2025, 7:43 pm",cash,49,1130
+Hawksnest,"2025-12-26 17:49:58","December 26, 2025, 5:49 pm",credit,33.15,1130
+Hawksnest,"2026-01-03 19:55:31","January 3, 2026, 7:55 pm",credit,49.72,1131
+Hawksnest,"2026-01-02 19:50:00","January 2, 2026, 7:49 pm",credit,26.52,1131
+Hawksnest,"2025-12-31 19:34:27","December 31, 2025, 7:34 pm",credit,8.84,1131
+Hawksnest,"2025-12-28 19:54:06","December 28, 2025, 7:52 pm",cash,35,1131
+Hawksnest,"2025-12-27 19:45:43","December 27, 2025, 7:45 pm",credit,27.62,1131
+Hawksnest,"2025-12-26 17:56:47","December 26, 2025, 5:51 pm",cash,72,1131
+Hawksnest,"2026-01-03 19:56:37","January 3, 2026, 7:56 pm",credit,38.67,1132
+Hawksnest,"2026-01-02 19:50:09","January 2, 2026, 7:50 pm",credit,33.15,1132
+Hawksnest,"2025-12-31 19:34:51","December 31, 2025, 7:34 pm",credit,17.68,1132
+Hawksnest,"2025-12-28 19:54:11","December 28, 2025, 7:54 pm",credit,66.29,1132
+Hawksnest,"2025-12-27 19:47:56","December 27, 2025, 7:46 pm",cash,35,1132
+Hawksnest,"2025-12-26 17:56:49","December 26, 2025, 5:52 pm",cash,25,1132
+Hawksnest,"2026-01-03 19:57:16","January 3, 2026, 7:57 pm",credit,38.67,1133
+Hawksnest,"2026-01-02 19:52:01","January 2, 2026, 7:50 pm",cash,30,1133
+Hawksnest,"2025-12-31 19:34:57","December 31, 2025, 7:34 pm",credit,38.67,1133
+Hawksnest,"2025-12-28 19:55:09","December 28, 2025, 7:55 pm",credit,35.36,1133
+Hawksnest,"2025-12-27 19:50:12","December 27, 2025, 7:50 pm",credit,8.84,1133
+Hawksnest,"2025-12-26 17:54:02","December 26, 2025, 5:54 pm",credit,8.84,1133
+Hawksnest,"2026-01-03 19:57:55","January 3, 2026, 7:57 pm",credit,38.67,1134
+Hawksnest,"2026-01-02 19:51:22","January 2, 2026, 7:51 pm",credit,26.52,1134
+Hawksnest,"2025-12-28 20:00:08","December 28, 2025, 7:59 pm",cash,25,1134
+Hawksnest,"2025-12-27 19:52:23","December 27, 2025, 7:51 pm",cash,32,1134
+Hawksnest,"2025-12-26 17:56:20","December 26, 2025, 5:56 pm",credit,69.61,1134
+Hawksnest,"2026-01-03 19:57:59","January 3, 2026, 7:57 pm",credit,27.62,1135
+Hawksnest,"2026-01-02 19:52:26","January 2, 2026, 7:52 pm",credit,33.15,1135
+Hawksnest,"2025-12-28 20:01:31","December 28, 2025, 8:01 pm",credit,61.87,1135
+Hawksnest,"2025-12-27 19:54:29","December 27, 2025, 7:54 pm",credit,69.61,1135
+Hawksnest,"2025-12-26 17:58:05","December 26, 2025, 5:58 pm",credit,27.62,1135
+Hawksnest,"2026-01-03 19:58:39","January 3, 2026, 7:58 pm",credit,17.68,1136
+Hawksnest,"2026-01-02 19:52:43","January 2, 2026, 7:52 pm",credit,16.57,1136
+Hawksnest,"2025-12-28 20:07:03","December 28, 2025, 8:02 pm",cash,25,1136
+Hawksnest,"2025-12-27 19:55:09","December 27, 2025, 7:55 pm",credit,24.31,1136
+Hawksnest,"2025-12-26 17:58:09","December 26, 2025, 5:58 pm",credit,38.67,1136
+Hawksnest,"2026-01-03 20:00:17","January 3, 2026, 7:59 pm",cash,12,1137
+Hawksnest,"2026-01-02 19:53:54","January 2, 2026, 7:53 pm",credit,27.62,1137
+Hawksnest,"2025-12-28 20:06:59","December 28, 2025, 8:06 pm",credit,61.87,1137
+Hawksnest,"2025-12-27 19:57:39","December 27, 2025, 7:57 pm",credit,12.15,1137
+Hawksnest,"2025-12-26 18:00:09","December 26, 2025, 6:00 pm",credit,27.62,1137
+Hawksnest,"2026-01-03 20:00:56","January 3, 2026, 8:00 pm",credit,17.68,1138
+Hawksnest,"2026-01-02 19:54:50","January 2, 2026, 7:54 pm",credit,16.57,1138
+Hawksnest,"2025-12-28 20:09:33","December 28, 2025, 8:09 pm",credit,61.87,1138
+Hawksnest,"2025-12-27 19:58:45","December 27, 2025, 7:58 pm",cash,25,1138
+Hawksnest,"2025-12-26 18:06:09","December 26, 2025, 6:06 pm",credit,55.24,1138
+Hawksnest,"2026-01-03 20:01:34","January 3, 2026, 8:01 pm",credit,8.84,1139
+Hawksnest,"2026-01-02 19:56:53","January 2, 2026, 7:55 pm",cash,32,1139
+Hawksnest,"2025-12-27 20:02:20","December 27, 2025, 8:02 pm",credit,34.25,1139
+Hawksnest,"2025-12-26 18:07:55","December 26, 2025, 6:07 pm",credit,38.67,1139
+Hawksnest,"2026-01-03 20:04:53","January 3, 2026, 8:04 pm",credit,27.62,1140
+Hawksnest,"2026-01-02 19:56:11","January 2, 2026, 7:56 pm",credit,49.72,1140
+Hawksnest,"2025-12-27 20:05:39","December 27, 2025, 8:05 pm",credit,77.34,1140
+Hawksnest,"2025-12-26 18:09:06","December 26, 2025, 6:09 pm",credit,38.67,1140
+Hawksnest,"2026-01-03 20:06:59","January 3, 2026, 8:04 pm",cash,25,1141
+Hawksnest,"2026-01-02 19:57:12","January 2, 2026, 7:56 pm",cash,25,1141
+Hawksnest,"2025-12-26 18:59:00","December 26, 2025, 6:12 pm",cash,35,1141
+Hawksnest,"2026-01-03 20:14:41","January 3, 2026, 8:13 pm",cash,56,1142
+Hawksnest,"2026-01-02 19:56:55","January 2, 2026, 7:56 pm",credit,38.67,1142
+Hawksnest,"2025-12-26 19:19:50","December 26, 2025, 7:19 pm",credit,27.62,1142
+Hawksnest,"2026-01-02 19:57:38","January 2, 2026, 7:57 pm",credit,33.15,1143
+Hawksnest,"2025-12-26 19:21:50","December 26, 2025, 7:21 pm",credit,38.67,1143
+Hawksnest,"2026-01-02 19:58:43","January 2, 2026, 7:58 pm",credit,33.15,1144
+Hawksnest,"2025-12-26 19:23:49","December 26, 2025, 7:23 pm",credit,17.68,1144
+Hawksnest,"2026-01-02 20:01:15","January 2, 2026, 7:59 pm",cash,32,1145
+Hawksnest,"2025-12-26 19:24:05","December 26, 2025, 7:24 pm",credit,37.74,1145
+Hawksnest,"2026-01-02 20:01:06","January 2, 2026, 8:01 pm",credit,27.62,1146
+Hawksnest,"2025-12-26 19:28:48","December 26, 2025, 7:28 pm",credit,16.57,1146
+Hawksnest,"2025-12-26 19:31:05","December 26, 2025, 7:31 pm",credit,36.46,1147
+Hawksnest,"2025-12-26 19:31:20","December 26, 2025, 7:31 pm",credit,35.36,1148
+Hawksnest,"2025-12-26 19:35:05","December 26, 2025, 7:34 pm",cash,16,1149
+Hawksnest,"2025-12-26 19:35:20","December 26, 2025, 7:35 pm",credit,64.08,1150
+Hawksnest,"2025-12-26 19:37:21","December 26, 2025, 7:37 pm",credit,50.82,1151
+Hawksnest,"2025-12-26 19:42:23","December 26, 2025, 7:42 pm",credit,8.84,1152
+Hawksnest,"2025-12-26 19:44:21","December 26, 2025, 7:44 pm",credit,69.61,1153
+Hawksnest,"2025-12-26 19:44:41","December 26, 2025, 7:44 pm",credit,49.72,1154
+Hawksnest,"2025-12-26 19:45:01","December 26, 2025, 7:45 pm",credit,36.46,1155
+Hawksnest,"2025-12-26 19:45:13","December 26, 2025, 7:45 pm",credit,36.46,1156
+Hawksnest,"2025-12-26 19:52:22","December 26, 2025, 7:45 pm",cash,24,1157
+Hawksnest,"2025-12-26 19:46:57","December 26, 2025, 7:46 pm",credit,36.46,1158
+Hawksnest,"2025-12-26 19:53:09","December 26, 2025, 7:52 pm",cash,33,1159
+Hawksnest,"2025-12-26 19:54:05","December 26, 2025, 7:53 pm",cash,35,1160
+Hawksnest,"2025-12-26 19:59:18","December 26, 2025, 7:57 pm",cash,16,1161
+Hawksnest,"2025-12-26 19:57:35","December 26, 2025, 7:57 pm",credit,17.68,1162
+Hawksnest,"2025-12-26 19:57:57","December 26, 2025, 7:57 pm",credit,35.36,1163
+Hawksnest,"2025-12-26 20:01:27","December 26, 2025, 8:01 pm",cash,44,1164
+Hawksnest,"2025-12-26 20:04:12","December 26, 2025, 8:04 pm",credit,38.67,1165
+Hawksnest,"2025-12-26 20:05:50","December 26, 2025, 8:04 pm",cash,42,1166
+Hawksnest,"2025-12-26 20:16:28","December 26, 2025, 8:07 pm",cash,8,1167
+Hawksnest,"2025-12-26 20:16:29","December 26, 2025, 8:12 pm",cash,30,1168
