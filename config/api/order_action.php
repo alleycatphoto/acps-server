@@ -376,36 +376,47 @@ if ($action === 'paid') {
             
             $csvFile = __DIR__ . '/../../sales/transactions.csv';
             $today = date("m/d/Y");
-            $locationSlug = getenv('LOCATION_SLUG') ?: ($locationName ?? 'Unknown'); // Fallback if locationName not set
-            // Ensure locationName is available if getenv fails (re-include config if needed, but it is required at top)
-            if (!$locationSlug && isset($locationName)) $locationSlug = $locationName;
+            $rawLocation = getenv('LOCATION_SLUG') ?: ($locationName ?? 'Unknown');
+            $locationSlug = str_replace(' ', '', $rawLocation);
 
             $data = [];
             if (file_exists($csvFile)) {
-                $handle = fopen($csvFile, 'r');
-                $header = fgetcsv($handle); // Skip header
-                while (($row = fgetcsv($handle)) !== false) {
-                    $key = $row[0] . '|' . $row[1];
-                    if (isset($row[4])) $row[4] = (float)str_replace(['$', ','], '', $row[4]);
-                    $data[$key] = $row;
+                $handle = @fopen($csvFile, 'r');
+                if ($handle !== false) {
+                    $header = fgetcsv($handle); // Skip header
+                    while (($row = fgetcsv($handle)) !== false) {
+                        // Key is Location | Date | Payment Type
+                        $key = $row[0] . '|' . $row[1] . '|' . ($row[3] ?? '');
+                        if (isset($row[4])) $row[4] = (float)str_replace(['$', ','], '', $row[4]);
+                        $data[$key] = $row;
+                    }
+                    fclose($handle);
                 }
-                fclose($handle);
             }
 
-            $key = $locationSlug . '|' . $today;
+            $key = $locationSlug . '|' . $today . '|Cash';
             if (!isset($data[$key])) {
                 $data[$key] = [$locationSlug, $today, 0, 'Cash', 0];
             }
             $data[$key][2] += 1;      // Orders
             $data[$key][4] += $txtAmt; // Amount
 
-            $fp = fopen($csvFile, 'w');
-            fputcsv($fp, ['Location', 'Order Date', 'Orders', 'Payment Type', 'Amount']);
-            foreach ($data as $row) {
-                $row[4] = '$' . number_format($row[4], 2);
-                fputcsv($fp, $row);
+            // Ensure directory exists
+            if (!is_dir(dirname($csvFile))) {
+                @mkdir(dirname($csvFile), 0777, true);
             }
-            fclose($fp);
+
+            $fp = @fopen($csvFile, 'w');
+            if ($fp !== false) {
+                fputcsv($fp, ['Location', 'Order Date', 'Orders', 'Payment Type', 'Amount']);
+                foreach ($data as $row) {
+                    $row[4] = '$' . number_format($row[4], 2);
+                    fputcsv($fp, $row);
+                }
+                fclose($fp);
+            } else {
+                error_log("Failed to open CSV for writing in order_action.php: " . $csvFile);
+            }
         }
     }
     $statusMsg = "Order #$orderID marked PAID.";

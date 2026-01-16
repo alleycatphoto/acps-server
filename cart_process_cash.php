@@ -207,42 +207,58 @@ $Cart->clearCart();
 // --- LOG TRANSACTION TO DAILY TOTALS CSV ---
 $csvFile = __DIR__ . '/sales/transactions.csv';
 $today = date("m/d/Y");
-$location = getenv('LOCATION_SLUG') ?: $locationName;
-$paymentTypeDisplay = $paymentType === 'cash' ? 'Cash' : 'Credit';
+// User wants Location Slug without spaces/quotes in CSV
+$rawLocation = getenv('LOCATION_SLUG') ?: $locationName;
+$location = str_replace(' ', '', $rawLocation); 
+
+$paymentTypeDisplay = ($paymentType === 'square') ? 'Credit' : 'Cash';
+// For CSV, if Credit/Square, use the full taxed amount. If Cash, use untaxed.
+// $txtAmt is already adjusted above: if Square, it has tax added. If Cash, it is base.
+$logAmount = $txtAmt; 
 
 // Read existing data
 $data = [];
 if (file_exists($csvFile)) {
-    $handle = fopen($csvFile, 'r');
-    $header = fgetcsv($handle);
-    while (($row = fgetcsv($handle)) !== false) {
-        $key = $row[0] . '|' . $row[1]; // Location|Date
-        // Sanitize amount (remove $ and ,)
-        if (isset($row[4])) {
-            $row[4] = (float)str_replace(['$', ','], '', $row[4]);
+    $handle = @fopen($csvFile, 'r');
+    if ($handle !== false) {
+        $header = fgetcsv($handle);
+        while (($row = fgetcsv($handle)) !== false) {
+            // Key is Location | Date | Payment Type
+            $key = $row[0] . '|' . $row[1] . '|' . ($row[3] ?? ''); 
+            // Sanitize amount (remove $ and ,)
+            if (isset($row[4])) {
+                $row[4] = (float)str_replace(['$', ','], '', $row[4]);
+            }
+            $data[$key] = $row;
         }
-        $data[$key] = $row;
+        fclose($handle);
     }
-    fclose($handle);
 }
 
 // Update or create entry for today
-$key = $location . '|' . $today;
+$key = $location . '|' . $today . '|' . $paymentTypeDisplay;
 if (!isset($data[$key])) {
     $data[$key] = [$location, $today, 0, $paymentTypeDisplay, 0];
 }
 $data[$key][2] += 1; // Orders
-$data[$key][4] += $txtAmt; // Amount
+$data[$key][4] += $logAmount; // Amount
 
 // Write back to CSV
-$fp = fopen($csvFile, 'w');
-fputcsv($fp, ['Location', 'Order Date', 'Orders', 'Payment Type', 'Amount']);
-foreach ($data as $row) {
-    // Format amount with $
-    $row[4] = '$' . number_format($row[4], 2);
-    fputcsv($fp, $row);
+if (!is_dir(dirname($csvFile))) {
+    @mkdir(dirname($csvFile), 0777, true);
 }
-fclose($fp);
+$fp = @fopen($csvFile, 'w');
+if ($fp !== false) {
+    fputcsv($fp, ['Location', 'Order Date', 'Orders', 'Payment Type', 'Amount']);
+    foreach ($data as $row) {
+        // Format amount with $
+        $row[4] = '$' . number_format($row[4], 2);
+        fputcsv($fp, $row);
+    }
+    fclose($fp);
+} else {
+    error_log("Failed to open CSV for writing: " . $csvFile);
+}
 
 // Determine UI Display
 $isApproved = ($paymentType === 'square');
