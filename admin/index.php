@@ -577,10 +577,10 @@ $token = md5('unique_salt' . $timestamp);
         <li class="nav-item">
           <a class="nav-link" id="uploader-tab" data-toggle="tab" href="#uploader" role="tab" aria-controls="uploader" aria-selected="true">Uploader</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" style="display:none;">
           <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="false">Settings</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" style="display:none;">
           <a class="nav-link" id="sales-tab" data-toggle="tab" href="#sales" role="tab" aria-controls="sales" aria-selected="false">Sales</a>
         </li>
       </ul>
