@@ -48,3 +48,4 @@ ai/
 config/autoprint_status.txt
 google.php
 *.csv
+mcp/

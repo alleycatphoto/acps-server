@@ -283,8 +283,8 @@ $savings = $cc_totaltaxed - $amount_without_tax;
                 </div>
 
                 <div class="pay-actions-fullwidth">
-                    <div style="text-align:center; color:#fff; font-size:2rem; margin-bottom:20px; text-transform:uppercase; font-weight:bold;">
-                        PAY CASH HERE AND SAVE <span style="color:#6F0; font-size:1.2em;">$<?php echo number_format($savings, 2); ?></span>
+                    <div style="text-align:center; color:#fff; font-size:2.4rem; margin-bottom:40px; text-transform:uppercase; font-weight:bold; line-height: 1.1;">
+                        PAY CASH HERE AND SAVE <span style="color:#6F0; font-size:2.4rem;">$<?php echo number_format($savings, 2); ?></span>
                     </div>
                     <button type="button" class="big-pay-btn" id="cashPayBtn" onclick="processCash()">
                         <div class="big-pay-main"><span class="fa fa-money-bill-wave"></span> PAY CASH AT COUNTER</div>

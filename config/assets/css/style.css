@@ -264,10 +264,10 @@ input:checked + .slider:before { transform: translateX(14px); }
     .order-card { 
         display: flex;
         flex-wrap: wrap;
-        align-items: baseline; /* Align text baselines */
+        align-items: center; /* Center vertically */
         padding: 12px;
-        gap: 5px; /* Tighter spacing */
-        justify-content: flex-start;
+        gap: 0; /* Manual spacing via margins */
+        justify-content: space-between;
     }
     
     /* ROW 1: ID, Time, Price (Right) */
@@ -282,9 +282,8 @@ input:checked + .slider:before { transform: translateX(14px); }
         order: 2;
         width: auto;
         font-size: 0.9rem;
-        /* flex-grow removed */
         text-align: left;
-        margin-right: auto; /* Push price to right instead */
+        margin-right: auto; /* Pushes price to far right */
     }
     
     .order-total {
@@ -292,37 +291,43 @@ input:checked + .slider:before { transform: translateX(14px); }
         width: auto;
         font-size: 1.2rem;
         font-weight: bold;
-        margin-left: auto; /* Force right alignment */
+        text-align: right;
     }
 
     /* ROW 2: Email (Full Width) */
     .order-name { 
         order: 4;
         width: 100%;
-        margin-top: 4px;
-        font-size: 0.95rem;
+        margin-top: 8px;
+        font-size: 1rem;
         border: none;
         padding: 0;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        display: block; /* Ensure it breaks to new line */
     }
     
     /* ROW 3: Buttons */
     .order-actions { 
         order: 5;
         width: 100%;
-        margin-top: 10px;
+        margin-top: 12px;
         margin-left: 0; 
-        justify-content: center; 
+        justify-content: flex-start; 
         flex-wrap: wrap; 
         gap: 8px;
     }
     
     .btn {
         flex: 1 1 auto;
-        max-width: none; /* Allow buttons to fill space evenly */
-        padding: 8px 12px;
+        padding: 10px;
+        font-size: 0.8rem;
+    }
+    
+    /* Hide badge on mobile if needed to save space, or keep it */
+    .order-type {
+        display: none; 
     }
 }
 
