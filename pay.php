@@ -98,6 +98,9 @@ if ($cc_totaltaxed > 0) {
     // }
 }
 
+// New calculation
+$savings = $cc_totaltaxed - $amount_without_tax;
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -268,7 +271,7 @@ if ($cc_totaltaxed > 0) {
                         <p style="color:black; font-weight:bold;">Loading...</p>
                     <?php endif; ?>
                 </div>
-                <img src="/public/assets/images/pay_icons_250.png" alt="Icons" style="width: 200px; margin-top: 1rem;">
+                <img src="/public/assets/images/pay_icons_250.png" alt="Icons" style="width: 250px; margin-top: 1rem;">
             </div>
             
             <!-- Right: Totals & Actions -->
@@ -280,9 +283,12 @@ if ($cc_totaltaxed > 0) {
                 </div>
 
                 <div class="pay-actions-fullwidth">
+                    <div style="text-align:center; color:#fff; font-size:2rem; margin-bottom:20px; text-transform:uppercase; font-weight:bold;">
+                        PAY CASH HERE AND SAVE <span style="color:#6F0; font-size:1.2em;">$<?php echo number_format($savings, 2); ?></span>
+                    </div>
                     <button type="button" class="big-pay-btn" id="cashPayBtn" onclick="processCash()">
-                        <div class="big-pay-main"><span class="fa fa-money-bill-wave"></span> PAY AT COUNTER</div>
-                        <div class="big-pay-sub">CASH OR CARD &nbsp; • &nbsp; SCAN QR TO LEFT</div>
+                        <div class="big-pay-main"><span class="fa fa-money-bill-wave"></span> PAY CASH AT COUNTER</div>
+                        <div class="big-pay-sub">SCAN QR TO LEFT TO PAY ON PHONE</div>
                     </button>
                     <button type="button" class="big-cancel-btn" onclick="location.reload()">
                         <div class="big-cancel-main"><span class="fa fa-times-circle"></span> CANCEL</div>
@@ -336,7 +342,7 @@ if ($cc_totaltaxed > 0) {
 <!-- <script src="/public/assets/js/jsKeyboard.js?v=<?php echo time(); ?>"></script> -->
 <script src="/public/assets/js/modern_keyboard.js?v=<?php echo time(); ?>"></script>
 <script src="/public/assets/js/CardReader.js"></script>
-<script src="/public/assets/js/acps.js"></script> <!-- Master JS -->
+<script src="/public/assets/js/acps.js?v=<?php echo time(); ?>"></script> <!-- Master JS -->
 
 
 <script>
@@ -375,16 +381,37 @@ if ($cc_totaltaxed > 0) {
 
 // Lock cash/pay button and show spinner, then call real processCash
 var _originalProcessCash = null;
+
+// Capture the original function immediately if it exists
 if (typeof window.processCash === 'function') {
     _originalProcessCash = window.processCash;
 }
+
 window.processCash = function() {
     var btn = document.getElementById('cashPayBtn');
-    if (!btn.disabled) {
+    if (btn) {
+        // Stop if already disabled
+        if (btn.disabled || btn.getAttribute('disabled') === 'disabled') return;
+
+        // Immediate UI Lock
         btn.disabled = true;
+        btn.setAttribute('disabled', 'disabled');
+        btn.onclick = null; // Kill property handler
+        btn.removeAttribute('onclick'); // Kill attribute handler
+        
+        // Show Spinner
         btn.innerHTML = '<div class="big-pay-main"><span class="fa fa-spinner fa-spin"></span> Processing...</div><div class="big-pay-sub">Please wait</div>';
+
+        // Call original logic
         if (typeof _originalProcessCash === 'function') {
             _originalProcessCash();
+        } else {
+            console.error("Original processCash function not found.");
+            // Fallback: try to find it in case of race condition (unlikely with sync script tags)
+            if (typeof window.acps_base_total !== 'undefined') {
+               // We could try to reconstruct the redirect here if desperate, 
+               // but it's better to rely on the loaded file.
+            }
         }
     }
 };

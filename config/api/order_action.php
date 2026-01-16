@@ -131,17 +131,24 @@ function acp_send_digital_email($orderID): array {
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept: text/plain,*/*']);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+        
+        // --- PATCH: Fire and Forget (don't wait for emailer to finish) ---
+        curl_setopt($ch, CURLOPT_TIMEOUT, 1); // Timeout after 1 second
+        curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
+
         $cacertPath = realpath(__DIR__ . '/../../cacert.pem');
         if ($cacertPath && file_exists($cacertPath)) {
             curl_setopt($ch, CURLOPT_CAINFO, $cacertPath);
         }
         $body   = curl_exec($ch);
-        $errNo  = curl_errno($ch);
+        $errNo  = curl_errno($ch); // 28 is timeout
         $errStr = curl_error($ch);
         curl_close($ch);
-        if ($errNo === 0 && $body !== false) {
-            $text = preg_replace('/<[^>]*>/', '', $body);
-            $ok   = (bool)preg_match('/Message has been sent/i', $text);
+
+        // Treat timeout (28) as success for "background" sending
+        if ($errNo === 0 || $errNo === 28) {
+            $ok = true; 
+            $body = "Email triggered in background (Timeout set to 1s).";
         } else {
             $body = 'cURL error: ' . $errStr;
         }
@@ -361,6 +368,45 @@ if ($action === 'paid') {
         file_put_contents($receiptPath, $updatedReceipt);
         $receiptData = $updatedReceipt;
         acp_log_event($orderID, "PAID");
+
+        // --- Log to Daily CSV ---
+        // Extract Amount from receipt: "CASH ORDER: $XX.XX PAID"
+        if (preg_match('/CASH ORDER:\s*\$([0-9]+\.[0-9]{2})\s*PAID/i', $updatedReceipt, $m)) {
+            $txtAmt = floatval($m[1]);
+            
+            $csvFile = __DIR__ . '/../../sales/transactions.csv';
+            $today = date("m/d/Y");
+            $locationSlug = getenv('LOCATION_SLUG') ?: ($locationName ?? 'Unknown'); // Fallback if locationName not set
+            // Ensure locationName is available if getenv fails (re-include config if needed, but it is required at top)
+            if (!$locationSlug && isset($locationName)) $locationSlug = $locationName;
+
+            $data = [];
+            if (file_exists($csvFile)) {
+                $handle = fopen($csvFile, 'r');
+                $header = fgetcsv($handle); // Skip header
+                while (($row = fgetcsv($handle)) !== false) {
+                    $key = $row[0] . '|' . $row[1];
+                    if (isset($row[4])) $row[4] = (float)str_replace(['$', ','], '', $row[4]);
+                    $data[$key] = $row;
+                }
+                fclose($handle);
+            }
+
+            $key = $locationSlug . '|' . $today;
+            if (!isset($data[$key])) {
+                $data[$key] = [$locationSlug, $today, 0, 'Cash', 0];
+            }
+            $data[$key][2] += 1;      // Orders
+            $data[$key][4] += $txtAmt; // Amount
+
+            $fp = fopen($csvFile, 'w');
+            fputcsv($fp, ['Location', 'Order Date', 'Orders', 'Payment Type', 'Amount']);
+            foreach ($data as $row) {
+                $row[4] = '$' . number_format($row[4], 2);
+                fputcsv($fp, $row);
+            }
+            fclose($fp);
+        }
     }
     $statusMsg = "Order #$orderID marked PAID.";
 } else if ($action === 'void') {
