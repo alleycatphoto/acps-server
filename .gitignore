@@ -48,4 +48,4 @@ ai/
 config/autoprint_status.txt
 google.php
 *.csv
-mcp/
+mcp/sales/historical_transactions.csv
