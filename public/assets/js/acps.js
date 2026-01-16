@@ -220,7 +220,8 @@ function processCash() {
     // Redirect to cash handler
     // Ensure taxFreeAmt is available (passed from PHP via global or data attr)
     // We will read it from a hidden input or global var set in pay.php
-    const baseAmt = window.acps_base_total; 
+    // Use amount without tax for Cash orders (Base Price)
+    const baseAmt = window.acps_amount_without_tax; 
     
     const q = `?txtAmt=${baseAmt}&isOnsite=${state.onsite}&txtEmail=${encodeURIComponent(state.email)}` +
               `&txtName=${encodeURIComponent(state.address.name)}&txtAddr=${encodeURIComponent(state.address.street)}` +
@@ -276,6 +277,14 @@ function startQrPolling(orderId) {
             // Set QR flags
             $('#is_qr_payment').val('1');
             $('#square_order_id').val(orderId);
+            
+            // For Square/QR, we need to send the PRE-TAX amount because cart_process_cash.php adds tax.
+            // window.acps_total is the TAXED total.
+            // Calculate pre-tax: Total / 1.0675
+            if (window.acps_total > 0) {
+                const preTaxAmt = window.acps_total / 1.0675;
+                $('input[name="txtAmt"]').val(preTaxAmt.toFixed(2));
+            }
             
             fillFinalForm();
             form.submit();
