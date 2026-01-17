@@ -48,4 +48,5 @@ ai/
 config/autoprint_status.txt
 google.php
 *.csv
-sales/historical_transactions.csv
+mcp/sales/historical_transactions.csv
+sales/transactions.csv
