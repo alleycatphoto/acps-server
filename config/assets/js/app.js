@@ -4,7 +4,7 @@ const App = {
         isLoading: false,
         lastUpdate: null,
         autoRefresh: true,
-        viewMode: 'due', // due, paid, all
+        viewMode: 'pending', // pending, paid, void, all
         autoPrint: true
     },
 
@@ -16,11 +16,10 @@ const App = {
         modalTitle: null,
         receiptContent: null,
         refreshBtn: null,
-        viewFilter: null,
         autoPrintToggle: null,
         autoRefreshToggle: null,
         refreshCountdown: null,
-        viewBadge: null
+        tabs: []
     },
 
     init() {
@@ -32,11 +31,17 @@ const App = {
         this.elements.modalTitle = document.getElementById('modal-title');
         this.elements.receiptContent = document.getElementById('receipt-content');
         this.elements.refreshBtn = document.getElementById('refreshBtn');
-        this.elements.viewFilter = document.getElementById('view-filter');
         this.elements.autoPrintToggle = document.getElementById('autoprint-toggle');
         this.elements.autoRefreshToggle = document.getElementById('autorefresh-toggle');
         this.elements.refreshCountdown = document.getElementById('refresh-countdown');
-        this.elements.viewBadge = document.getElementById('view-badge');
+        
+        // Tabs
+        this.elements.tabs = document.querySelectorAll('.tab-item');
+        this.elements.tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                this.switchTab(tab.dataset.tab);
+            });
+        });
 
         this.updateClock();
         setInterval(() => this.updateClock(), 1000);
@@ -46,13 +51,6 @@ const App = {
 
         this.elements.refreshBtn.addEventListener('click', () => {
             this.state.countdown = 10; // Reset
-            this.fetchOrders();
-        });
-        
-        // View Filter
-        this.elements.viewFilter.addEventListener('change', (e) => {
-            this.state.viewMode = e.target.value;
-            this.updateBadge();
             this.fetchOrders();
         });
 
@@ -86,6 +84,16 @@ const App = {
         });
     },
 
+    switchTab(tabName) {
+        this.state.viewMode = tabName;
+        // Update Active Class
+        this.elements.tabs.forEach(t => {
+            if (t.dataset.tab === tabName) t.classList.add('active');
+            else t.classList.remove('active');
+        });
+        this.render();
+    },
+
     startRefreshTimer() {
         if (this.refreshInterval) clearInterval(this.refreshInterval);
         this.state.countdown = 10;
@@ -107,20 +115,6 @@ const App = {
         this.elements.clock.textContent = now.toLocaleTimeString('en-US', { hour12: false });
     },
 
-    updateBadge() {
-        const badge = this.elements.viewBadge;
-        if (this.state.viewMode === 'due') {
-            badge.textContent = 'PENDING';
-            badge.className = 'badge badge-fire';
-        } else if (this.state.viewMode === 'paid') {
-            badge.textContent = 'PAID';
-            badge.className = 'badge badge-main';
-        } else {
-            badge.textContent = 'ALL';
-            badge.className = 'badge badge-main';
-        }
-    },
-
     async fetchOrders(silent = false) {
         if (!silent) {
             this.state.isLoading = true;
@@ -128,8 +122,8 @@ const App = {
         }
 
         try {
-            // Add timestamp to prevent caching
-            const res = await fetch(`api/orders.php?view=${this.state.viewMode}&_=${Date.now()}`);
+            // Add timestamp to prevent caching. API returns ALL orders.
+            const res = await fetch(`api/orders.php?_=${Date.now()}`);
             const data = await res.json();
             
             if (data.status === 'ok') {
@@ -141,6 +135,7 @@ const App = {
                     this.elements.autoPrintToggle.checked = this.state.autoPrint;
                 }
 
+                this.updateTabCounts();
                 this.render();
                 this.updateStatus('Live', 'success-color');
             } else {
@@ -155,15 +150,24 @@ const App = {
         }
     },
 
+    updateTabCounts() {
+        // Calculate counts
+        const pending = this.state.orders.filter(o => o.type === 'Cash Pending').length;
+        const paid = this.state.orders.filter(o => o.type === 'Paid' || o.payment_method === 'square').length; // Square is technically paid
+        const voided = this.state.orders.filter(o => o.type === 'Void').length;
+        const all = this.state.orders.length;
+
+        // Update DOM
+        document.querySelector('.tab-pending .tab-count').textContent = `(${pending})`;
+        document.querySelector('.tab-paid .tab-count').textContent = `(${paid})`;
+        document.querySelector('.tab-void .tab-count').textContent = `(${voided})`;
+        document.querySelector('.tab-all .tab-count').textContent = `(${all})`;
+    },
+
     async toggleAutoPrint(enabled) {
         // Optimistic UI update
         this.state.autoPrint = enabled;
         try {
-            // We need a backend endpoint to save this status. 
-            // Reuse admin_set_autoprint.php but routed via our API or direct call if allowed.
-            // Since this is in /config, path is ../admin/admin_set_autoprint.php
-            // But we need to call it via HTTP relative path.
-            
             const formData = new FormData();
             formData.append('status', enabled ? '1' : '0');
             
@@ -193,26 +197,53 @@ const App = {
     },
 
     render() {
-        if (this.state.orders.length === 0) {
+        // Filter based on viewMode
+        let filteredOrders = [];
+        if (this.state.viewMode === 'all') {
+            filteredOrders = this.state.orders;
+        } else if (this.state.viewMode === 'pending') {
+            filteredOrders = this.state.orders.filter(o => o.type === 'Cash Pending');
+        } else if (this.state.viewMode === 'paid') {
+            filteredOrders = this.state.orders.filter(o => o.type === 'Paid' || o.payment_method === 'square');
+        } else if (this.state.viewMode === 'void') {
+            filteredOrders = this.state.orders.filter(o => o.type === 'Void');
+        }
+
+        if (filteredOrders.length === 0) {
             this.elements.list.innerHTML = '<div class="loading-state"><p>No orders found.</p></div>';
             return;
         }
 
         this.elements.list.innerHTML = '';
 
-        this.state.orders.forEach(order => {
+        filteredOrders.forEach(order => {
             const card = document.createElement('div');
-            card.className = `order-card type-${order.type.toLowerCase().replace(' ', '-')}`;
+            // Base class
+            let cardClass = `order-card type-${order.type.toLowerCase().replace(' ', '-')}`;
+            
+            // Enhance card class based on payment method for border color
+            if (order.payment_method === 'square') {
+                cardClass += ' type-square';
+            } else if (order.payment_method === 'cash') {
+                cardClass += ' type-cash';
+            } else if (order.type === 'Void') {
+                cardClass += ' type-void';
+            }
+
+            card.className = cardClass;
             card.dataset.id = order.id;
 
             // Determine class for badge and text
             let badgeClass = 'order-type';
             let badgeText = order.type;
             
-            if (order.type.includes('Cash')) {
+            if (order.payment_method === 'square') {
+                badgeClass += ' type-square';
+                badgeText = 'SQUARE';
+            } else if (order.payment_method === 'cash') {
                 badgeClass += ' type-cash';
-                badgeText = 'PENDING';
-            } else if (order.type.includes('Paid')) {
+                badgeText = 'CASH';
+            } else if (order.type === 'Paid') {
                 badgeClass += ' type-paid';
                 badgeText = 'PAID';
             } else if (order.type === 'Void') {
@@ -235,6 +266,21 @@ const App = {
                 elapsedHtml = `<span class="${elapsedClass}">${diff} mins ago</span>`;
             }
 
+            // Action Buttons Logic
+            // Hide payment/void actions if Paid, Void, or Square (assumed paid)
+            const isPaidOrVoid = (order.type === 'Paid' || order.type === 'Void' || order.payment_method === 'square');
+            let actionsHtml = '';
+            
+            if (!isPaidOrVoid) {
+                actionsHtml += `
+                    <button class="btn btn-square action-btn" data-action="square">Square</button>
+                    <button class="btn btn-cash action-btn" data-action="cash">Cash</button>
+                    <button class="btn btn-void action-btn" data-action="void">Void</button>
+                `;
+            }
+            // Receipt button always visible
+            actionsHtml += `<button class="btn btn-receipt view-receipt-btn" data-file="${order.filename}">Receipt</button>`;
+
             card.innerHTML = `
                 <div class="order-id">${order.emoji} #${order.id}</div>
                 <div class="order-time-group">
@@ -245,10 +291,7 @@ const App = {
                 <div class="order-total" style="color: #28a745; font-weight: bold;">$${Number(order.total).toFixed(2)}</div>
                 <div class="order-actions">
                     <div class="${badgeClass}">${badgeText}</div>
-                    <button class="btn btn-square action-btn" data-action="square">Square</button>
-                    <button class="btn btn-cash action-btn" data-action="cash">Cash</button>
-                    <button class="btn btn-void action-btn" data-action="void">Void</button>
-                    <button class="btn btn-receipt view-receipt-btn" data-file="${order.filename}">Receipt</button>
+                    ${actionsHtml}
                 </div>
                 <div class="order-details">
                     <p><strong>Total:</strong> $${Number(order.total).toFixed(2)}</p>

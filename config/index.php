@@ -27,14 +27,6 @@
                 </label>
             </div>
             <div class="control-group">
-                <span class="label">View:</span>
-                <select id="view-filter" class="select-input">
-                    <option value="due">Due Only</option>
-                    <option value="paid">Paid Only</option>
-                    <option value="all">All Receipts</option>
-                </select>
-            </div>
-            <div class="control-group">
                 <span class="label">Auto Refresh:</span>
                 <label class="switch">
                     <input type="checkbox" id="autorefresh-toggle" checked>
@@ -50,7 +42,12 @@
     <main class="app-shell">
         <div class="orders-panel">
             <div class="panel-header">
-                <h2>Orders <span id="view-badge" class="badge badge-fire">PENDING</span></h2>
+                <div class="tabs">
+                    <div class="tab-item tab-pending active" data-tab="pending">Pending <span class="tab-count">(0)</span></div>
+                    <div class="tab-item tab-paid" data-tab="paid">Paid <span class="tab-count">(0)</span></div>
+                    <div class="tab-item tab-void" data-tab="void">Void <span class="tab-count">(0)</span></div>
+                    <div class="tab-item tab-all" data-tab="all">All <span class="tab-count">(0)</span></div>
+                </div>
                 <div class="panel-actions">
                     <span id="status-text" class="status-text">Ready</span>
                 </div>
