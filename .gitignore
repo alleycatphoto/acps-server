@@ -50,3 +50,4 @@ google.php
 *.csv
 mcp/sales/historical_transactions.csv
 sales/transactions.csv
+sales/transactions.csv
