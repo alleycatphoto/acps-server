@@ -1,9 +1,17 @@
 <?php
+// Load .env if not already loaded
+if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+    require_once __DIR__ . '/../vendor/autoload.php';
+    if (class_exists('Dotenv\\Dotenv')) {
+        $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+        $dotenv->load();
+    }
+}
 // Map location names to display names
 $locMap = [
     "Hawksnest" => "Hawks Nest",
     "ZipnSlip" => "Zip'n'Slip",
-    "Test Location" => "Moonshine",
+    "Moonshine" => "Moonshine",
     // Add more as needed
 ];
 
@@ -14,7 +22,7 @@ if (file_exists($csvFile)) {
     $handle = fopen($csvFile, 'r');
     $header = fgetcsv($handle);
     while (($row = fgetcsv($handle)) !== false) {
-        $locName = trim($row[0]);
+        $locName = trim($row[0], " \t\n\r\0\x0B\"");
         $locId = $locMap[$locName] ?? $locName;
         
         if (count($row) == 6) {
@@ -48,6 +56,131 @@ if (file_exists($csvFile)) {
     }
     fclose($handle);
 }
+
+  // If requested, perform a full rescan of today's receipts and update transactions.csv
+  function scan_receipts_for_date(string $datePath): array {
+    $base = realpath(__DIR__ . '/../') ?: __DIR__ . '/..';
+    $receiptsDir = $base . '/photos/' . $datePath . '/receipts';
+    $result = ['cash_total' => 0.0, 'credit_total' => 0.0, 'cash_count' => 0, 'credit_count' => 0];
+    if (!is_dir($receiptsDir)) return $result;
+
+    $files = glob($receiptsDir . '/*.txt');
+    foreach ($files as $f) {
+      $txt = @file_get_contents($f);
+      if ($txt === false) continue;
+      $txt = strtoupper($txt);
+
+      // Find SQUARE (credit) paid
+      if (preg_match('/SQUARE\s+ORDER:\s*\$?([0-9]+(?:\.[0-9]{1,2})?)\s+PAID/', $txt, $m)) {
+        $amt = (float)$m[1];
+        $result['credit_total'] += $amt;
+        $result['credit_count'] += 1;
+        continue;
+      }
+
+      // Find CASH paid (ignore VOID or DUE)
+      if (preg_match('/CASH\s+ORDER:\s*\$?([0-9]+(?:\.[0-9]{1,2})?)\s+PAID/', $txt, $m)) {
+        $amt = (float)$m[1];
+        $result['cash_total'] += $amt;
+        $result['cash_count'] += 1;
+        continue;
+      }
+    }
+    return $result;
+  }
+
+  function write_transactions_csv_for_date(string $csvFile, string $location, string $dateDisplay, array $totals) {
+    // Read existing rows, except for this location/date rows (we'll replace)
+    $rows = [];
+    if (file_exists($csvFile)) {
+      if (($h = fopen($csvFile, 'r')) !== false) {
+        $header = fgetcsv($h);
+        while (($r = fgetcsv($h)) !== false) {
+          $rows[] = $r;
+        }
+        fclose($h);
+      }
+    }
+
+    // Remove rows that match this location and date
+    $rows = array_values(array_filter($rows, function($r) use ($location, $dateDisplay) {
+      return !(trim($r[0]) === $location && trim($r[1]) === $dateDisplay);
+    }));
+
+    // Append cash and credit rows if present
+    if ($totals['cash_count'] > 0 || $totals['cash_total'] > 0) {
+      $rows[] = [$location, $dateDisplay, $totals['cash_count'], 'Cash', '$' . number_format($totals['cash_total'], 2)];
+    }
+    if ($totals['credit_count'] > 0 || $totals['credit_total'] > 0) {
+      $rows[] = [$location, $dateDisplay, $totals['credit_count'], 'Credit', '$' . number_format($totals['credit_total'], 2)];
+    }
+
+    // Write back
+    if (($h = fopen($csvFile, 'w')) !== false) {
+      fputcsv($h, ['Location', 'Order Date', 'Orders', 'Payment Type', 'Amount']);
+      foreach ($rows as $r) fputcsv($h, $r);
+      fclose($h);
+      return true;
+    }
+    return false;
+  }
+
+  // Public update method now uses GET
+  function post_update_to_master(string $urlBase, string $dateISO, array $totals, string $location) {
+    $params = http_build_query([
+      'date' => $dateISO,
+      'cash' => number_format($totals['cash_total'], 2, '.', ''),
+      'credit' => number_format($totals['credit_total'], 2, '.', ''),
+      'cash_count' => $totals['cash_count'],
+      'credit_count' => $totals['credit_count'],
+      'location' => $location
+    ]);
+    $url = rtrim($urlBase, '/') . '/update.php?' . $params;
+    // Use GET request for update
+    if (!function_exists('curl_init')) {
+      @file_get_contents($url);
+      return;
+    }
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+    $resp = curl_exec($ch);
+    $err = curl_error($ch);
+    curl_close($ch);
+    // Log to file
+    $log = __DIR__ . '/update_report.log';
+    @file_put_contents($log, date('c') . " POSTED: $url -- resp:" . ($resp ?: '') . " err:" . ($err ?: '') . "\n", FILE_APPEND | LOCK_EX);
+  }
+
+  // Handle update action from UI
+  if (isset($_GET['action']) && $_GET['action'] === 'update') {
+    // Determine today's folder
+    $datePath = date('Y/m/d');
+    $dateDisplay = date('m/d/Y');
+    $dateISO = date('Y-m-d');
+
+    // Location identification (prefer LOCATION_NAME, fallback to LOCATION_SLUG, then UNKNOWN)
+    $location = getenv('LOCATION_NAME');
+    if ($location && trim($location) !== '') {
+      $location = trim($location);
+    } else if (getenv('LOCATION_SLUG') && trim(getenv('LOCATION_SLUG')) !== '') {
+      $location = trim(getenv('LOCATION_SLUG'));
+    } else {
+      $location = 'UNKNOWN';
+    }
+
+    $totals = scan_receipts_for_date($datePath);
+
+    $csvFile = __DIR__ . '/transactions.csv';
+    write_transactions_csv_for_date($csvFile, $location, $dateDisplay, $totals);
+
+    // Post to master endpoint on central server
+    post_update_to_master('https://alleycatphoto.net/admin', $dateISO, $totals, $location);
+
+    // Redirect back to clean page
+    header('Location: ' . basename(__FILE__));
+    exit;
+  }
 
 // Read historical credit data
 $creditCsv = __DIR__ . '/CREDIT_ALL_ALLEYCAT.csv';
@@ -503,7 +636,10 @@ if (file_exists($historicalCsv)) {
             <div class="subtitle">Credit vs Cash Breakdown</div>
           </div>
         </div>
-        <a href="/admin/index.php" class="back-btn">BACK TO ADMIN</a>
+        <form method="get" style="margin:0;">
+          <input type="hidden" name="action" value="update" />
+          <button type="submit" class="back-btn">UPDATE REPORT</button>
+        </form>
       </div>
 
       <div class="header" style="margin-bottom: 14px; padding: 12px 20px;">
@@ -530,13 +666,13 @@ if (file_exists($historicalCsv)) {
 
     <script>
       const LOCATIONS = {
-        "Moonshine": "Moonshine",
-        "Zip'n'Slip": "Zip'n'Slip",
+        "Moonshine Mountain": "Moonshine Mountain",
+        "Zip n Slip": "Zip n Slip",
         "Hawks Nest": "Hawks Nest",
         "UNKNOWN": "Unknown"
       };
 
-      const locOrder = ['Moonshine', 'Zip\'n\'Slip', 'Hawks Nest'];
+      const locOrder = ['Hawks Nest', 'Zip n Slip', 'Moonshine Mountain'];
 
       // Data from PHP
       const rawData = <?php echo json_encode($data); ?>;
@@ -642,7 +778,7 @@ if (file_exists($historicalCsv)) {
         container.innerHTML = '';
 
         // Define location order: Moonshine, Zip'n'Slip, Hawks Nest
-        const locOrder = ['Moonshine', 'Zip\'n\'Slip', 'Hawks Nest'];
+        const locOrder = ['Hawks Nest', 'Zip n Slip', 'Moonshine Mountain'];
 
         // Collect all dates
         const allDates = new Set();
