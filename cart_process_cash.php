@@ -94,6 +94,32 @@ $message .= "Order Date: " . date("F j, Y, g:i a") . "\r\n";
 $message .= "Order Total: $" . number_format($txtAmt, 2) . "\r\n\r\n";
 $message .= "ITEMS ORDERED:\r\n-----------------------------\r\n";
 
+// --- EMAIL SENDING FUNCTION ---
+function sendReceiptEmail($orderID, $customerEmail, $messageBody) {
+    // Ensure PHPMailer is available and configured (your project already uses it in mailer.php)
+    require_once __DIR__ . '/vendor/autoload.php';
+    $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+    try {
+        // Configure as your existing mailer (SMTP or mail())
+        // Example using PHP mail() transport — adapt to your SMTP config:
+        $mail->isMail();
+        $mail->setFrom('no-reply@yourdomain.com', 'AlleyCat Photo');
+        $mail->addAddress($customerEmail);
+        $mail->Subject = "Your AlleyCat Photo Receipt — Order #{$orderID}";
+        $mail->isHTML(false); // Plain text for receipts
+        $mail->Body = $messageBody;
+
+        if (!$mail->send()) {
+            error_log("sendReceiptEmail: PHPMailer send failed for order $orderID to $customerEmail: " . $mail->ErrorInfo);
+            return false;
+        }
+        return true;
+    } catch (Exception $e) {
+        error_log("sendReceiptEmail Exception for order $orderID: " . $e->getMessage());
+        return false;
+    }
+}
+
 // --- FALLBACK for getImageID() ---
 if (!method_exists($Cart, 'getImageID')) {
     function getImageID_Fallback($order_code) {
@@ -197,7 +223,24 @@ if ($paymentType === 'square') {
     }
     // Trigger mailer for digital items immediately if paid
     if ($txtEmail != '') {
-        exec('start /B php mailer.php');
+        exec('start /B php mailer.php ' . escapeshellarg($orderID)  . ' > NUL 2>&1');
+    }
+    // For QR/Square payments, also send receipt email directly to customer
+    if ($paymentType === 'square' && !empty($txtEmail)) {
+        $receiptBody = "Thank you for your order!\n\n" . $message;
+        $sent = sendReceiptEmail($orderID, $txtEmail, $receiptBody);
+        if (!$sent) {
+            // Queue for retry
+            $qdir = __DIR__ . '/email_queue';
+            if (!is_dir($qdir)) mkdir($qdir, 0755, true);
+            file_put_contents($qdir . "/resend_{$orderID}.json", json_encode([
+                'orderID' => $orderID,
+                'email' => $txtEmail,
+                'body' => $receiptBody,
+                'ts' => time()
+            ]));
+            error_log("Queued email resend for order $orderID to $txtEmail");
+        }
     }
 }
 

@@ -1113,16 +1113,13 @@ dialog[open] {
     box-sizing: border-box;
     display: flex;
     align-items: center;
-    justify-content: center;
     overflow-y: auto;
     transition: padding 0.3s ease, align-items 0.3s ease;
 }
 
 /* Keyboard handling - shift content up when on-screen keyboard appears (ALL screen sizes) */
 body.keyboard-open .acps-checkout-content {
-    align-items: flex-start;
-    padding-top: 50px;
-    padding-bottom: 240px;
+    padding-bottom: 340px;
 }
 
 body.keyboard-open .acps-checkout-overlay {
