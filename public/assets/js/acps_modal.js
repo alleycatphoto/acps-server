@@ -13,8 +13,9 @@
     var ModalConfig = {
         cart: {
             maxWidth: '95vw',
-            maxHeight: '90vh',
-            width: '900px'
+            maxHeight: '96vh',
+            width: '95vw',
+            height: '90vh' 
         },
         checkout: {
             fullScreen: true  // Full viewport overlay for checkout
@@ -101,6 +102,13 @@
                 
                 // Store reference
                 topWindow.ACPS.modals.cart = $modal;
+                
+                // Ensure prices are updated after modal loads
+                setTimeout(function() {
+                    if (typeof topWindow.updateSubtotal === 'function') {
+                        topWindow.updateSubtotal();
+                    }
+                }, 100);
                 
                 console.log('[ACPS Modal] Cart modal opened');
             },
