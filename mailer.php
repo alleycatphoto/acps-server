@@ -37,7 +37,7 @@ $dirname   = "photos/" . $date_path . "/pending_email/";
 // If ?order=XXX is present, switch the directory
 $order = '';
 if ((isset($_GET['order']) && $_GET['order'] !== '') || (php_sapi_name() === 'cli' && isset($argv[0]) && $argv[0] !== '')) {
-    // Sanitize to avoid traversal or weird chars
+    // Sanitize to avoid traversal or weird chars 
     $order = urldecode($_GET['order'] ?? $argv[1] ?? '');
     $order = preg_replace('/[^A-Za-z0-9_-]/', '', $order);
 
