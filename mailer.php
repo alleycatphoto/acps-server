@@ -22,6 +22,22 @@ ignore_user_abort();
 require_once __DIR__ . '/vendor/autoload.php';
 require_once "admin/config.php";
 
+// --- DEBUG LOGGING ---
+$logsDir = __DIR__ . '/logs';
+if (!is_dir($logsDir)) { @mkdir($logsDir, 0777, true); }
+$mailerLog = $logsDir . '/mailer.log';
+function mailer_log($msg) {
+    global $mailerLog;
+    $ts = date('Y-m-d H:i:s');
+    @file_put_contents($mailerLog, "[$ts] $msg\n", FILE_APPEND | LOCK_EX);
+}
+mailer_log('Mailer.php started, cwd: ' . getcwd() . ', _SERVER[PHP_SELF]: ' . ($_SERVER['PHP_SELF'] ?? 'n/a'));
+
+if (!class_exists('PHPMailer\PHPMailer\PHPMailer')) {
+    mailer_log("FATAL ERROR: PHPMailer class not found. Check vendor/autoload.php");
+    exit;
+}
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
@@ -32,7 +48,8 @@ ini_set('memory_limit', '-1');
 set_time_limit(0);
 
 $date_path = date('Y/m/d');
-$dirname   = "photos/" . $date_path . "/pending_email/";
+$base_dir  = __DIR__;
+$dirname   = $base_dir . "/photos/" . $date_path . "/pending_email/";
 
 // If ?order=XXX is present, switch the directory
 $order = '';
@@ -42,20 +59,35 @@ if ((isset($_GET['order']) && $_GET['order'] !== '') || (php_sapi_name() === 'cl
     $order = preg_replace('/[^A-Za-z0-9_-]/', '', $order);
 
     if ($order !== '') {
-        $dirname = "photos/{$date_path}/cash_email/{$order}/";
+        $dirname = $base_dir . "/photos/{$date_path}/cash_email/{$order}/";
+        mailer_log("Order mode: $order, directory: $dirname");
     }
 }
 
 // Read info.txt
-$emailDetail = file_get_contents($dirname . "info.txt", true);
+if (!is_file($dirname . "info.txt")) {
+    mailer_log("ERROR: info.txt not found in $dirname - stopping.");
+    exit;
+}
+
+$emailDetail = file_get_contents($dirname . "info.txt");
 $email_inf   = explode('|', $emailDetail);
 
+if (count($email_inf) < 1 || empty(trim($email_inf[0]))) {
+    mailer_log("ERROR: Invalid info.txt content in $dirname - stopping.");
+    exit;
+}
+
 $user_email   = trim($email_inf[0]);
-$user_message = $email_inf[1];
+$user_message = $email_inf[1] ?? '';
+
+mailer_log("Target email: $user_email");
 
 // Build emails folder for this user
-$filePath = "photos/" . $date_path . "/emails/" . $user_email;
+$filePath = $base_dir . "/photos/" . $date_path . "/emails/" . $user_email;
 $files    = glob($filePath . "/*.[jJ][pP]*");
+
+mailer_log("Found " . count($files) . " files for attachment in $filePath");
 
 // Move info.txt into the email folder
 if (is_file($dirname . "info.txt")) {
@@ -206,17 +238,6 @@ foreach ($files as $image) {
 imagedestroy($stamp);
 
 
-// --- DEBUG LOGGING ---
-$logsDir = __DIR__ . '/logs';
-if (!is_dir($logsDir)) { @mkdir($logsDir, 0777, true); }
-$mailerLog = $logsDir . '/mailer.log';
-function mailer_log($msg) {
-    global $mailerLog;
-    $ts = date('Y-m-d H:i:s');
-    @file_put_contents($mailerLog, "[$ts] $msg\n", FILE_APPEND | LOCK_EX);
-}
-mailer_log('Mailer.php started, cwd: ' . getcwd() . ', _SERVER[PHP_SELF]: ' . ($_SERVER['PHP_SELF'] ?? 'n/a'));
-
 // ---------------------------------------------------------------------
 // PHPMailer config + multi-send
 // ---------------------------------------------------------------------
@@ -344,11 +365,13 @@ try {
     }
     // If this was an order (cash_email/XXX), archive it to sent/XXX
     if (!empty($order)) {
-        $src = "photos/{$date_path}/cash_email/{$order}/";
-        $dst = "photos/{$date_path}/cash_email/sent/{$order}/";
+        $src = __DIR__ . "/photos/{$date_path}/cash_email/{$order}/";
+        $dst = __DIR__ . "/photos/{$date_path}/cash_email/sent/{$order}/";
 
         if (!move_dir_force($src, $dst)) {
-            error_log("Failed to move order folder from {$src} to {$dst}");
+            mailer_log("ERROR: Failed to move order folder from {$src} to {$dst}");
+        } else {
+            mailer_log("Successfully archived order folder to $dst");
         }
     }
 
