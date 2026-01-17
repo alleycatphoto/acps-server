@@ -47,6 +47,7 @@ try {
             // Parsing Logic
             // 1. Identify Cash Order
             $isCash = false;
+            $isSquare = false;
             $amount = 0.0;
             $orderId = null;
             $station = 'MS';
@@ -54,15 +55,30 @@ try {
             $label = '';
             $items = []; 
 
-
-            // Simple parser for cash due
+            // Simple parser
             foreach ($lines as $line) {
                 $lineTrim = trim($line);
-                // Check for Cash Due
+                
+                // Check for Cash Pending (DUE)
                 if (preg_match('/^CASH ORDER:\s*\$([0-9]+(?:\.[0-9]{2})?)\s+DUE\s*$/i', $lineTrim, $m)) {
                     $isCash = true;
                     $amount = (float)$m[1];
                 }
+                // Check for SQUARE ORDER
+                if (stripos($lineTrim, 'SQUARE ORDER') !== false) {
+                    $isSquare = true;
+                }
+                // Check for General Cash Order (maybe PAID)
+                if (stripos($lineTrim, 'CASH ORDER') !== false && !$isCash) {
+                    // It's a cash order, but maybe paid. 
+                    // We'll let the PAID check determine status, but tag as cash.
+                }
+
+                // Check for "Order Total" (Fallback for amount)
+                if ($amount == 0.0 && preg_match('/^Order Total:\s*\$([0-9]+(?:\.[0-9]{2})?)/i', $lineTrim, $m)) {
+                    $amount = (float)$m[1];
+                }
+
                 // Check for Order ID
                 if ($orderId === null && preg_match('/^Order (?:Number|#):\s*(\d+)(?:\s*[-–—]\s*([A-Z0-9]+))?/i', $lineTrim, $m)) {
                     $orderId = $m[1];
@@ -96,29 +112,35 @@ try {
 
             // Determine Status
             $isPaid = false;
+            // If it says PAID anywhere, it's paid.
+            // UNLESS it's specifically a "CASH ORDER ... DUE" line which sets $isCash=true (pending).
+            // But wait, $isCash is only true if DUE is found. 
+            // If it says "CASH ORDER ... PAID", $isCash (pending) is false.
             if (stripos($raw, 'PAID') !== false && !$isCash) {
                 $isPaid = true;
             }
             
             // Determine type
             $type = 'Standard';
+            $paymentMethod = 'unknown';
+
+            if ($isSquare) $paymentMethod = 'square';
+            elseif (stripos($raw, 'CASH ORDER') !== false) $paymentMethod = 'cash';
+
             if (stripos($raw, 'VOID') !== false) {
                 $type = 'Void';
-            } elseif ($isCash) $type = 'Cash Pending';
-            elseif ($isPaid) $type = 'Paid';
+            } elseif ($isCash) {
+                $type = 'Cash Pending';
+                $paymentMethod = 'cash';
+            } elseif ($isPaid) {
+                $type = 'Paid';
+            }
             
             // Timestamp for elapsed calculation
             $fileTime = filemtime($receiptFile);
 
-            // Filter Logic
-            $include = false;
-            if ($viewFilter === 'all') {
-                $include = true;
-            } elseif ($viewFilter === 'paid') {
-                if ($isPaid) $include = true;
-            } else { // Default: due
-                if ($isCash) $include = true;
-            }
+            // Always include all orders for the frontend to filter/count
+            $include = true;
 
             if ($include) {
                 // Clean date string: remove extra commas that break strtotime on some systems
@@ -137,6 +159,7 @@ try {
                     'time'     => $formattedTime,
                     'timestamp'=> $fileTime,  // Add timestamp
                     'type'     => $type,
+                    'payment_method' => $paymentMethod,
                     'filename' => basename($receiptFile),
                     'raw_snippet' => substr($raw, 0, 100) . '...'
                 ];
