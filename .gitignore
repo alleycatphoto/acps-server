@@ -49,4 +49,3 @@ config/autoprint_status.txt
 google.php
 *.csv
 sales/historical_transactions.csv
-sales/transactions.csv
