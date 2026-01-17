@@ -25,6 +25,31 @@ function cart_log($msg) {
     @file_put_contents($log_file, "[$ts] $msg\n", FILE_APPEND | LOCK_EX);
 }
 
+// Post update to central master when transactions change
+function post_update_to_master(string $dateISO, float $cash, float $credit, int $cash_count, int $credit_count, string $location) {
+    $base = 'https://alleycatphoto.net/admin/update.php';
+    $params = http_build_query([
+        'date' => $dateISO,
+        'cash' => number_format($cash, 2, '.', ''),
+        'credit' => number_format($credit, 2, '.', ''),
+        'cash_count' => $cash_count,
+        'credit_count' => $credit_count,
+        'location' => $location
+    ]);
+    $url = $base . '?' . $params;
+    if (!function_exists('curl_init')) {
+        @file_get_contents($url);
+        return;
+    }
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+    $resp = curl_exec($ch);
+    $err = curl_error($ch);
+    curl_close($ch);
+    cart_log("Posted update to master: $url resp=" . ($resp ?: '') . " err=" . ($err ?: ''));
+}
+
 // --- Helper: Get Auto Print Status ---
 function acp_get_autoprint_status(): bool {
     $statusFilePath = realpath(__DIR__ . "/config/autoprint_status.txt");
@@ -281,6 +306,7 @@ $Cart->clearCart();
 $csvFile = __DIR__ . '/sales/transactions.csv';
 $today = date("m/d/Y");
 // User wants Location Slug without spaces/quotes in CSV
+
 $rawLocation = getenv('LOCATION_SLUG') ?: $locationName;
 $location = str_replace(' ', '', $rawLocation); 
 
@@ -329,6 +355,27 @@ if ($fp !== false) {
         fputcsv($fp, $row);
     }
     fclose($fp);
+    // After writing CSV, compute today's totals for this location and post update to master
+    $cash_total = 0.0; $credit_total = 0.0; $cash_count = 0; $credit_count = 0;
+    foreach ($data as $k => $row) {
+        $loc = trim($row[0]);
+        $date = trim($row[1]);
+        $orders = (int)$row[2];
+        $ptype = strtolower(trim($row[3]));
+        $amount = (float)$row[4];
+        if ($loc === $location && $date === $today) {
+            if ($ptype === 'cash') {
+                $cash_total += $amount;
+                $cash_count += $orders;
+            } else {
+                $credit_total += $amount;
+                $credit_count += $orders;
+            }
+        }
+    }
+    $dateISO = date('Y-m-d');
+    // Post to central master
+    post_update_to_master($dateISO, $cash_total, $credit_total, $cash_count, $credit_count, $location);
 } else {
     error_log("Failed to open CSV for writing: " . $csvFile);
 }

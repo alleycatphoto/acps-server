@@ -18,6 +18,16 @@ set_time_limit(0);
 ignore_user_abort();
 header('Content-Type: application/json');
 
+// Location identification (prefer LOCATION_NAME, fallback to LOCATION_SLUG, then UNKNOWN)
+$location = getenv('LOCATION_NAME');
+if ($location && trim($location) !== '') {
+    $location = trim($location);
+} else if (getenv('LOCATION_SLUG') && trim(getenv('LOCATION_SLUG')) !== '') {
+    $location = trim(getenv('LOCATION_SLUG'));
+} else {
+    $location = 'UNKNOWN';
+}
+
 $orderID = isset($_POST['order'])  ? trim($_POST['order'])  : '';
 $action  = isset($_POST['action']) ? trim($_POST['action']) : '';
 // The new JS sends this flag, but we don't strictly need it in the action file
@@ -491,6 +501,7 @@ if ($action === 'paid') {
     $statusMsg = "Order #$orderID voided.";
 }
 
+
 // Final JSON response
 echo json_encode([
     'status'          => 'success',
@@ -502,4 +513,5 @@ echo json_encode([
     'email_raw'       => $emailRaw,
     'receipt'         => nl2br(htmlspecialchars($receiptData, ENT_QUOTES, 'UTF-8')),
     'email_stage'     => $emailStageInfo,
+    'location'        => $location,
 ]);

@@ -9,6 +9,17 @@ ini_set('memory_limit', '-1');
 set_time_limit(0);
 ignore_user_abort();
 
+
+// Location identification (prefer LOCATION_NAME, fallback to LOCATION_SLUG, then UNKNOWN)
+$location = getenv('LOCATION_NAME');
+if ($location && trim($location) !== '') {
+    $location = trim($location);
+} else if (getenv('LOCATION_SLUG') && trim(getenv('LOCATION_SLUG')) !== '') {
+    $location = trim(getenv('LOCATION_SLUG'));
+} else {
+    $location = 'UNKNOWN';
+}
+
 $orderID = isset($_POST['order'])  ? trim($_POST['order'])  : '';
 $action  = isset($_POST['action']) ? trim($_POST['action']) : '';
 
@@ -376,8 +387,7 @@ if ($action === 'paid') {
             
             $csvFile = __DIR__ . '/../../sales/transactions.csv';
             $today = date("m/d/Y");
-            $rawLocation = getenv('LOCATION_SLUG') ?: ($locationName ?? 'Unknown');
-            $locationSlug = str_replace(' ', '', $rawLocation);
+            $locationKey = str_replace(' ', '', $location);
 
             $data = [];
             if (file_exists($csvFile)) {
@@ -394,9 +404,9 @@ if ($action === 'paid') {
                 }
             }
 
-            $key = $locationSlug . '|' . $today . '|Cash';
+            $key = $locationKey . '|' . $today . '|Cash';
             if (!isset($data[$key])) {
-                $data[$key] = [$locationSlug, $today, 0, 'Cash', 0];
+                $data[$key] = [$locationKey, $today, 0, 'Cash', 0];
             }
             $data[$key][2] += 1;      // Orders
             $data[$key][4] += $txtAmt; // Amount
