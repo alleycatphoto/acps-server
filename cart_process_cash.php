@@ -94,6 +94,32 @@ $message .= "Order Date: " . date("F j, Y, g:i a") . "\r\n";
 $message .= "Order Total: $" . number_format($txtAmt, 2) . "\r\n\r\n";
 $message .= "ITEMS ORDERED:\r\n-----------------------------\r\n";
 
+// --- EMAIL SENDING FUNCTION ---
+function sendReceiptEmail($orderID, $customerEmail, $messageBody) {
+    // Ensure PHPMailer is available and configured (your project already uses it in mailer.php)
+    require_once __DIR__ . '/vendor/autoload.php';
+    $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+    try {
+        // Configure as your existing mailer (SMTP or mail())
+        // Example using PHP mail() transport — adapt to your SMTP config:
+        $mail->isMail();
+        $mail->setFrom('no-reply@yourdomain.com', 'AlleyCat Photo');
+        $mail->addAddress($customerEmail);
+        $mail->Subject = "Your AlleyCat Photo Receipt — Order #{$orderID}";
+        $mail->isHTML(false); // Plain text for receipts
+        $mail->Body = $messageBody;
+
+        if (!$mail->send()) {
+            error_log("sendReceiptEmail: PHPMailer send failed for order $orderID to $customerEmail: " . $mail->ErrorInfo);
+            return false;
+        }
+        return true;
+    } catch (Exception $e) {
+        error_log("sendReceiptEmail Exception for order $orderID: " . $e->getMessage());
+        return false;
+    }
+}
+
 // --- FALLBACK for getImageID() ---
 if (!method_exists($Cart, 'getImageID')) {
     function getImageID_Fallback($order_code) {
@@ -161,6 +187,7 @@ if ($txtEmail != '') {
     }
     $infoTxt .= "\r\n" . $message;
     file_put_contents("$toPath/info.txt", $infoTxt);
+    file_put_contents("$filePath/info.txt", $infoTxt);
 
     foreach ($Cart->items as $order_code => $quantity) {
         [$prod_code, $photo_id] = explode('-', $order_code);
@@ -197,7 +224,24 @@ if ($paymentType === 'square') {
     }
     // Trigger mailer for digital items immediately if paid
     if ($txtEmail != '') {
-        exec('start /B php mailer.php');
+        exec('start /B php mailer.php ' . escapeshellarg($orderID)  . ' > NUL 2>&1');
+    }
+    // For QR/Square payments, also send receipt email directly to customer
+    if ($paymentType === 'square' && !empty($txtEmail)) {
+        $receiptBody = "Thank you for your order!\n\n" . $message;
+        $sent = sendReceiptEmail($orderID, $txtEmail, $receiptBody);
+        if (!$sent) {
+            // Queue for retry
+            $qdir = __DIR__ . '/email_queue';
+            if (!is_dir($qdir)) mkdir($qdir, 0755, true);
+            file_put_contents($qdir . "/resend_{$orderID}.json", json_encode([
+                'orderID' => $orderID,
+                'email' => $txtEmail,
+                'body' => $receiptBody,
+                'ts' => time()
+            ]));
+            error_log("Queued email resend for order $orderID to $txtEmail");
+        }
     }
 }
 
@@ -207,42 +251,58 @@ $Cart->clearCart();
 // --- LOG TRANSACTION TO DAILY TOTALS CSV ---
 $csvFile = __DIR__ . '/sales/transactions.csv';
 $today = date("m/d/Y");
-$location = getenv('LOCATION_SLUG') ?: $locationName;
-$paymentTypeDisplay = $paymentType === 'cash' ? 'Cash' : 'Credit';
+// User wants Location Slug without spaces/quotes in CSV
+$rawLocation = getenv('LOCATION_SLUG') ?: $locationName;
+$location = str_replace(' ', '', $rawLocation); 
+
+$paymentTypeDisplay = ($paymentType === 'square') ? 'Credit' : 'Cash';
+// For CSV, if Credit/Square, use the full taxed amount. If Cash, use untaxed.
+// $txtAmt is already adjusted above: if Square, it has tax added. If Cash, it is base.
+$logAmount = $txtAmt; 
 
 // Read existing data
 $data = [];
 if (file_exists($csvFile)) {
-    $handle = fopen($csvFile, 'r');
-    $header = fgetcsv($handle);
-    while (($row = fgetcsv($handle)) !== false) {
-        $key = $row[0] . '|' . $row[1]; // Location|Date
-        // Sanitize amount (remove $ and ,)
-        if (isset($row[4])) {
-            $row[4] = (float)str_replace(['$', ','], '', $row[4]);
+    $handle = @fopen($csvFile, 'r');
+    if ($handle !== false) {
+        $header = fgetcsv($handle);
+        while (($row = fgetcsv($handle)) !== false) {
+            // Key is Location | Date | Payment Type
+            $key = $row[0] . '|' . $row[1] . '|' . ($row[3] ?? ''); 
+            // Sanitize amount (remove $ and ,)
+            if (isset($row[4])) {
+                $row[4] = (float)str_replace(['$', ','], '', $row[4]);
+            }
+            $data[$key] = $row;
         }
-        $data[$key] = $row;
+        fclose($handle);
     }
-    fclose($handle);
 }
 
 // Update or create entry for today
-$key = $location . '|' . $today;
+$key = $location . '|' . $today . '|' . $paymentTypeDisplay;
 if (!isset($data[$key])) {
     $data[$key] = [$location, $today, 0, $paymentTypeDisplay, 0];
 }
 $data[$key][2] += 1; // Orders
-$data[$key][4] += $txtAmt; // Amount
+$data[$key][4] += $logAmount; // Amount
 
 // Write back to CSV
-$fp = fopen($csvFile, 'w');
-fputcsv($fp, ['Location', 'Order Date', 'Orders', 'Payment Type', 'Amount']);
-foreach ($data as $row) {
-    // Format amount with $
-    $row[4] = '$' . number_format($row[4], 2);
-    fputcsv($fp, $row);
+if (!is_dir(dirname($csvFile))) {
+    @mkdir(dirname($csvFile), 0777, true);
 }
-fclose($fp);
+$fp = @fopen($csvFile, 'w');
+if ($fp !== false) {
+    fputcsv($fp, ['Location', 'Order Date', 'Orders', 'Payment Type', 'Amount']);
+    foreach ($data as $row) {
+        // Format amount with $
+        $row[4] = '$' . number_format($row[4], 2);
+        fputcsv($fp, $row);
+    }
+    fclose($fp);
+} else {
+    error_log("Failed to open CSV for writing: " . $csvFile);
+}
 
 // Determine UI Display
 $isApproved = ($paymentType === 'square');

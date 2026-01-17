@@ -52,6 +52,15 @@ foreach ($Cart->items as $order_code => $quantity) {
 // Logic: If ALL items are emails (no physical prints), skip delivery & address steps
 $skipDelivery = ($emlCount > 0 && $otherCount == 0);
 
+// After cart analysis add this guard
+$totalItems = $emlCount + $otherCount;
+$invalid_order = false;
+if ($thisTotal > 0 && $totalItems == 0) {
+    // Someone passed an amount but cart is empty — mark as invalid to prevent phantom orders
+    error_log("pay.php: invalid request — amount={$thisTotal} but cart empty");
+    $invalid_order = true;
+}
+
 // --- 3. PREPARE PAYMENT DATA (For Step 4) ---
 // Note: We calculate this early to generate QR code if needed, but display later
 // cart_process.php logic: Input is Tax Inclusive
@@ -63,39 +72,64 @@ $cc_total = $amount_without_tax * 1.035;
 $cc_totaltaxed = $cc_total * 1.0675;
 // $cc_tax = $cc_total * 0.0675; // Unused in display usually
 
-// Generate Order ID & Square Link (Only if we have a total)
+// Generate Order ID atomically if valid
 $qr_code_url = null;
 $squareOrderId = null;
-$orderID = ""; 
+$orderID = "";
 
-if ($cc_totaltaxed > 0) {
-    // Generate Order ID (Logic from cart_process.php)
-    $dirname = "photos/";
-    $date_path = date('Y/m/d');
-    $filename = $dirname.$date_path."/orders.txt";
-    
-    if (file_exists($filename)) {
-        $orderID = (int) trim(file_get_contents($filename)) + 1; // Anticipate next
-    } else {
-        $orderID = 1000;
+if (!$invalid_order) {
+    // existing tax/surcharge/calculation above already computed $cc_totaltaxed
+    if ($cc_totaltaxed > 0) {
+        $dirname = "photos/";
+        $date_path = date('Y/m/d');
+        $filename = $dirname . $date_path . "/orders.txt";
+
+        /**
+         * Atomically read+increment an orders file.
+         * Returns the next order id (int).
+         */
+        function getNextOrderId($filename, $initial = 1000) {
+            $dir = dirname($filename);
+            if (!is_dir($dir)) {
+                if (!mkdir($dir, 0755, true) && !is_dir($dir)) {
+                    error_log("getNextOrderId: failed to create dir: $dir");
+                    return $initial;
+                }
+            }
+
+            $fp = fopen($filename, 'c+');
+            if (!$fp) {
+                error_log("getNextOrderId: unable to open $filename");
+                return $initial;
+            }
+
+            if (!flock($fp, LOCK_EX)) {
+                fclose($fp);
+                error_log("getNextOrderId: unable to lock $filename");
+                return $initial;
+            }
+
+            rewind($fp);
+            $contents = stream_get_contents($fp);
+            $current = (int) trim($contents);
+            if ($current < $initial) {
+                $current = $initial - 1;
+            }
+
+            $next = $current + 1;
+            rewind($fp);
+            ftruncate($fp, 0);
+            fwrite($fp, (string)$next . PHP_EOL);
+            fflush($fp);
+            flock($fp, LOCK_UN);
+            fclose($fp);
+
+            return $next;
+        }
+
+        $orderID = getNextOrderId($filename);
+        // (Optional) generate QR / Square link here using $orderID and email later when available
     }
-    
-    // Generate Link
-    // require_once __DIR__ . '/square_link.php';
-    // $transactionId = uniqid('qr_');
-    // // Using a placeholder/system email for the QR link generation since user email is not yet known
-    // // Square requires an email, but we can't get it until Step 1. 
-    // // Compromise: Use a system email for the link generation, or if possible, update it later.
-    // // For now, consistent with legacy logic, we create it here.
-    // $linkEmail = "kiosk@alleycatphoto.net"; 
-    
-    // $paymentLink_response = createSquarePaymentLink($cc_totaltaxed, $linkEmail, (string)$orderID, $transactionId);
-    
-    // if ($paymentLink_response) {
-    //     $square_link_url = $paymentLink_response->getUrl();
-    //     $squareOrderId = $paymentLink_response->getOrderId(); 
-    //     $qr_code_url = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' . urlencode($square_link_url);
-    // }
 }
 
 // New calculation
@@ -121,6 +155,7 @@ $savings = $cc_totaltaxed - $amount_without_tax;
         window.acps_total = <?php echo json_encode($cc_totaltaxed); ?>;
         window.acps_base_total = <?php echo json_encode($thisTotal); ?>;
         window.acps_is_retry = <?php echo $isRetry ? 'true' : 'false'; ?>;
+        window.acps_invalid_order = <?php echo $invalid_order ? 'true' : 'false'; ?>;
         window.acps_retry_email = <?php echo json_encode($retryEmail); ?>;
         window.acps_retry_onsite = <?php echo json_encode($retryOnsite); ?>;
         window.acps_retry_name = <?php echo json_encode($retryName); ?>;
@@ -283,8 +318,8 @@ $savings = $cc_totaltaxed - $amount_without_tax;
                 </div>
 
                 <div class="pay-actions-fullwidth">
-                    <div style="text-align:center; color:#fff; font-size:2rem; margin-bottom:20px; text-transform:uppercase; font-weight:bold;">
-                        PAY CASH HERE AND SAVE <span style="color:#6F0; font-size:1.2em;">$<?php echo number_format($savings, 2); ?></span>
+                    <div style="text-align:center; color:#fff; font-size:2.4rem; margin-bottom:40px; text-transform:uppercase; font-weight:bold; line-height: 1.1;">
+                        PAY CASH HERE AND SAVE <span style="color:#6F0; font-size:2.4rem;">$<?php echo number_format($savings, 2); ?></span>
                     </div>
                     <button type="button" class="big-pay-btn" id="cashPayBtn" onclick="processCash()">
                         <div class="big-pay-main"><span class="fa fa-money-bill-wave"></span> PAY CASH AT COUNTER</div>
@@ -415,6 +450,26 @@ window.processCash = function() {
         }
     }
 };
+</script>
+
+<script>
+// Block UI if server flagged an invalid order (amount > 0 but cart empty)
+if (window.acps_invalid_order) {
+    document.addEventListener('DOMContentLoaded', function() {
+        // Disable pay buttons
+        var btn = document.getElementById('cashPayBtn');
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<div class="big-pay-main"><span class="fa fa-exclamation-triangle"></span> Error</div><div class="big-pay-sub">Order invalid — please return to gallery</div>';
+        }
+        // Show modal if present
+        var modal = document.getElementById('modal-error');
+        if (modal) {
+            document.getElementById('modal-error-msg').textContent = 'Invalid order: amount present but no items in cart. Please return to gallery.';
+            modal.classList.remove('hidden');
+        }
+    });
+}
 </script>
 
 </body>
