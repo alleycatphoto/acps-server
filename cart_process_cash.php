@@ -16,6 +16,15 @@
 require_once "admin/config.php";
 if (session_status() === PHP_SESSION_NONE) session_start();
 
+// --- Helper: Logging ---
+function cart_log($msg) {
+    $log_dir = __DIR__ . "/logs";
+    if (!is_dir($log_dir)) @mkdir($log_dir, 0777, true);
+    $log_file = $log_dir . '/cart_process.log';
+    $ts = date("Y-m-d H:i:s");
+    @file_put_contents($log_file, "[$ts] $msg\n", FILE_APPEND | LOCK_EX);
+}
+
 // --- Helper: Get Auto Print Status ---
 function acp_get_autoprint_status(): bool {
     $statusFilePath = realpath(__DIR__ . "/config/autoprint_status.txt");
@@ -224,7 +233,27 @@ if ($paymentType === 'square') {
     }
     // Trigger mailer for digital items immediately if paid
     if ($txtEmail != '') {
-        exec('start /B php mailer.php ' . escapeshellarg($orderID)  . ' > NUL 2>&1');
+        $phpPath = 'php'; 
+        
+        // Log the environment state
+        cart_log("Processing order $orderID for $txtEmail. Payment type: $paymentType");
+
+        $cmd = "$phpPath \"" . __DIR__ . "/mailer.php\" " . escapeshellarg($orderID);
+        
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $cmd = "start /B $cmd";
+        } else {
+            $cmd = "$cmd > /dev/null 2>&1 &";
+        }
+
+        cart_log("Triggering mailer for Order $orderID. Command: $cmd");
+        $output = [];
+        $return_var = 0;
+        exec($cmd, $output, $return_var);
+        
+        if ($return_var !== 0) {
+            cart_log("WARNING: exec() returned code $return_var for command: $cmd");
+        }
     }
     // For QR/Square payments, also send receipt email directly to customer
     if ($paymentType === 'square' && !empty($txtEmail)) {
