@@ -187,6 +187,7 @@ if ($txtEmail != '') {
     }
     $infoTxt .= "\r\n" . $message;
     file_put_contents("$toPath/info.txt", $infoTxt);
+    file_put_contents("$filePath/info.txt", $infoTxt);
 
     foreach ($Cart->items as $order_code => $quantity) {
         [$prod_code, $photo_id] = explode('-', $order_code);
