@@ -128,7 +128,8 @@ const App = {
         }
 
         try {
-            const res = await fetch(`api/orders.php?view=${this.state.viewMode}`);
+            // Add timestamp to prevent caching
+            const res = await fetch(`api/orders.php?view=${this.state.viewMode}&_=${Date.now()}`);
             const data = await res.json();
             
             if (data.status === 'ok') {
@@ -300,14 +301,17 @@ const App = {
             formData.append('action', action);
             formData.append('autoprint', this.state.autoPrint ? '1' : '0');
 
-            // Force a minimum 5-second spinner delay
-            await new Promise(resolve => setTimeout(resolve, 5000));
+            // Force a minimum spinner delay for feedback
+            await new Promise(resolve => setTimeout(resolve, 2000));
 
             await fetch('api/order_action.php', {
                 method: 'POST',
                 body: formData
             });
             
+            // Short delay to ensure FS update is visible
+            await new Promise(resolve => setTimeout(resolve, 500));
+
             // Refresh to update list
             this.fetchOrders();
         } catch (e) {

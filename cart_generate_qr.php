@@ -78,7 +78,7 @@ if ($paymentLink_response !== false) {
     // For now, if it returns object:
     $square_link_url = $paymentLink_response->getUrl();
     $squareOrderId = $paymentLink_response->getOrderId(); 
-    $qr_code_url = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' . urlencode($square_link_url);
+    $qr_code_url = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' . urlencode($square_link_url);
     
     echo json_encode([
         'status' => 'success',
