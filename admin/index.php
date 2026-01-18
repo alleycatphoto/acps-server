@@ -176,8 +176,24 @@ $token = md5('unique_salt' . $timestamp);
     color: #ffffff;
     background-color: #2b2b2b;
     border-color: #636363 #636363 #ef0000;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    border-color: #636363 #636363 #ef0000;
   }
-
+  .nav-tabs .nav-link {
+    color: #be0000;
+    background-color: #000000;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
   .cemodal { position: fixed; inset: 0; display: none; }
   .cemodal.is-open { display: block; }
   .cemodal__backdrop { position:absolute; inset:0; background:rgba(0,0,0,.6); }
@@ -562,7 +578,25 @@ $token = md5('unique_salt' . $timestamp);
 
 <body>
 
-  <main role="main" class="container">
+  <!-- Custom container style to match user request (80% width) -->
+  <style>
+    .custom-container {
+      width: 80%;
+      max-width: 1200px; /* Optional: cap it so it doesn't get absurd on 4k */
+      margin: 0 auto;
+      padding-right: 15px;
+      padding-left: 15px;
+    }
+    .admin-iframe {
+      width: 100%;
+      max-width: 1180px;
+      height: 80vh; /* 80% view height */
+      border: none;
+      display: block;
+    }
+  </style>
+
+  <main role="main" class="custom-container">
 
     <div align="center">
       <p><img src="/public/assets/images/alley_logo_sm.png" width="250" alt="Administration Header"/>
@@ -587,7 +621,7 @@ $token = md5('unique_salt' . $timestamp);
       <div class="tab-content" id="adminTabContent">
         <div class="tab-pane fade show active" id="orders" role="tabpanel" aria-labelledby="orders-tab">
           <!-- Order Management Panel -->
-          <iframe src="/config" style="width:100%;height:600px;border:none;"></iframe>
+          <iframe src="/config" class="admin-iframe"></iframe>
         </div>
         <div class="tab-pane fade" id="uploader" role="tabpanel" aria-labelledby="uploader-tab">
           <!-- Uploader Panel (existing uploader form) -->
@@ -697,7 +731,7 @@ $token = md5('unique_salt' . $timestamp);
 
         <div class="tab-pane fade" id="sales" role="tabpanel" aria-labelledby="sales-tab">
           <!-- Sales Panel -->
-          <iframe src="/sales" style="width:100%;height:600px;border:none;"></iframe>
+          <iframe src="/sales" class="admin-iframe"></iframe>
         </div>
 
 
