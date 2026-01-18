@@ -387,7 +387,7 @@ if ($action === 'paid') {
             
             $csvFile = __DIR__ . '/../../sales/transactions.csv';
             $today = date("m/d/Y");
-            $locationKey = str_replace(' ', '', $location);
+            $locationKey = '"$location"';
 
             $data = [];
             if (file_exists($csvFile)) {
@@ -420,7 +420,7 @@ if ($action === 'paid') {
             if ($fp !== false) {
                 fputcsv($fp, ['Location', 'Order Date', 'Orders', 'Payment Type', 'Amount']);
                 foreach ($data as $row) {
-                    $row[4] = '$' . number_format($row[4], 2);
+                    $row[4] = '"$' . number_format($row[4], 2) . '"';
                     fputcsv($fp, $row);
                 }
                 fclose($fp);

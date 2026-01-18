@@ -307,8 +307,8 @@ $csvFile = __DIR__ . '/sales/transactions.csv';
 $today = date("m/d/Y");
 // User wants Location Slug without spaces/quotes in CSV
 
-$rawLocation = getenv('LOCATION_SLUG') ?: $locationName;
-$location = str_replace(' ', '', $rawLocation); 
+$rawLocation = getenv('LOCATION_NAME') ?: $locationName;
+$location = '"$rawLocation"'; 
 
 $paymentTypeDisplay = ($paymentType === 'square') ? 'Credit' : 'Cash';
 // For CSV, if Credit/Square, use the full taxed amount. If Cash, use untaxed.
@@ -351,7 +351,7 @@ if ($fp !== false) {
     fputcsv($fp, ['Location', 'Order Date', 'Orders', 'Payment Type', 'Amount']);
     foreach ($data as $row) {
         // Format amount with $
-        $row[4] = '$' . number_format($row[4], 2);
+        $row[4] = '"$' . number_format($row[4], 2) . '"';
         fputcsv($fp, $row);
     }
     fclose($fp);
