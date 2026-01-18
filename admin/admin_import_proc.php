@@ -35,7 +35,7 @@ $date_path = date('Y/m/d');
 $thiscount = 0;
 
 $photostock_base = getenv('PHOTOSTOCK_BASE_DIR') ?: __DIR__ . "/../photostock";
-$photostock = $photostock_base . "/" . date('Y') . " " . $locationName  . "/" . date('F') . " " . date('Y') . "/" . date('F d, Y');
+$photostock = $photostock_base . "/" . date('Y') . " " . getenv('PHOTOSTOCK_SLUG')  . "/" . date('F') . " " . date('Y') . "/" . date('F d, Y');
 
 // Load categories
 $cat_raw = @file_get_contents(__DIR__ . '/categories.txt');
