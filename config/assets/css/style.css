@@ -221,6 +221,13 @@ input:checked + .slider:before { transform: translateX(14px); }
 .tab-paid.active { color: var(--success-color); border-bottom-color: var(--success-color); }
 .tab-void.active { color: var(--danger-color); border-bottom-color: var(--danger-color); }
 .tab-all.active { color: #fff; border-bottom-color: #fff; }
+/* Tab Colors */
+.tab-pending:hover { color: var(--warning-color); border-bottom-color: var(--warning-color); }
+.tab-paid:hover { color: var(--success-color); border-bottom-color: var(--success-color); }
+.tab-void:hover { color: var(--danger-color); border-bottom-color: var(--danger-color); }
+.tab-all:hover { color: #fff; border-bottom-color: #fff; }
+
+
 
 .tab-count { font-size: 1em; opacity: 0.7; margin-left: 4px; }
 
