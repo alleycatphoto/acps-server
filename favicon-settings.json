@@ -1,0 +1,32 @@
+{
+  "icon": {
+    "desktop": {
+      "regularIconTransformation": {
+        "type": "none"
+      },
+      "darkIconType": "none"
+    },
+    "touch": {
+      "transformation": {
+        "type": "background",
+        "backgroundColor": "#000000",
+        "backgroundRadius": 0,
+        "imageScale": 0.9
+      },
+      "appTitle": "AlleyCat PhotoStation"
+    },
+    "webAppManifest": {
+      "transformation": {
+        "type": "background",
+        "backgroundColor": "#000000",
+        "backgroundRadius": 0,
+        "imageScale": 0.8
+      },
+      "backgroundColor": "#272727",
+      "name": "AlleyCat PhotoStation",
+      "shortName": "ACPS",
+      "themeColor": "#ff0000"
+    }
+  },
+  "path": "/public/assets/images/"
+}

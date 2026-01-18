@@ -10,8 +10,8 @@ if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
 // Map location names to display names
 $locMap = [
     "Hawksnest" => "Hawks Nest",
-    "ZipnSlip" => "Zip'n'Slip",
-    "Moonshine" => "Moonshine",
+    "ZipnSlip" => "Zip n Slip",
+    "Moonshine" => "Moonshine Mountain",
     // Add more as needed
 ];
 
@@ -666,9 +666,9 @@ if (file_exists($historicalCsv)) {
 
     <script>
       const LOCATIONS = {
-        "Moonshine Mountain": "Moonshine Mountain",
-        "Zip n Slip": "Zip n Slip",
-        "Hawks Nest": "Hawks Nest",
+        "Moonshine": "Moonshine Mountain",
+        "Zipnlip": "Zip n Slip",
+        "Hawkmest": "Hawks Nest",
         "UNKNOWN": "Unknown"
       };
 
@@ -818,7 +818,7 @@ if (file_exists($historicalCsv)) {
           // Calculate monthly totals
           let monthTotal = 0;
           let monthOrders = 0;
-          const locTotals = { 'Moonshine': 0, 'Zip\'n\'Slip': 0, 'Hawks Nest': 0 };
+          const locTotals = { 'Moonshine Mountain': 0, 'Zip n Slip': 0, 'Hawks Nest': 0 };
           for (const date of monthDates) {
             let dayTotal = 0;
             let dayOrders = 0;
@@ -842,8 +842,8 @@ if (file_exists($historicalCsv)) {
             <div class="card-hd month-summary">
               <h2>${monthName.toUpperCase()} <span style="color: var(--muted);">(${monthOrders} Orders)</span></h2>
               <div class="loc-totals">
-                <span style="color: #f1c40f;"><img src="/public/assets/images/moonshine.png" style="height:16px; margin-right:4px;">MOON: ${formatMoney(locTotals['Moonshine'])}</span> |
-                <span style="color: #3498db;"><img src="/public/assets/images/zipnslip.png" style="height:16px; margin-right:4px;">ZIP: ${formatMoney(locTotals['Zip\'n\'Slip'])}</span> |
+                <span style="color: #f1c40f;"><img src="/public/assets/images/moonshine.png" style="height:16px; margin-right:4px;">MOON: ${formatMoney(locTotals['Moonshine Mountain'])}</span> |
+                <span style="color: #3498db;"><img src="/public/assets/images/zipnslip.png" style="height:16px; margin-right:4px;">ZIP: ${formatMoney(locTotals['Zip n Slip'])}</span> |
                 <span style="color: #e74c3c;"><img src="/public/assets/images/hawk.png" style="height:16px; margin-right:4px;">HAWK: ${formatMoney(locTotals['Hawks Nest'])}</span> |
                 <span style="color: #27ae60;">TOTAL: ${formatMoney(monthTotal)}</span>
               </div>
