@@ -672,7 +672,7 @@ if (file_exists($historicalCsv)) {
         "UNKNOWN": "Unknown"
       };
 
-      const locOrder = ['Hawks Nest', 'Zip n Slip', 'Moonshine Mountain'];
+      const locOrder = ['Moonshine Mountain', 'Zip n Slip', 'Hawks Nest'];
 
       // Data from PHP
       const rawData = <?php echo json_encode($data); ?>;
@@ -681,7 +681,6 @@ if (file_exists($historicalCsv)) {
         const dollars = cents / 100;
         return '$' + dollars.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       }
-
       function formatDate(yyyyMmDd) {
         const d = new Date(yyyyMmDd + "T00:00:00");
         if (isNaN(d)) return yyyyMmDd;
@@ -778,7 +777,7 @@ if (file_exists($historicalCsv)) {
         container.innerHTML = '';
 
         // Define location order: Moonshine, Zip'n'Slip, Hawks Nest
-        const locOrder = ['Hawks Nest', 'Zip n Slip', 'Moonshine Mountain'];
+        const locOrder = ['Moonshine Mountain', 'Zip n Slip', 'Hawks Nest'];
 
         // Collect all dates
         const allDates = new Set();
