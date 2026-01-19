@@ -70,6 +70,24 @@ if (file_exists($csvFile)) {
       if ($txt === false) continue;
       $txt = strtoupper($txt);
 
+      // Skip internal emails, VOID/DUE orders, and empty orders
+      $ignoreTerms = [
+        'PHOTOS@ALLEYCATPHOTO.NET',
+        'ZIPNSLIP@ALLEYCATPHOTO.COM',
+        'HAWKSNEST@ALLEYCATPHOTO.COM',
+        'MOONSHINE@ALLEYCATPHOTO.COM',
+        'VOID',
+        'DUE'
+      ];
+      foreach ($ignoreTerms as $term) {
+        if (strpos($txt, $term) !== false) continue 2;
+      }
+
+      // Check for 0 items (ITEMS ORDERED followed immediately by two separator lines)
+      if (preg_match('/ITEMS ORDERED:\s*-+\s*-+/', $txt)) {
+        continue;
+      }
+
       // Find SQUARE (credit) paid
       if (preg_match('/SQUARE\s+ORDER:\s*\$?([0-9]+(?:\.[0-9]{1,2})?)\s+PAID/', $txt, $m)) {
         $amt = (float)$m[1];
