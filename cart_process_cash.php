@@ -402,10 +402,6 @@ if ($paymentType === 'qr') {
         }
         fclose($fp);
         
-        // Real-time sync to master log
-        $dateISO = date('Y-m-d');
-        acp_sync_log_to_master($location, $dateISO, $paymentTypeDisplay, $data[$key][2], $data[$key][4]);
-        
         // After writing CSV, compute today's totals for this location and post update to master
         $cash_total = 0.0; $credit_total = 0.0; $cash_count = 0; $credit_count = 0;
         foreach ($data as $k => $row) {
@@ -413,8 +409,8 @@ if ($paymentType === 'qr') {
             $date = trim($row[1]);
             $orders = (int)$row[2];
             $ptype = strtolower(trim($row[3]));
-            // Clean amount for calc
-            $amount = (float)str_replace(['$', '"', ','], '', $row[4]);
+            // Clean amount for calculation
+            $amount = (float)str_replace(['$', ','], '', $row[4]);
             if ($loc === $location && $date === $today) {
                 if ($ptype === 'cash') {
                     $cash_total += $amount;
@@ -426,7 +422,9 @@ if ($paymentType === 'qr') {
             }
         }
         $dateISO = date('Y-m-d');
-        // Post to central master
+        // Real-time sync to master log
+        acp_sync_log_to_master($location, $dateISO, $paymentTypeDisplay, $data[$key][2], $data[$key][4]);
+        // Post full totals to master update
         post_update_to_master($dateISO, $cash_total, $credit_total, $cash_count, $credit_count, $location);
     } else {
         error_log("Failed to open CSV for writing: " . $csvFile);
