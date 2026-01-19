@@ -51,3 +51,4 @@ google.php
 mcp/sales/historical_transactions.csv
 sales/historical_transactions.csv
 sales/transactions.csv
+email_queue/
