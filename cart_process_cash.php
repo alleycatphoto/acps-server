@@ -12,6 +12,13 @@
 // Date: 10/14/2025                                                    //
 // Updated for pricing logic + stability                               //
 //*********************************************************************//
+require_once __DIR__ . '/vendor/autoload.php';
+try {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+    $dotenv->load();
+} catch (\Dotenv\Exception\InvalidPathException $e) {
+    // Silently ignore
+}
 
 require_once "admin/config.php";
 if (session_status() === PHP_SESSION_NONE) session_start();
@@ -23,6 +30,27 @@ function cart_log($msg) {
     $log_file = $log_dir . '/cart_process.log';
     $ts = date("Y-m-d H:i:s");
     @file_put_contents($log_file, "[$ts] $msg\n", FILE_APPEND | LOCK_EX);
+}
+
+// --- Helper: Sync Log to Master ---
+function acp_sync_log_to_master($location, $dateISO, $type, $count, $amount) {
+    $url = 'https://alleycatphoto.net/admin/index.php?' . http_build_query([
+        'action'   => 'log',
+        'date'     => $dateISO,
+        'location' => $location,
+        'type'     => $type,
+        'count'    => $count,
+        'amount'   => $amount
+    ]);
+    if (function_exists('curl_init')) {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_exec($ch);
+        curl_close($ch);
+    } else {
+        @file_get_contents($url);
+    }
 }
 
 // Post update to central master when transactions change
@@ -100,17 +128,24 @@ $to = $locationEmail;
 $subject = "Alley Cat Photo : " . $locationName . " " . $stationID . " New Order - (Cash Due): " . $orderID;
 
 // Detect payment type and Square response/confirmation
-$paymentType = $_REQUEST['payment_type'] ?? (($_POST['is_square_payment'] ?? '0') == '1' || ($_POST['is_qr_payment'] ?? '0') == '1' ? 'square' : 'cash');
+$paymentType = $_REQUEST['payment_type'] ?? 'cash';
+if (isset($_POST['is_square_payment']) && $_POST['is_square_payment'] == '1') {
+    $paymentType = 'square';
+} else if (isset($_POST['is_qr_payment']) && $_POST['is_qr_payment'] == '1') {
+    $paymentType = 'qr';
+}
 
-// Apply tax only if QR code callback (Square) happened
-if ($paymentType === 'square') {
-    $txtAmt = $txtAmt * 1.0675;
+// Apply tax for both Square terminal and QR code payments (3.5% fee + tax)
+if ($paymentType === 'square' || $paymentType === 'qr') {
+    $txtAmt = (($txtAmt * 1.035) * 1.0675); 
 }
 
 $squareResponse = $_REQUEST['square_response'] ?? '';
-$squareOrderId = $_REQUEST['square_order_id'] ?? '';
+$squareOrderId = $_REQUEST['square_order_id'] ?? ($_REQUEST['transaction_id'] ?? '');
+
 $message .= "$txtEmail | \r\n";
-if ($paymentType === 'square') {
+
+if ($paymentType === 'square' || $paymentType === 'qr') {
     $message .= "SQUARE ORDER: $" . number_format($txtAmt, 2) . " PAID\r\n";
 } else {
     $message .= "CASH ORDER: $" . number_format($txtAmt, 2) . " DUE\r\n";
@@ -137,7 +172,7 @@ function sendReceiptEmail($orderID, $customerEmail, $messageBody) {
         // Configure as your existing mailer (SMTP or mail())
         // Example using PHP mail() transport — adapt to your SMTP config:
         $mail->isMail();
-        $mail->setFrom('no-reply@yourdomain.com', 'AlleyCat Photo');
+        $mail->setFrom($locationEmail, "AlleyCat Photo $locationName Receipt");
         $mail->addAddress($customerEmail);
         $mail->Subject = "Your AlleyCat Photo Receipt — Order #{$orderID}";
         $mail->isHTML(false); // Plain text for receipts
@@ -174,7 +209,8 @@ foreach ($Cart->getItems() as $order_code => $quantity) {
 
 
 $message .= "-----------------------------\r\nCheck out your pictures later at:\r\nhttp://www.alleycatphoto.net\r\n";
-// If Square, append confirmation/response at bottom
+
+// Append confirmation IDs based on payment method
 if ($paymentType === 'square') {
     if ($squareOrderId) {
         $message .= "\r\nSQUARE CONFIRMATION: $squareOrderId\r\n";
@@ -182,7 +218,12 @@ if ($paymentType === 'square') {
     if ($squareResponse) {
         $message .= "SQUARE RESPONSE: $squareResponse\r\n";
     }
+} else if ($paymentType === 'qr') {
+    if ($squareOrderId) {
+        $message .= "\r\nQR CONFIRMATION: $squareOrderId\r\n";
+    }
 }
+
 $message .= "\r\n";
 
 // --- SEND STAFF MAIL ---
@@ -210,12 +251,18 @@ if ($txtEmail != '') {
     mkdir($filePath, 0777, true);
 
     // info.txt must always be email|message (first line is email|message)
-    $infoTxt = "$txtEmail|" . ($paymentType === 'square' ? "SQUARE ORDER: $" . number_format($txtAmt, 2) . " PAID" : "CASH ORDER: $" . number_format($txtAmt, 2) . " DUE");
-    if ($paymentType === 'square') {
+    $payLabel = "CASH ORDER: $" . number_format($txtAmt, 2) . " DUE";
+    if ($paymentType === 'square' || $paymentType === 'qr') {
+        $payLabel = "SQUARE ORDER: $" . number_format($txtAmt, 2) . " PAID";
+    }
+
+    $infoTxt = "$txtEmail|" . $payLabel;
+    
+    if ($paymentType === 'square' || $paymentType === 'qr') {
         if ($squareOrderId) {
-            $infoTxt .= "|SQUARE CONFIRMATION: $squareOrderId";
+            $infoTxt .= "|" . strtoupper($paymentType) . " CONFIRMATION: $squareOrderId";
         }
-        if ($squareResponse) {
+        if ($paymentType === 'square' && $squareResponse) {
             $infoTxt .= "|SQUARE RESPONSE: $squareResponse";
         }
     }
@@ -233,8 +280,8 @@ if ($txtEmail != '') {
     }
 }
 
-// --- HANDLE AUTO PRINT FOR SQUARE PAYMENTS ---
-if ($paymentType === 'square') {
+// --- HANDLE AUTO PRINT FOR PAID PAYMENTS ---
+if ($paymentType === 'square' || $paymentType === 'qr') {
     $shouldAutoPrint = acp_get_autoprint_status();
     if ($shouldAutoPrint) {
         $orderOutputDir = ($server_addy == '192.168.2.126') ? "R:/orders" : "C:/orders";
@@ -281,7 +328,7 @@ if ($paymentType === 'square') {
         }
     }
     // For QR/Square payments, also send receipt email directly to customer
-    if ($paymentType === 'square' && !empty($txtEmail)) {
+    if (($paymentType === 'square' || $paymentType === 'qr') && !empty($txtEmail)) {
         $receiptBody = "Thank you for your order!\n\n" . $message;
         $sent = sendReceiptEmail($orderID, $txtEmail, $receiptBody);
         if (!$sent) {
@@ -302,86 +349,92 @@ if ($paymentType === 'square') {
 // --- CLEAR CART ---
 $Cart->clearCart();
 
-// --- LOG TRANSACTION TO DAILY TOTALS CSV ---
-$csvFile = __DIR__ . '/sales/transactions.csv';
-$today = date("m/d/Y");
-// User wants Location Slug without spaces/quotes in CSV
+// --- LOG TRANSACTION TO DAILY TOTALS CSV (QR ONLY) ---
+// Cash and Terminal (Square) are logged via the admin dashboard or callback (order_action.php)
+if ($paymentType === 'qr') {
+    $csvFile = __DIR__ . '/sales/transactions.csv';
+    $today = date("m/d/Y");
 
-$rawLocation = getenv('LOCATION_NAME') ?: $locationName;
-$location = '"$rawLocation"'; 
+    $rawLocation = getenv('LOCATION_NAME') ?: $locationName;
+    $location = $rawLocation; 
 
-$paymentTypeDisplay = ($paymentType === 'square') ? 'Credit' : 'Cash';
-// For CSV, if Credit/Square, use the full taxed amount. If Cash, use untaxed.
-// $txtAmt is already adjusted above: if Square, it has tax added. If Cash, it is base.
-$logAmount = $txtAmt; 
+    $paymentTypeDisplay = 'Credit';
+    $logAmount = $txtAmt; 
 
-// Read existing data
-$data = [];
-if (file_exists($csvFile)) {
-    $handle = @fopen($csvFile, 'r');
-    if ($handle !== false) {
-        $header = fgetcsv($handle);
-        while (($row = fgetcsv($handle)) !== false) {
-            // Key is Location | Date | Payment Type
-            $key = $row[0] . '|' . $row[1] . '|' . ($row[3] ?? ''); 
-            // Sanitize amount (remove $ and ,)
-            if (isset($row[4])) {
-                $row[4] = (float)str_replace(['$', ','], '', $row[4]);
+    // Read existing data
+    $data = [];
+    if (file_exists($csvFile)) {
+        $handle = @fopen($csvFile, 'r');
+        if ($handle !== false) {
+            $header = fgetcsv($handle);
+            while (($row = fgetcsv($handle)) !== false) {
+                // Key is Location | Date | Payment Type
+                $key = $row[0] . '|' . $row[1] . '|' . ($row[3] ?? ''); 
+                // Sanitize amount (remove $ and ,)
+                if (isset($row[4])) {
+                    $row[4] = (float)str_replace(['$', '"', ','], '', $row[4]);
+                }
+                $data[$key] = $row;
             }
-            $data[$key] = $row;
-        }
-        fclose($handle);
-    }
-}
-
-// Update or create entry for today
-$key = $location . '|' . $today . '|' . $paymentTypeDisplay;
-if (!isset($data[$key])) {
-    $data[$key] = [$location, $today, 0, $paymentTypeDisplay, 0];
-}
-$data[$key][2] += 1; // Orders
-$data[$key][4] += $logAmount; // Amount
-
-// Write back to CSV
-if (!is_dir(dirname($csvFile))) {
-    @mkdir(dirname($csvFile), 0777, true);
-}
-$fp = @fopen($csvFile, 'w');
-if ($fp !== false) {
-    fputcsv($fp, ['Location', 'Order Date', 'Orders', 'Payment Type', 'Amount']);
-    foreach ($data as $row) {
-        // Format amount with $
-        $row[4] = '"$' . number_format($row[4], 2) . '"';
-        fputcsv($fp, $row);
-    }
-    fclose($fp);
-    // After writing CSV, compute today's totals for this location and post update to master
-    $cash_total = 0.0; $credit_total = 0.0; $cash_count = 0; $credit_count = 0;
-    foreach ($data as $k => $row) {
-        $loc = trim($row[0]);
-        $date = trim($row[1]);
-        $orders = (int)$row[2];
-        $ptype = strtolower(trim($row[3]));
-        $amount = (float)$row[4];
-        if ($loc === $location && $date === $today) {
-            if ($ptype === 'cash') {
-                $cash_total += $amount;
-                $cash_count += $orders;
-            } else {
-                $credit_total += $amount;
-                $credit_count += $orders;
-            }
+            fclose($handle);
         }
     }
-    $dateISO = date('Y-m-d');
-    // Post to central master
-    post_update_to_master($dateISO, $cash_total, $credit_total, $cash_count, $credit_count, $location);
-} else {
-    error_log("Failed to open CSV for writing: " . $csvFile);
+
+    // Update or create entry for today
+    $key = $location . '|' . $today . '|' . $paymentTypeDisplay;
+    if (!isset($data[$key])) {
+        $data[$key] = [$location, $today, 0, $paymentTypeDisplay, 0];
+    }
+    $data[$key][2] += 1; // Orders
+    $data[$key][4] += $logAmount; // Amount
+
+    // Write back to CSV
+    if (!is_dir(dirname($csvFile))) {
+        @mkdir(dirname($csvFile), 0777, true);
+    }
+    $fp = @fopen($csvFile, 'w');
+    if ($fp !== false) {
+        fputcsv($fp, ['Location', 'Order Date', 'Orders', 'Payment Type', 'Amount']);
+        foreach ($data as $row) {
+            // Format amount with $
+            $row[4] = '$' . number_format($row[4], 2);
+            fputcsv($fp, $row);
+        }
+        fclose($fp);
+        
+        // Real-time sync to master log
+        $dateISO = date('Y-m-d');
+        acp_sync_log_to_master($location, $dateISO, $paymentTypeDisplay, $data[$key][2], $data[$key][4]);
+        
+        // After writing CSV, compute today's totals for this location and post update to master
+        $cash_total = 0.0; $credit_total = 0.0; $cash_count = 0; $credit_count = 0;
+        foreach ($data as $k => $row) {
+            $loc = trim($row[0]);
+            $date = trim($row[1]);
+            $orders = (int)$row[2];
+            $ptype = strtolower(trim($row[3]));
+            // Clean amount for calc
+            $amount = (float)str_replace(['$', '"', ','], '', $row[4]);
+            if ($loc === $location && $date === $today) {
+                if ($ptype === 'cash') {
+                    $cash_total += $amount;
+                    $cash_count += $orders;
+                } else {
+                    $credit_total += $amount;
+                    $credit_count += $orders;
+                }
+            }
+        }
+        $dateISO = date('Y-m-d');
+        // Post to central master
+        post_update_to_master($dateISO, $cash_total, $credit_total, $cash_count, $credit_count, $location);
+    } else {
+        error_log("Failed to open CSV for writing: " . $csvFile);
+    }
 }
 
 // Determine UI Display
-$isApproved = ($paymentType === 'square');
+$isApproved = ($paymentType === 'square' || $paymentType === 'qr');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">

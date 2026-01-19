@@ -182,69 +182,52 @@ if (file_exists($csvFile)) {
     exit;
   }
 
-// Read historical credit data
-$creditCsv = __DIR__ . '/CREDIT_ALL_ALLEYCAT.csv';
-if (file_exists($creditCsv)) {
-    $handle = fopen($creditCsv, 'r');
-    $header = fgetcsv($handle);
-    while (($row = fgetcsv($handle)) !== false) {
-        $locName = trim($row[0]);
-        $locId = $locMap[$locName] ?? $locName;
-        // Convert MM/DD/YYYY to YYYY-MM-DD
-        $dateParts = explode('/', trim($row[1]));
-        if (count($dateParts) === 3) {
-            $date = sprintf('%04d-%02d-%02d', $dateParts[2], $dateParts[0], $dateParts[1]);
-        } else {
-            continue; // Skip invalid dates
-        }
-        $orders = (int)trim($row[2]);
-        $type = strtolower(trim($row[3]));
-        $amount = (float)str_replace(['$', ','], '', trim($row[4]));
-        
-        if (!isset($data[$locId])) $data[$locId] = [];
-        if (!isset($data[$locId][$date])) $data[$locId][$date] = ['credit' => 0, 'cash' => 0, 'orders' => 0];
-        
-        if ($type === 'cash') {
-            $data[$locId][$date]['cash'] += $amount;
-        } else {
-            $data[$locId][$date]['credit'] += $amount;
-        }
-        $data[$locId][$date]['orders'] += $orders;
-    }
-    fclose($handle);
-}
+  // Handle log action from GET request
+  if (isset($_GET['action']) && $_GET['action'] === 'log') {
+    $date = $_GET['date'] ?? date('Y-m-d');
+    $location = $_GET['location'] ?? 'UNKNOWN';
+    $type = ucfirst(strtolower($_GET['type'] ?? 'Cash'));
+    $count = (int)($_GET['count'] ?? 0);
+    $amount = (float)($_GET['amount'] ?? 0.0);
 
-// Read historical cash data
-$historicalCsv = __DIR__ . '/historical_transactions.csv';
-if (file_exists($historicalCsv)) {
-    $handle = fopen($historicalCsv, 'r');
-    $header = fgetcsv($handle);
-    while (($row = fgetcsv($handle)) !== false) {
-        $locName = trim($row[0]);
-        $locId = $locMap[$locName] ?? $locName;
-        // Convert MM/DD/YYYY to YYYY-MM-DD
-        $dateParts = explode('/', trim($row[1]));
-        if (count($dateParts) === 3) {
-            $date = sprintf('%04d-%02d-%02d', $dateParts[2], $dateParts[0], $dateParts[1]);
-        } else {
-            continue; // Skip invalid dates
+    // Convert ISO date (YYYY-MM-DD) to m/d/Y if needed, or keep as is if already in that format
+    $dateDisplay = (strpos($date, '-') !== false) ? date('m/d/Y', strtotime($date)) : $date;
+    
+    $csvFile = __DIR__ . '/transactions.csv';
+    $rows = [];
+    $found = false;
+
+    if (file_exists($csvFile)) {
+      if (($h = fopen($csvFile, 'r')) !== false) {
+        $header = fgetcsv($h);
+        while (($r = fgetcsv($h)) !== false) {
+          if (count($r) < 4) continue;
+          // Check if this row matches location, date and payment type
+          if (trim($r[0]) === $location && trim($r[1]) === $dateDisplay && strcasecmp(trim($r[3]), $type) === 0) {
+            $rows[] = [$location, $dateDisplay, $count, $type, '$' . number_format($amount, 2)];
+            $found = true;
+          } else {
+            $rows[] = $r;
+          }
         }
-        $orders = (int)trim($row[2]);
-        $type = strtolower(trim($row[3]));
-        $amount = (float)str_replace(['$', ','], '', trim($row[4]));
-        
-        if (!isset($data[$locId])) $data[$locId] = [];
-        if (!isset($data[$locId][$date])) $data[$locId][$date] = ['credit' => 0, 'cash' => 0, 'orders' => 0];
-        
-        if ($type === 'cash') {
-            $data[$locId][$date]['cash'] += $amount;
-        } else {
-            $data[$locId][$date]['credit'] += $amount;
-        }
-        $data[$locId][$date]['orders'] += $orders;
+        fclose($h);
+      }
     }
-    fclose($handle);
-}
+
+    if (!$found) {
+      $rows[] = [$location, $dateDisplay, $count, $type, '$' . number_format($amount, 2)];
+    }
+
+    // Write back to CSV
+    if (($h = fopen($csvFile, 'w')) !== false) {
+      fputcsv($h, ['Location', 'Order Date', 'Orders', 'Payment Type', 'Amount']);
+      foreach ($rows as $r) fputcsv($h, $r);
+      fclose($h);
+    }
+
+    header('Location: ' . basename(__FILE__));
+    exit;
+  }
 ?>
 <!doctype html>
 <html lang="en">
@@ -672,7 +655,7 @@ if (file_exists($historicalCsv)) {
         "UNKNOWN": "Unknown"
       };
 
-      const locOrder = ['Hawks Nest', 'Zip n Slip', 'Moonshine Mountain'];
+      const locOrder = ['Moonshine Mountain', 'Zip n Slip', 'Hawks Nest'];
 
       // Data from PHP
       const rawData = <?php echo json_encode($data); ?>;
@@ -681,7 +664,6 @@ if (file_exists($historicalCsv)) {
         const dollars = cents / 100;
         return '$' + dollars.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       }
-
       function formatDate(yyyyMmDd) {
         const d = new Date(yyyyMmDd + "T00:00:00");
         if (isNaN(d)) return yyyyMmDd;
@@ -778,7 +760,7 @@ if (file_exists($historicalCsv)) {
         container.innerHTML = '';
 
         // Define location order: Moonshine, Zip'n'Slip, Hawks Nest
-        const locOrder = ['Hawks Nest', 'Zip n Slip', 'Moonshine Mountain'];
+        const locOrder = ['Moonshine Mountain', 'Zip n Slip', 'Hawks Nest'];
 
         // Collect all dates
         const allDates = new Set();

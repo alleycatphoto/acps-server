@@ -113,10 +113,13 @@ try {
         $response = $client->terminal->checkouts->get($request);
         $checkout = $response->getCheckout();
         $status = $checkout->getStatus(); 
+        $paymentIds = $checkout->getPaymentIds();
+        $paymentId = ($paymentIds && count($paymentIds) > 0) ? $paymentIds[0] : '';
 
         echo json_encode([
             'status' => 'success',
             'terminal_status' => $status,
+            'payment_id' => $paymentId
         ]);
 
     } elseif ($action === 'cancel') {

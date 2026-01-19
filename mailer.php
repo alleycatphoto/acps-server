@@ -78,8 +78,9 @@ if (count($email_inf) < 1 || empty(trim($email_inf[0]))) {
     exit;
 }
 
-$user_email   = trim($email_inf[0]);
-$user_message = $email_inf[1] ?? '';
+$user_email   = trim(array_shift($email_inf));
+// Re-join remaining parts as message/metadata
+$user_message = implode(' | ', $email_inf);
 
 mailer_log("Target email: $user_email");
 
@@ -239,6 +240,162 @@ imagedestroy($stamp);
 
 
 // ---------------------------------------------------------------------
+// HTML Email Template Builder
+// ---------------------------------------------------------------------
+function acp_generate_html_email($orderInfo, $copyrightText) {
+    // Extract data from the raw message using regex
+    $orderId = 'N/A';
+    $station = 'N/A';
+    $date = 'N/A';
+    $total = '0.00';
+    $paymentStatus = 'Paid';
+    $delivery = 'N/A';
+
+    if (preg_match('/Order #:\s*(\d+)\s*-\s*([A-Z]+)/i', $orderInfo, $m)) {
+        $orderId = $m[1];
+        $station = $m[2];
+    }
+    if (preg_match('/Order Date:\s*(.+)$/mi', $orderInfo, $m)) {
+        $date = trim($m[1]);
+    }
+    if (preg_match('/Order Total:\s*\$([0-9.]+)/i', $orderInfo, $m)) {
+        $total = $m[1];
+    }
+    if (preg_match('/Delivery:\s*(.+)$/mi', $orderInfo, $m)) {
+        $delivery = trim($m[1]);
+    }
+    
+    // Determine status from the "label" part (e.g. CASH ORDER: $43.00 DUE)
+    if (stripos($orderInfo, 'DUE') !== false) {
+        $paymentStatus = 'Payment Due at Counter';
+    } else {
+        $paymentStatus = 'Paid in Full';
+    }
+
+    // Define accent color
+    $accentColor = '#28a745'; // Green
+    
+    // Parse items
+    $itemsHtml = '';
+    if (preg_match('/ITEMS ORDERED:\s*[\-]+(.*?)[\-]+/s', $orderInfo, $m)) {
+        $itemsRaw = trim($m[1]);
+        $lines = explode("\n", $itemsRaw);
+        foreach ($lines as $line) {
+            if (trim($line) === '') continue;
+            // Format: [Qty] Name (ID)
+            if (preg_match('/\[(\d+)\]\s*(.*?)\s*\((.*?)\)/', $line, $im)) {
+                $itemsHtml .= "<tr>
+                    <td style='padding: 12px 10px; border-bottom: 1px solid #222; color: #eee; font-size: 14px;'>
+                        <strong style='color: $accentColor;'>{$im[1]}x</strong> {$im[2]}
+                    </td>
+                    <td style='padding: 12px 10px; border-bottom: 1px solid #222; color: #666; font-size: 13px; text-align: right; font-family: monospace;'>
+                        {$im[3]}
+                    </td>
+                </tr>";
+            } else {
+                $itemsHtml .= "<tr><td colspan='2' style='padding: 10px; border-bottom: 1px solid #222; color: #ccc; font-size: 13px;'>".htmlspecialchars($line)."</td></tr>";
+            }
+        }
+    }
+
+    $logoUrl = 'cid:logo_img';
+    $accentColor = '#28a745'; // Green
+    $paymentStatus = 'Payment Received';
+
+    $html = "
+    <!DOCTYPE html>
+    <html lang='en'>
+    <head>
+        <meta charset='UTF-8'>
+        <link href='https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap' rel='stylesheet'>
+        <style>
+            body { font-family: 'Poppins', sans-serif !important; }
+            .badge { display: inline-block; padding: 6px 14px; border-radius: 4px; font-weight: 600; font-size: 13px; text-transform: uppercase; }
+            .badge-paid { background-color: #28a745; color: #fff; }
+            .badge-due { background-color: #ffc107; color: #000; }
+            .main-text { font-size: 18px; line-height: 1.6; color: #bbb; }
+        </style>
+    </head>
+    <body style='background-color: #0a0a0a; color: #e0e0e0; font-family: \"Poppins\", sans-serif; margin: 0; padding: 0;'>
+        <table width='100%' cellpadding='0' cellspacing='0' style='background-color: #0a0a0a;'>
+            <tr>
+                <td align='center' style='padding: 20px;'>
+                    <table width='600' cellpadding='0' cellspacing='0' style='background-color: #141414; border: 1px solid #e70017; border-radius: 12px; overflow: hidden;'>
+                        <tr>
+                            <td style='padding: 40px; text-align: center; border-bottom: 1px solid #333;'>
+                                <img src='$logoUrl' alt='Alley Cat Photo' style='display: block; margin: 0 auto; max-width: 100%;'>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style='padding: 40px;'>
+                                <table width='100%' cellpadding='0' cellspacing='0'>
+                                    <tr>
+                                        <td valign='top' style='border-bottom: 2px solid $accentColor; padding-bottom: 20px;'>
+                                            <h1 style='margin: 0; font-size: 32px; color: #fff; font-weight: 800;'>Order #$orderId</h1>
+                                            <p style='margin: 5px 0; color: #888; font-size: 16px;'>$date</p>
+                                        </td>
+                                        <td valign='top' align='right' style='border-bottom: 2px solid $accentColor; padding-bottom: 20px;'>
+                                            <div style='margin-bottom: 10px;'>
+                                                <span class='badge badge-paid'>$paymentStatus</span>
+                                            </div>
+                                            <h2 style='margin: 0; color: $accentColor; font-size: 28px; font-weight: 800;'>\$$total</h2>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <p class='main-text' style='margin: 30px 0; font-size: 18px;'>
+                                  Thank you for choosing <strong>Alley Cat Photo</strong>! Your photos are being printed now, and you can also pick up a copy of your receipt at the counter. Your order details and digital rights release are provided below.
+                                </p>
+
+                                <div style='text-align: center; margin: 40px 0; padding: 10px; border: 2px solid #e70017; border-radius: 8px; background-color: #000000;'>
+                                    <p style='color: #e4e4e4; font-size: 24px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;'>See your photos later at</p>
+                                    <a href='https://alleycatphoto.net' style='color: #e70017; text-decoration: none; font-size: 32px; font-weight: 800; text-transform: uppercase;'>alleycatphoto.net</a>
+                                </div>
+
+                                <table width='100%' cellpadding='0' cellspacing='0' style='margin-bottom: 30px;'>
+                                    <thead>
+                                        <tr>
+                                            <th align='left' style='color: #e70017; font-size: 14px; text-transform: uppercase; padding: 10px; border-bottom: 1px solid #333;'>Item</th>
+                                            <th align='right' style='color: #e70017; font-size: 14px; text-transform: uppercase; padding: 10px; border-bottom: 1px solid #333;'>Reference</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        $itemsHtml
+                                    </tbody>
+                                </table>
+
+                                <div style='background-color: #1a1a1a; padding: 25px; border-radius: 8px; border-left: 4px solid #e70017;'>
+                                    <span style='color: #fff; font-weight: bold; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 15px;'>Legal Copyright Release</span>
+                                    <div style='color: #999; font-size: 15px; line-height: 1.7;'>
+                                        " . nl2br(trim($copyrightText)) . "
+                                    </div>
+                                </div>
+
+                                <table width='100%' style='margin-top: 30px; color: #555; font-size: 14px;'>
+                                    <tr>
+                                        <td>Delivery: <strong style='color: #e70017;'>$delivery</strong></td>
+                                        <td align='right'>Station: <strong style='color: #e70017;'>$station</strong></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style='padding: 30px; background-color: #0f0f0f; border-top: 1px solid #333; text-align: center;'>
+                                <p style='margin: 0; color: #555; font-size: 14px;'>&copy; " . date('Y') . " Alley Cat Photo Station | <a href='https://www.alleycatphoto.net' style='color: #e70017; text-decoration: none; font-weight: 600;'>alleycatphoto.net</a></p>
+                                <p style='margin: 10px 0 0 0; color: #444; font-size: 12px;'>This is an official transaction record. Please keep this email for your records.</p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
+    </html>";
+
+    return $html;
+}
+
+// ---------------------------------------------------------------------
 // PHPMailer config + multi-send
 // ---------------------------------------------------------------------
 
@@ -299,13 +456,18 @@ try {
             $mail->addReplyTo($fromMail, 'Alley Cat Photo : ' . $locationName);
             $mail->addBCC('orders@alleycatphoto.net');
 
+            // Embed Logo
+            $logoPath = realpath(__DIR__ . '/public/assets/images/alley_logo.png');
+            $mail->addEmbeddedImage($logoPath, 'logo_img');
+
             // Attach ONE image per email
             $mail->addAttachment($imagePath);
 
             // Content
-            $mail->isHTML(false); // Plain-text email
+            $mail->isHTML(true); 
             $mail->Subject = $subjectWithImages;
-            $mail->Body    = rtrim($user_message) . "\n\n" . $copyrightText;
+            $mail->Body    = acp_generate_html_email($user_message, $copyrightText);
+            $mail->AltBody = rtrim($user_message) . "\n\n" . $copyrightText;
 
             try {
                 $mail->send();
@@ -343,10 +505,15 @@ try {
         $mail->addReplyTo($fromMail, 'Alley Cat Photo : ZipNSlip');
         $mail->addBCC('orders@alleycatphoto.net');
 
+        // Embed Logo
+        $logoPath = realpath(__DIR__ . '/public/assets/images/alley_logo.png');
+        $mail->addEmbeddedImage($logoPath, 'logo_img');
+
         // Content
-        $mail->isHTML(false);
+        $mail->isHTML(true);
         $mail->Subject = $subjectNoImages;
-        $mail->Body    = rtrim($user_message) . "\n\n" . $copyrightText;
+        $mail->Body    = acp_generate_html_email($user_message, $copyrightText);
+        $mail->AltBody = rtrim($user_message) . "\n\n" . $copyrightText;
 
         try {
             $mail->send();

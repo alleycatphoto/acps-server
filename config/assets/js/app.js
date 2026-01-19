@@ -237,15 +237,15 @@ const App = {
             let badgeClass = 'order-type';
             let badgeText = order.type;
             
-            if (order.payment_method === 'square') {
+            if (order.type === 'Paid') {
+                badgeClass += ' type-paid';
+                badgeText = 'PAID';
+            } else if (order.payment_method === 'square') {
                 badgeClass += ' type-square';
                 badgeText = 'SQUARE';
             } else if (order.payment_method === 'cash') {
                 badgeClass += ' type-cash';
                 badgeText = 'CASH';
-            } else if (order.type === 'Paid') {
-                badgeClass += ' type-paid';
-                badgeText = 'PAID';
             } else if (order.type === 'Void') {
                 badgeClass += ' type-void';
                 badgeText = 'VOID';
@@ -274,6 +274,7 @@ const App = {
             if (!isPaidOrVoid) {
                 actionsHtml += `
                     <button class="btn btn-square action-btn" data-action="square">Square</button>
+                    <button class="btn btn-qr action-btn" data-action="qr">QR Pay</button>
                     <button class="btn btn-cash action-btn" data-action="cash">Cash</button>
                     <button class="btn btn-void action-btn" data-action="void">Void</button>
                 `;
@@ -314,6 +315,7 @@ const App = {
                     if (action === 'cash') this.handleAction('paid', order.id, btn);
                     if (action === 'void') this.handleAction('void', order.id, btn);
                     if (action === 'square') this.handleSquare(order.id, order.cc_totaltaxed, btn);
+                    if (action === 'qr') this.handleQR(order.id, btn);
                 });
             });
 
@@ -328,7 +330,7 @@ const App = {
         });
     },
 
-    async handleAction(action, orderId, btn = null) {
+    async handleAction(action, orderId, btn = null, extraParams = {}) {
         if (action === 'void' && !confirm('Void this order?')) return;
         
         if (btn) {
@@ -343,6 +345,11 @@ const App = {
             formData.append('order', orderId);
             formData.append('action', action);
             formData.append('autoprint', this.state.autoPrint ? '1' : '0');
+
+            // Add extra parameters (e.g., payment_method, transaction_id)
+            for (const key in extraParams) {
+                formData.append(key, extraParams[key]);
+            }
 
             // Force a minimum spinner delay for feedback
             await new Promise(resolve => setTimeout(resolve, 2000));
@@ -426,6 +433,16 @@ const App = {
         }
     },
 
+    async handleQR(orderId, btn) {
+        const ref = prompt('Enter QR Payment Reference (e.g. Venmo ID, CashApp Name):');
+        if (!ref) return;
+
+        await this.handleAction('paid', orderId, btn, {
+            payment_method: 'qr',
+            transaction_id: ref
+        });
+    },
+
     pollSquare(checkoutId, orderId, btn, originalText, cancelBtn) {
         let attempts = 0;
         const maxAttempts = 100; // ~5 mins at 3s interval
@@ -454,7 +471,10 @@ const App = {
                         btn.className = 'btn btn-cash action-btn'; // Turn green
                         if (cancelBtn) cancelBtn.remove();
                         // Mark as paid in system
-                        await this.handleAction('paid', orderId);
+                        await this.handleAction('paid', orderId, null, {
+                            payment_method: 'square',
+                            transaction_id: data.payment_id
+                        });
                         setTimeout(() => {
                             this.resumeRefresh();
                         }, 1000);

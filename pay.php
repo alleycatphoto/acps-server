@@ -152,7 +152,7 @@ $savings = $cc_totaltaxed - $amount_without_tax;
     <script>
         window.acps_amount_without_tax = <?php echo json_encode($amount_without_tax); ?>;
         window.acps_skip_delivery = <?php echo $skipDelivery ? 'true' : 'false'; ?>;
-        window.acps_total = <?php echo json_encode($cc_totaltaxed); ?>;
+        window.acps_total = <?php echo json_encode($amount_with_tax); ?>;
         window.acps_base_total = <?php echo json_encode($thisTotal); ?>;
         window.acps_is_retry = <?php echo $isRetry ? 'true' : 'false'; ?>;
         window.acps_invalid_order = <?php echo $invalid_order ? 'true' : 'false'; ?>;
@@ -352,7 +352,7 @@ $savings = $cc_totaltaxed - $amount_without_tax;
     <!-- Variables populated by JS -->
     <input type="hidden" name="txtEmail" id="final-email">
     <input type="hidden" name="isOnsite" id="final-onsite" value="yes">
-    <input type="hidden" name="txtAmt" value="<?php echo $cc_totaltaxed; ?>">
+    <input type="hidden" name="txtAmt" value="<?php echo $thisTotal; ?>">
     <input type="hidden" name="txtName" id="final-name">
     <input type="hidden" name="txtAddr" id="final-addr">
     <input type="hidden" name="txtCity" id="final-city">

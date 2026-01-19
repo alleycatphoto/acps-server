@@ -22,6 +22,8 @@ if ($location && trim($location) !== '') {
 
 $orderID = isset($_POST['order'])  ? trim($_POST['order'])  : '';
 $action  = isset($_POST['action']) ? trim($_POST['action']) : '';
+$paymentMethod = isset($_POST['payment_method']) ? trim($_POST['payment_method']) : 'cash';
+$transactionId = isset($_POST['transaction_id']) ? trim($_POST['transaction_id']) : '';
 
 if ($orderID === '' || !preg_match('/^\d+$/', $orderID)) {
     echo json_encode(['status' => 'error', 'message' => 'Invalid or missing order number.']);
@@ -89,6 +91,26 @@ function acp_log_event($orderID, $event) {
     return false;
 }
 
+function acp_sync_log_to_master($location, $dateISO, $type, $count, $amount) {
+    $url = 'https://alleycatphoto.net/admin/index.php?' . http_build_query([
+        'action'   => 'log',
+        'date'     => $dateISO,
+        'location' => $location,
+        'type'     => $type,
+        'count'    => $count,
+        'amount'   => $amount
+    ]);
+    if (function_exists('curl_init')) {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_exec($ch);
+        curl_close($ch);
+    } else {
+        @file_get_contents($url);
+    }
+}
+
 function acp_parse_receipt_items(array $lines): array {
     $items = [];
     foreach ($lines as $line) {
@@ -127,6 +149,66 @@ function acp_update_cash_status(string $receipt, string $newStatus): array {
         return [$receipt, 0];
     }
     return [$updated, $count];
+}
+
+function acp_update_square_status(string $receipt, string $transactionId): array {
+    $count = 0;
+    // Find the original amount $X
+    if (preg_match('/CASH ORDER:\s*\$([0-9]+(?:\.[0-9]{2})?)\s+DUE/i', $receipt, $m)) {
+        $originalAmt = floatval($m[1]);
+        $taxedAmt = ($originalAmt * 1.035) * 1.0675;
+        $taxedAmtStr = number_format($taxedAmt, 2);
+        $originalAmtStr = number_format($originalAmt, 2);
+
+        // 1. Replace "CASH ORDER: $X DUE" with "SQUARE ORDER: $Y PAID"
+        // Note: Use \\$ to escape the dollar sign so preg_replace doesn't treat $1 as a backreference
+        $updated = preg_replace(
+            '/^CASH ORDER:\s*\$[0-9]+(?:\.[0-9]{2})?\s+DUE\s*$/mi',
+            'SQUARE ORDER: \\$' . $taxedAmtStr . ' PAID',
+            $receipt,
+            1,
+            $count
+        );
+
+        // 2. "update the two places with the untaxed totals"
+        // Replace all occurrences of the original amount string (e.g. "$10.00") with the new taxed one.
+        $updated = str_replace('$' . $originalAmtStr, '$' . $taxedAmtStr, $updated);
+        
+        // 3. Add Square Confirmation ID at the bottom
+        $updated .= "\nSQUARE CONFIRMATION: " . $transactionId . "\n";
+        
+        return [$updated, 1];
+    }
+    return [$receipt, 0];
+}
+
+function acp_update_qr_status(string $receipt, string $transactionId): array {
+    $count = 0;
+    // Find the original amount $X
+    if (preg_match('/CASH ORDER:\s*\$([0-9]+(?:\.[0-9]{2})?)\s+DUE/i', $receipt, $m)) {
+        $originalAmt = floatval($m[1]);
+        $taxedAmt = ($originalAmt * 1.035) * 1.0675;
+        $taxedAmtStr = number_format($taxedAmt, 2);
+        $originalAmtStr = number_format($originalAmt, 2);
+
+        // 1. Replace "CASH ORDER: $X DUE" with "SQUARE ORDER: $Y PAID"
+        $updated = preg_replace(
+            '/^CASH ORDER:\s*\$[0-9]+(?:\.[0-9]{2})?\s+DUE\s*$/mi',
+            'SQUARE ORDER: \\$' . $taxedAmtStr . ' PAID',
+            $receipt,
+            1,
+            $count
+        );
+
+        // 2. Update all occurrences of the original amount string with the new taxed one.
+        $updated = str_replace('$' . $originalAmtStr, '$' . $taxedAmtStr, $updated);
+        
+        // 3. Add QR Confirmation ID at the bottom
+        $updated .= "\nQR CONFIRMATION: " . $transactionId . "\n";
+        
+        return [$updated, 1];
+    }
+    return [$receipt, 0];
 }
 
 function acp_send_digital_email($orderID): array {
@@ -374,20 +456,27 @@ if ($action === 'paid') {
             acp_log_event($orderID, "STAGE_ERROR: {$emailStageInfo['error']}");
         }
     }
-    list($updatedReceipt, $changed) = acp_update_cash_status($receiptData, 'PAID');
+
+    if ($paymentMethod === 'square') {
+        list($updatedReceipt, $changed) = acp_update_square_status($receiptData, $transactionId);
+    } else if ($paymentMethod === 'qr') {
+        list($updatedReceipt, $changed) = acp_update_qr_status($receiptData, $transactionId);
+    } else {
+        list($updatedReceipt, $changed) = acp_update_cash_status($receiptData, 'PAID');
+    }
+
     if ($changed > 0) {
         file_put_contents($receiptPath, $updatedReceipt);
         $receiptData = $updatedReceipt;
-        acp_log_event($orderID, "PAID");
+        acp_log_event($orderID, strtoupper($paymentMethod));
 
         // --- Log to Daily CSV ---
-        // Extract Amount from receipt: "CASH ORDER: $XX.XX PAID"
-        if (preg_match('/CASH ORDER:\s*\$([0-9]+\.[0-9]{2})\s*PAID/i', $updatedReceipt, $m)) {
+        if (preg_match('/(?:CASH|SQUARE|QR) ORDER:\s*\$([0-9]+\.[0-9]{2})\s*PAID/i', $updatedReceipt, $m)) {
             $txtAmt = floatval($m[1]);
             
             $csvFile = __DIR__ . '/../../sales/transactions.csv';
             $today = date("m/d/Y");
-            $locationKey = '"$location"';
+            $locationKey = $location;
 
             $data = [];
             if (file_exists($csvFile)) {
@@ -395,21 +484,22 @@ if ($action === 'paid') {
                 if ($handle !== false) {
                     $header = fgetcsv($handle); // Skip header
                     while (($row = fgetcsv($handle)) !== false) {
-                        // Key is Location | Date | Payment Type
                         $key = $row[0] . '|' . $row[1] . '|' . ($row[3] ?? '');
-                        if (isset($row[4])) $row[4] = (float)str_replace(['$', ','], '', $row[4]);
+                        if (isset($row[4])) $row[4] = (float)str_replace(['$', '"', ','], '', $row[4]);
                         $data[$key] = $row;
                     }
                     fclose($handle);
                 }
             }
 
-            $key = $locationKey . '|' . $today . '|Cash';
+            $pType = ($paymentMethod === 'square' || $paymentMethod === 'qr') ? 'Credit' : 'Cash';
+            
+            $key = $locationKey . '|' . $today . '|' . $pType;
             if (!isset($data[$key])) {
-                $data[$key] = [$locationKey, $today, 0, 'Cash', 0];
+                $data[$key] = [$locationKey, $today, 0, $pType, 0];
             }
-            $data[$key][2] += 1;      // Orders
-            $data[$key][4] += $txtAmt; // Amount
+            $data[$key][2] += 1;
+            $data[$key][4] += $txtAmt;
 
             // Ensure directory exists
             if (!is_dir(dirname($csvFile))) {
@@ -420,16 +510,20 @@ if ($action === 'paid') {
             if ($fp !== false) {
                 fputcsv($fp, ['Location', 'Order Date', 'Orders', 'Payment Type', 'Amount']);
                 foreach ($data as $row) {
-                    $row[4] = '"$' . number_format($row[4], 2) . '"';
+                    $row[4] = '$' . number_format($row[4], 2);
                     fputcsv($fp, $row);
                 }
                 fclose($fp);
+
+                // Real-time sync to master log
+                $dateISO = date('Y-m-d');
+                acp_sync_log_to_master($locationKey, $dateISO, $pType, $data[$key][2], $data[$key][4]);
             } else {
                 error_log("Failed to open CSV for writing in order_action.php: " . $csvFile);
             }
         }
     }
-    $statusMsg = "Order #$orderID marked PAID.";
+    $statusMsg = "Order #$orderID marked " . strtoupper($paymentMethod) . " PAID.";
 } else if ($action === 'void') {
     list($updatedReceipt, $changed) = acp_update_cash_status($receiptData, 'VOID');
     if ($changed > 0) {
