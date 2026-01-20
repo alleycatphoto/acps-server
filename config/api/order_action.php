@@ -1,6 +1,6 @@
 <?php
-// Gemicunt API - Order Action Endpoint (PAID/VOID/EMAIL)
-// Replaces legacy /admin/admin_cash_order_action.php logic
+// ACPS API - Order Action Endpoint (PAID/VOID/EMAIL)
+// Location: /config/api/order_action.php (Phasing out legacy /admin/admin_cash_order_action.php)
 
 header('Content-Type: application/json');
 require_once __DIR__ . '/../../admin/config.php';
@@ -153,15 +153,12 @@ function acp_update_cash_status(string $receipt, string $newStatus): array {
 
 function acp_update_square_status(string $receipt, string $transactionId): array {
     $count = 0;
-    // Find the original amount $X
     if (preg_match('/CASH ORDER:\s*\$([0-9]+(?:\.[0-9]{2})?)\s+DUE/i', $receipt, $m)) {
         $originalAmt = floatval($m[1]);
         $taxedAmt = ($originalAmt * 1.035) * 1.0675;
         $taxedAmtStr = number_format($taxedAmt, 2);
         $originalAmtStr = number_format($originalAmt, 2);
 
-        // 1. Replace "CASH ORDER: $X DUE" with "SQUARE ORDER: $Y PAID"
-        // Note: Use \\$ to escape the dollar sign so preg_replace doesn't treat $1 as a backreference
         $updated = preg_replace(
             '/^CASH ORDER:\s*\$[0-9]+(?:\.[0-9]{2})?\s+DUE\s*$/mi',
             'SQUARE ORDER: \\$' . $taxedAmtStr . ' PAID',
@@ -170,11 +167,7 @@ function acp_update_square_status(string $receipt, string $transactionId): array
             $count
         );
 
-        // 2. "update the two places with the untaxed totals"
-        // Replace all occurrences of the original amount string (e.g. "$10.00") with the new taxed one.
         $updated = str_replace('$' . $originalAmtStr, '$' . $taxedAmtStr, $updated);
-        
-        // 3. Add Square Confirmation ID at the bottom
         $updated .= "\nSQUARE CONFIRMATION: " . $transactionId . "\n";
         
         return [$updated, 1];
@@ -184,14 +177,12 @@ function acp_update_square_status(string $receipt, string $transactionId): array
 
 function acp_update_qr_status(string $receipt, string $transactionId): array {
     $count = 0;
-    // Find the original amount $X
     if (preg_match('/CASH ORDER:\s*\$([0-9]+(?:\.[0-9]{2})?)\s+DUE/i', $receipt, $m)) {
         $originalAmt = floatval($m[1]);
         $taxedAmt = ($originalAmt * 1.035) * 1.0675;
         $taxedAmtStr = number_format($taxedAmt, 2);
         $originalAmtStr = number_format($originalAmt, 2);
 
-        // 1. Replace "CASH ORDER: $X DUE" with "SQUARE ORDER: $Y PAID"
         $updated = preg_replace(
             '/^CASH ORDER:\s*\$[0-9]+(?:\.[0-9]{2})?\s+DUE\s*$/mi',
             'SQUARE ORDER: \\$' . $taxedAmtStr . ' PAID',
@@ -200,10 +191,7 @@ function acp_update_qr_status(string $receipt, string $transactionId): array {
             $count
         );
 
-        // 2. Update all occurrences of the original amount string with the new taxed one.
         $updated = str_replace('$' . $originalAmtStr, '$' . $taxedAmtStr, $updated);
-        
-        // 3. Add QR Confirmation ID at the bottom
         $updated .= "\nQR CONFIRMATION: " . $transactionId . "\n";
         
         return [$updated, 1];
@@ -225,8 +213,7 @@ function acp_send_digital_email($orderID): array {
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept: text/plain,*/*']);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
         
-        // --- PATCH: Fire and Forget (don't wait for emailer to finish) ---
-        curl_setopt($ch, CURLOPT_TIMEOUT, 1); // Timeout after 1 second
+        curl_setopt($ch, CURLOPT_TIMEOUT, 1);
         curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
 
         $cacertPath = realpath(__DIR__ . '/../../cacert.pem');
@@ -234,11 +221,10 @@ function acp_send_digital_email($orderID): array {
             curl_setopt($ch, CURLOPT_CAINFO, $cacertPath);
         }
         $body   = curl_exec($ch);
-        $errNo  = curl_errno($ch); // 28 is timeout
+        $errNo  = curl_errno($ch);
         $errStr = curl_error($ch);
         curl_close($ch);
 
-        // Treat timeout (28) as success for "background" sending
         if ($errNo === 0 || $errNo === 28) {
             $ok = true; 
             $body = "Email triggered in background (Timeout set to 1s).";
@@ -269,141 +255,36 @@ function acp_send_digital_email($orderID): array {
     ];
 }
 
-function acp_print_order_items($orderID, $baseDir, $date_path, array $items, string $receiptData): array {
-    $defaultOutputDir = getenv('PRINT_OUTPUT_DIR') ?: "../orders";
-    $fsOutputDir      = getenv('PRINT_OUTPUT_DIR_FS') ?: "../orders_fs";
-    if (strpos($receiptData, '- FS') !== false) {
-        $orderOutputDir = $fsOutputDir;
-    } else {
-        $orderOutputDir = $defaultOutputDir;
-    }
-    if (!is_dir($orderOutputDir)) {
-        @mkdir($orderOutputDir, 0777, true);
-    }
-    $copiedFiles = [];
-    foreach ($items as $item) {
-        $prod_code = $item['prod_code'];
-        $photo_id  = $item['photo_id'];
-        $quantity  = $item['quantity'];
-        if ($prod_code === 'EML') {
-            continue;
-        }
-        $sourcefile = $baseDir . '/' . $date_path . '/raw/' . $photo_id . '.jpg';
-        if (!file_exists($sourcefile)) {
-            continue;
-        }
-        $orientation = 'V';
-        $imgInfo = @getimagesize($sourcefile);
-        if ($imgInfo && isset($imgInfo[0], $imgInfo[1])) {
-            $orientation = ($imgInfo[0] > $imgInfo[1]) ? 'H' : 'V';
-        }
-        for ($i = 1; $i <= $quantity; $i++) {
-            $destfile = sprintf(
-                "%s/%s-%s-%s%s-%d.jpg",
-                $orderOutputDir,
-                $orderID,
-                $photo_id,
-                $prod_code,
-                $orientation,
-                $i
-            );
-            if (@copy($sourcefile, $destfile)) {
-                $copiedFiles[] = basename($destfile);
-            }
-        }
-    }
-    return $copiedFiles;
-}
+// --- Main Logic Starts Here ---
 
-function acp_stage_email_items(
-    $orderID,
-    $baseDir,
-    $date_path,
-    array $items,
-    array $lines,
-    string $receiptData
-): array {
-    $result = [
-        'has_email_items' => false,
-        'staged'          => false,
-        'email'           => null,
-        'message'         => null,
-        'copied'          => [],
-        'error'           => null,
-    ];
-    $emailItems = [];
-    foreach ($items as $it) {
-        if ($it['prod_code'] === 'EML') {
-            $emailItems[] = $it;
-        }
-    }
-    if (empty($emailItems)) {
-        return $result;
-    }
-    $result['has_email_items'] = true;
-    $user_email = '';
-    foreach ($lines as $line) {
-        if (preg_match('/([A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,})/i', $line, $m)) {
-            $user_email = trim(strtolower($m[1]));
-            break;
-        }
-    }
-    if ($user_email === '') {
-        $result['error'] = 'No email address found in receipt.';
-        return $result;
-    }
-    $result['email']   = $user_email;
-    $result['message'] = 'Full receipt in info.txt';
-    $emailsUserDir = $baseDir . '/' . $date_path . '/emails/' . $user_email;
-    if (!is_dir($emailsUserDir) && !@mkdir($emailsUserDir, 0777, true)) {
-        $result['error'] = 'Unable to create email image directory.';
-        return $result;
-    }
-    $seenPhoto = [];
-    foreach ($emailItems as $it) {
-        $photo_id = $it['photo_id'];
-        if (isset($seenPhoto[$photo_id])) {
-            continue;
-        }
-        $seenPhoto[$photo_id] = true;
-        $sourcefile = $baseDir . '/' . $date_path . '/raw/' . $photo_id . '.jpg';
-        if (!file_exists($sourcefile)) {
-            continue;
-        }
-        $destfile = $emailsUserDir . '/' . $photo_id . '.jpg';
-        if (@copy($sourcefile, $destfile)) {
-            $result['copied'][] = $destfile;
-        }
-    }
-    if (empty($result['copied'])) {
-        $result['error'] = 'No digital image files could be copied for email.';
-        return $result;
-    }
-    $cashEmailDir = $baseDir . '/' . $date_path . '/cash_email/' . $orderID;
-    if (!is_dir($cashEmailDir) && !@mkdir($cashEmailDir, 0777, true)) {
-        $result['error'] = 'Unable to create cash_email info directory.';
-        return $result;
-    }
-    if (@file_put_contents($cashEmailDir . '/info.txt', $receiptData) === false) {
-        $result['error'] = 'Unable to write info.txt for email.';
-        return $result;
-    }
-    $result['staged'] = true;
-    return $result;
-}
+$day_spool = $baseDir . '/' . $date_path . "/spool/";
+$printer_spool = $day_spool . "printer/";
+$mailer_spool = $day_spool . "mailer/";
 
-// --- Main Action Logic ---
+// Ensure spool directories exist
+if (!is_dir($printer_spool)) mkdir($printer_spool, 0777, true);
+if (!is_dir($mailer_spool)) mkdir($mailer_spool, 0777, true);
+
 $normalized  = str_replace("\r", "", $receiptData);
 $lines       = explode("\n", $normalized);
-$isCashDue = preg_match('/^CASH ORDER:\s*\$[0-9]+(?:\.[0-9]{2})?\s+DUE\s*$/mi', $receiptData);
-$items          = acp_parse_receipt_items($lines);
+$items       = acp_parse_receipt_items($lines);
+
+// Extract customer email if present
+$user_email = '';
+foreach ($lines as $line) {
+    if (preg_match('/([A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,})/i', $line, $m)) {
+        $user_email = trim(strtolower($m[1]));
+        break;
+    }
+}
+
 $copiedFiles    = [];
 $emailAttempted = false;
 $emailSuccess   = false;
 $emailRaw       = null;
-$emailStageInfo = null;
 
 if ($action === 'email') {
+    // Direct manual email trigger from console
     $emailResult = acp_send_digital_email($orderID);
     if ($emailResult['success']) {
         acp_log_event($orderID, "EMAIL_OK");
@@ -428,35 +309,65 @@ if ($action === 'email') {
 
 if ($action === 'paid') {
     $shouldAutoPrint = acp_get_autoprint_status();
-    if ($shouldAutoPrint) {
-        $copiedFiles = acp_print_order_items($orderID, $baseDir, $date_path, $items, $receiptData);
-        if (!empty($copiedFiles)) {
-            acp_log_event($orderID, "PRINT_OK (x".count($copiedFiles).")");
+    
+    foreach ($items as $item) {
+        $prod_code = $item['prod_code'];
+        $photo_id  = $item['photo_id'];
+        $quantity  = $item['quantity'];
+
+        // 1. Handle Printer Spooling
+        if ($prod_code !== 'EML' && $shouldAutoPrint) {
+            $sourcefile = $baseDir . '/' . $date_path . '/raw/' . $photo_id . '.jpg';
+            if (file_exists($sourcefile)) {
+                $orientation = 'V';
+                $imgInfo = @getimagesize($sourcefile);
+                if ($imgInfo && isset($imgInfo[0], $imgInfo[1])) {
+                    $orientation = ($imgInfo[0] > $imgInfo[1]) ? 'H' : 'V';
+                }
+
+                for ($i = 1; $i <= $quantity; $i++) {
+                    $filename = sprintf("%s-%s-%s%s-%d.jpg", $orderID, $photo_id, $prod_code, $orientation, $i);
+                    if (@copy($sourcefile, $printer_spool . $filename)) {
+                        $copiedFiles[] = $filename;
+                    }
+                }
+                // Log receipt for reference in spool
+                file_put_contents($printer_spool . $orderID . ".txt", $receiptData, FILE_APPEND);
+            }
         }
-    } else {
-        acp_log_event($orderID, "PRINT_SKIP (Auto Print OFF)");
-    }
-    $emailStageInfo = acp_stage_email_items(
-        $orderID,
-        $baseDir,
-        $date_path,
-        $items,
-        $lines,
-        $receiptData
-    );
-    if ($emailStageInfo['has_email_items']) {
-        $emailAttempted = true;
-        if ($emailStageInfo['staged']) {
-            $sendResult  = acp_send_digital_email($orderID);
-            $emailSuccess = $sendResult['success'];
-            $emailRaw     = $sendResult['raw'];
-        } else {
-            $emailSuccess = false;
-            $emailRaw     = 'Staging failed: ' . $emailStageInfo['error'];
-            acp_log_event($orderID, "STAGE_ERROR: {$emailStageInfo['error']}");
+
+        // 2. Handle Mailer Spooling
+        if ($user_email !== '') {
+            $emailAttempted = true;
+            $order_mail_dir = $mailer_spool . $orderID . "/";
+            if (!is_dir($order_mail_dir)) mkdir($order_mail_dir, 0777, true);
+            
+            $sourcefile = $baseDir . '/' . $date_path . '/raw/' . $photo_id . '.jpg';
+            if (file_exists($sourcefile)) {
+                copy($sourcefile, $order_mail_dir . $photo_id . ".jpg");
+            }
+            
+            file_put_contents($order_mail_dir . "info.txt", json_encode([
+                'email' => $user_email,
+                'order_id' => $orderID,
+                'timestamp' => time(),
+                'location' => $location
+            ]));
         }
     }
 
+    // Auto-trigger the background mailer if items were spooled
+    if ($emailAttempted) {
+        pclose(popen("start /B php ../../mailer.php \"$orderID\"", "r"));
+        $emailSuccess = true; // Assumed success for background trigger
+        $emailRaw = "GMailer triggered via spool.";
+    }
+
+    if (!empty($copiedFiles)) {
+        acp_log_event($orderID, "SPOOL_PRINT_OK (x".count($copiedFiles).")");
+    }
+
+    // Update receipt text based on payment method
     if ($paymentMethod === 'square') {
         list($updatedReceipt, $changed) = acp_update_square_status($receiptData, $transactionId);
     } else if ($paymentMethod === 'qr') {
@@ -473,7 +384,6 @@ if ($action === 'paid') {
         // --- Log to Daily CSV ---
         if (preg_match('/(?:CASH|SQUARE|QR) ORDER:\s*\$([0-9]+\.[0-9]{2})\s*PAID/i', $updatedReceipt, $m)) {
             $txtAmt = floatval($m[1]);
-            
             $csvFile = __DIR__ . '/../../sales/transactions.csv';
             $today = date("m/d/Y");
             $locationKey = $location;
@@ -482,7 +392,7 @@ if ($action === 'paid') {
             if (file_exists($csvFile)) {
                 $handle = @fopen($csvFile, 'r');
                 if ($handle !== false) {
-                    $header = fgetcsv($handle); // Skip header
+                    fgetcsv($handle); // Skip header
                     while (($row = fgetcsv($handle)) !== false) {
                         $key = $row[0] . '|' . $row[1] . '|' . ($row[3] ?? '');
                         if (isset($row[4])) $row[4] = (float)str_replace(['$', '"', ','], '', $row[4]);
@@ -493,18 +403,12 @@ if ($action === 'paid') {
             }
 
             $pType = ($paymentMethod === 'square' || $paymentMethod === 'qr') ? 'Credit' : 'Cash';
-            
             $key = $locationKey . '|' . $today . '|' . $pType;
             if (!isset($data[$key])) {
                 $data[$key] = [$locationKey, $today, 0, $pType, 0];
             }
             $data[$key][2] += 1;
             $data[$key][4] += $txtAmt;
-
-            // Ensure directory exists
-            if (!is_dir(dirname($csvFile))) {
-                @mkdir(dirname($csvFile), 0777, true);
-            }
 
             $fp = @fopen($csvFile, 'w');
             if ($fp !== false) {
@@ -514,12 +418,7 @@ if ($action === 'paid') {
                     fputcsv($fp, $row);
                 }
                 fclose($fp);
-
-                // Real-time sync to master log
-                $dateISO = date('Y-m-d');
-                acp_sync_log_to_master($locationKey, $dateISO, $pType, $data[$key][2], $data[$key][4]);
-            } else {
-                error_log("Failed to open CSV for writing in order_action.php: " . $csvFile);
+                acp_sync_log_to_master($locationKey, date('Y-m-d'), $pType, $data[$key][2], $data[$key][4]);
             }
         }
     }
@@ -543,5 +442,4 @@ echo json_encode([
     'email_success'   => $emailSuccess,
     'email_raw'       => $emailRaw,
     'receipt'         => nl2br(htmlspecialchars($receiptData, ENT_QUOTES, 'UTF-8')),
-    'email_stage'     => $emailStageInfo,
 ]);
