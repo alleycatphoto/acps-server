@@ -83,9 +83,9 @@ if (file_exists($csvFile)) {
         if (strpos($txt, $term) !== false) continue 2;
       }
 
-      // Check for 0 items (ITEMS ORDERED followed immediately by two separator lines)
-      if (preg_match('/ITEMS ORDERED:\s*-+\s*-+/', $txt)) {
-        continue;
+      // Check for empty items section (no items between ITEMS ORDERED and closing line)
+      if (preg_match('/ITEMS ORDERED:\s*----+\s*----+\s*Check out/is', $txt)) {
+          continue;
       }
 
       // Find SQUARE (credit) paid
