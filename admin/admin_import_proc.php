@@ -286,10 +286,10 @@ foreach ($images as $image) {
                 error_log("Failed to save numbered image: $numberedPath");
             } // Smaller image with numbering
             imagejpeg($im, $webPath, 100); // Larger image without numbering
-            imagejpeg($im, $rawPath, 70); // Larger image without numbering
-            imagejpeg($im, $webPath, 80); // Larger image without numbering
+            imagejpeg($im, $rawPath, 100); // Larger image without numbering
+            //imagejpeg($im, $webPath, 80); // Larger image without numbering
             if ($locationSlug === "Hawksnest") {
-                imagejpeg($im, $firePath2, 80); // Larger image without numbering
+                imagejpeg($im, $firePath2, 100); // Larger image without numbering
             }
             //Change permissions to read write
             chmod($rawPath, 0777);

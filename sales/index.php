@@ -83,9 +83,9 @@ if (file_exists($csvFile)) {
         if (strpos($txt, $term) !== false) continue 2;
       }
 
-      // Check for 0 items (ITEMS ORDERED followed immediately by two separator lines)
-      if (preg_match('/ITEMS ORDERED:\s*-+\s*-+/', $txt)) {
-        continue;
+      // Check for empty items section (no items between ITEMS ORDERED and closing line)
+      if (preg_match('/ITEMS ORDERED:\s*----+\s*----+\s*Check out/is',  $txt)) {
+          continue;
       }
 
       // Find SQUARE (credit) paid
@@ -199,8 +199,11 @@ if (file_exists($csvFile)) {
     header('Location: ' . basename(__FILE__));
     exit;
   }
+//"Zip n Slip",01/19/2026,3,Cash,$52.00
+//"Zip n Slip",01/19/2026,8,Credit,$236.31
 
   // Handle log action from GET request
+  //https://alleycatphoto.net/admin/index.php?action=log&date=2026-01-19&location=Zip n Slip&type=Cash&count=3&amount=52.00
   if (isset($_GET['action']) && $_GET['action'] === 'log') {
     $date = $_GET['date'] ?? date('Y-m-d');
     $location = $_GET['location'] ?? 'UNKNOWN';
