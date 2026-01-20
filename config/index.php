@@ -47,6 +47,8 @@
                     <div class="tab-item tab-paid" data-tab="paid">Paid <span class="tab-count">(0)</span></div>
                     <div class="tab-item tab-void" data-tab="void">Void <span class="tab-count">(0)</span></div>
                     <div class="tab-item tab-all" data-tab="all">All <span class="tab-count">(0)</span></div>
+                    <div class="tab-item tab-printer" data-tab="printer">Printer <span class="badge badge-warning" style="display:none">0</span></div>
+                    <div class="tab-item tab-mailer" data-tab="mailer">Mailer <span class="badge badge-info" style="display:none">0</span></div>
                 </div>
                 <div class="panel-actions">
                     <span id="status-text" class="status-text">Ready</span>
@@ -58,7 +60,7 @@
             </div>
             
             <div class="orders-list" id="orders-list">
-                <!-- Orders injected here -->
+                <!-- Orders or Queue Items injected here by app.js -->
             </div>
         </div>
     </main>

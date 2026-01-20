@@ -4,8 +4,9 @@ const App = {
         isLoading: false,
         lastUpdate: null,
         autoRefresh: true,
-        viewMode: 'pending', // pending, paid, void, all
-        autoPrint: true
+        viewMode: 'pending', // pending, paid, void, all, printer, mailer
+        autoPrint: true,
+        countdown: 10
     },
 
     elements: {
@@ -49,25 +50,33 @@ const App = {
         this.fetchOrders();
         this.startRefreshTimer();
 
+        // Spooler Loop (1.5s interval)
+        this.tickSpooler();
+        setInterval(() => this.tickSpooler(), 1500);
+
         this.elements.refreshBtn.addEventListener('click', () => {
             this.state.countdown = 10; // Reset
             this.fetchOrders();
         });
 
         // Auto Print Toggle
-        this.elements.autoPrintToggle.addEventListener('change', (e) => {
-            this.toggleAutoPrint(e.target.checked);
-        });
+        if (this.elements.autoPrintToggle) {
+            this.elements.autoPrintToggle.addEventListener('change', (e) => {
+                this.toggleAutoPrint(e.target.checked);
+            });
+        }
 
         // Auto Refresh Toggle
-        this.elements.autoRefreshToggle.addEventListener('change', (e) => {
-            this.state.autoRefresh = e.target.checked;
-            if (this.state.autoRefresh) {
-                this.startRefreshTimer();
-            } else {
-                this.elements.refreshCountdown.textContent = '--';
-            }
-        });
+        if (this.elements.autoRefreshToggle) {
+            this.elements.autoRefreshToggle.addEventListener('change', (e) => {
+                this.state.autoRefresh = e.target.checked;
+                if (this.state.autoRefresh) {
+                    this.startRefreshTimer();
+                } else {
+                    this.elements.refreshCountdown.textContent = '--';
+                }
+            });
+        }
 
         // Modal events
         document.querySelectorAll('.close-btn').forEach(btn => {
@@ -79,9 +88,12 @@ const App = {
         });
 
         // Print
-        document.getElementById('print-btn').addEventListener('click', () => {
-            window.print(); 
-        });
+        const printBtn = document.getElementById('print-btn');
+        if (printBtn) {
+            printBtn.addEventListener('click', () => {
+                window.print(); 
+            });
+        }
     },
 
     switchTab(tabName) {
@@ -106,13 +118,17 @@ const App = {
                 this.fetchOrders(true);
                 this.state.countdown = 10;
             }
-            this.elements.refreshCountdown.textContent = this.state.countdown;
+            if (this.elements.refreshCountdown) {
+                this.elements.refreshCountdown.textContent = this.state.countdown;
+            }
         }, 1000);
     },
 
     updateClock() {
-        const now = new Date();
-        this.elements.clock.textContent = now.toLocaleTimeString('en-US', { hour12: false });
+        if (this.elements.clock) {
+            const now = new Date();
+            this.elements.clock.textContent = now.toLocaleTimeString('en-US', { hour12: false });
+        }
     },
 
     async fetchOrders(silent = false) {
@@ -122,15 +138,13 @@ const App = {
         }
 
         try {
-            // Add timestamp to prevent caching. API returns ALL orders.
             const res = await fetch(`api/orders.php?_=${Date.now()}`);
             const data = await res.json();
             
             if (data.status === 'ok') {
                 this.state.orders = data.orders;
                 
-                // Sync Auto Print UI from server state if fetched
-                if (data.autoprint !== undefined) {
+                if (data.autoprint !== undefined && this.elements.autoPrintToggle) {
                     this.state.autoPrint = data.autoprint;
                     this.elements.autoPrintToggle.checked = this.state.autoPrint;
                 }
@@ -151,21 +165,23 @@ const App = {
     },
 
     updateTabCounts() {
-        // Calculate counts
         const pending = this.state.orders.filter(o => o.type === 'Cash Pending').length;
-        const paid = this.state.orders.filter(o => o.type === 'Paid' || o.payment_method === 'square').length; // Square is technically paid
+        const paid = this.state.orders.filter(o => o.type === 'Paid' || o.payment_method === 'square').length;
         const voided = this.state.orders.filter(o => o.type === 'Void').length;
         const all = this.state.orders.length;
 
-        // Update DOM
-        document.querySelector('.tab-pending .tab-count').textContent = `(${pending})`;
-        document.querySelector('.tab-paid .tab-count').textContent = `(${paid})`;
-        document.querySelector('.tab-void .tab-count').textContent = `(${voided})`;
-        document.querySelector('.tab-all .tab-count').textContent = `(${all})`;
+        const elPending = document.querySelector('.tab-pending .tab-count');
+        const elPaid = document.querySelector('.tab-paid .tab-count');
+        const elVoid = document.querySelector('.tab-void .tab-count');
+        const elAll = document.querySelector('.tab-all .tab-count');
+
+        if (elPending) elPending.textContent = `(${pending})`;
+        if (elPaid) elPaid.textContent = `(${paid})`;
+        if (elVoid) elVoid.textContent = `(${voided})`;
+        if (elAll) elAll.textContent = `(${all})`;
     },
 
     async toggleAutoPrint(enabled) {
-        // Optimistic UI update
         this.state.autoPrint = enabled;
         try {
             const formData = new FormData();
@@ -175,15 +191,14 @@ const App = {
                 method: 'POST',
                 body: formData
             });
-            // Success (silent)
         } catch (e) {
             console.error('Failed to toggle auto print', e);
-            // Revert UI on failure
-            this.elements.autoPrintToggle.checked = !enabled;
+            if (this.elements.autoPrintToggle) this.elements.autoPrintToggle.checked = !enabled;
         }
     },
 
     updateStatus(text, colorVar) {
+        if (!this.elements.status) return;
         this.elements.status.textContent = text;
         this.elements.status.style.color = ''; 
         if (colorVar) {
@@ -196,8 +211,87 @@ const App = {
         }
     },
 
+    // --- Spooler Methods ---
+
+    tickSpooler() {
+        // 1. Check queue status for badges and specific tab UI
+        fetch('api/spooler.php?action=status')
+            .then(r => r.json())
+            .then(data => {
+                this.updateBadge('printer', data.printer_count);
+                this.updateBadge('mailer', data.mailer_count);
+                
+                if (this.state.viewMode === 'printer') this.renderPrinterQueue(data.printer_items);
+                if (this.state.viewMode === 'mailer') this.renderMailerQueue(data.mailer_items);
+            })
+            .catch(err => console.error("Spooler status error", err));
+
+        // 2. Heartbeat: Drive the physical printer (one at a time)
+        fetch('api/spooler.php?action=tick_printer')
+            .then(r => r.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    console.log("Sent to printer: " + data.moved);
+                    this.updateStatus('Printing: ' + data.moved, 'success-color');
+                }
+            })
+            .catch(err => console.error("Spooler tick error", err));
+    },
+
+    updateBadge(type, count) {
+        const el = document.querySelector(`.tab-${type} .badge`);
+        if (el) {
+            el.innerText = count;
+            el.style.display = count > 0 ? 'inline-block' : 'none';
+        }
+    },
+
+    renderPrinterQueue(items) {
+        const container = document.getElementById('printer-queue-list');
+        if (!container) return;
+        
+        let html = items.map(item => `
+            <div class="queue-item" style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #333;">
+                <span>${item}</span>
+                <button onclick="App.handleSpoolAction('void_print', '${item}')" class="btn btn-void" style="padding:5px 10px; font-size:12px;">Void</button>
+            </div>
+        `).join('');
+        
+        container.innerHTML = html || '<div class="loading-state"><p>No items in print spool.</p></div>';
+    },
+
+    renderMailerQueue(items) {
+        const container = document.getElementById('mailer-queue-list');
+        if (!container) return;
+        
+        let html = items.map(item => `
+            <div class="queue-item" style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #333;">
+                <span>Order #${item}</span>
+                <button onclick="App.handleSpoolAction('retry_mail', '${item}')" class="btn btn-square" style="padding:5px 10px; font-size:12px;">Retry Send</button>
+            </div>
+        `).join('');
+        
+        container.innerHTML = html || '<div class="loading-state"><p>All emails sent.</p></div>';
+    },
+
+    async handleSpoolAction(action, target) {
+        // Implementation for manual spool interventions
+        console.log(`Action: ${action} on ${target}`);
+        if (action === 'retry_mail') {
+            await fetch(`api/spooler.php?action=trigger_mail&order_id=${target}`);
+            this.tickSpooler();
+        }
+    },
+
+    // --- End Spooler Methods ---
+
     render() {
-        // Filter based on viewMode
+        // If we are in printer or mailer mode, the tickSpooler() handles the innerHTML
+        if (this.state.viewMode === 'printer' || this.state.viewMode === 'mailer') {
+            this.elements.list.innerHTML = `<div id="${this.state.viewMode}-queue-list" class="queue-container">Loading queue...</div>`;
+            return;
+        }
+
         let filteredOrders = [];
         if (this.state.viewMode === 'all') {
             filteredOrders = this.state.orders;
@@ -218,10 +312,8 @@ const App = {
 
         filteredOrders.forEach(order => {
             const card = document.createElement('div');
-            // Base class
             let cardClass = `order-card type-${order.type.toLowerCase().replace(' ', '-')}`;
             
-            // Enhance card class based on payment method for border color
             if (order.payment_method === 'square') {
                 cardClass += ' type-square';
             } else if (order.payment_method === 'cash') {
@@ -233,7 +325,6 @@ const App = {
             card.className = cardClass;
             card.dataset.id = order.id;
 
-            // Determine class for badge and text
             let badgeClass = 'order-type';
             let badgeText = order.type;
             
@@ -253,21 +344,16 @@ const App = {
                 badgeClass += ' type-standard';
             }
 
-            // Elapsed Time Logic
             let elapsedHtml = '';
             if (order.timestamp) {
                 const now = Math.floor(Date.now() / 1000);
-                const diff = Math.floor((now - order.timestamp) / 60); // minutes
+                const diff = Math.floor((now - order.timestamp) / 60); 
                 let elapsedClass = 'elapsed-time';
-                
                 if (diff > 20) elapsedClass += ' late';
                 else if (diff > 10) elapsedClass += ' warn';
-                
                 elapsedHtml = `<span class="${elapsedClass}">${diff} mins ago</span>`;
             }
 
-            // Action Buttons Logic
-            // Hide payment/void actions if Paid, Void, or Square (assumed paid)
             const isPaidOrVoid = (order.type === 'Paid' || order.type === 'Void' || order.payment_method === 'square');
             let actionsHtml = '';
             
@@ -279,7 +365,6 @@ const App = {
                     <button class="btn btn-void action-btn" data-action="void">Void</button>
                 `;
             }
-            // Receipt button always visible
             actionsHtml += `<button class="btn btn-receipt view-receipt-btn" data-file="${order.filename}">Receipt</button>`;
 
             card.innerHTML = `
@@ -307,7 +392,6 @@ const App = {
                 card.classList.toggle('expanded');
             });
 
-            // Action Buttons
             card.querySelectorAll('.action-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -319,7 +403,6 @@ const App = {
                 });
             });
 
-            // Receipt Button
             const receiptBtn = card.querySelector('.view-receipt-btn');
             receiptBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -335,7 +418,6 @@ const App = {
         
         if (btn) {
             btn.disabled = true;
-            // Store original text just in case, though usually list refreshes
             btn.dataset.originalHtml = btn.innerHTML; 
             btn.innerHTML = '<span class="spinner"></span>';
         }
@@ -346,23 +428,17 @@ const App = {
             formData.append('action', action);
             formData.append('autoprint', this.state.autoPrint ? '1' : '0');
 
-            // Add extra parameters (e.g., payment_method, transaction_id)
             for (const key in extraParams) {
                 formData.append(key, extraParams[key]);
             }
 
-            // Force a minimum spinner delay for feedback
             await new Promise(resolve => setTimeout(resolve, 2000));
-
             await fetch('api/order_action.php', {
                 method: 'POST',
                 body: formData
             });
             
-            // Short delay to ensure FS update is visible
             await new Promise(resolve => setTimeout(resolve, 500));
-
-            // Refresh to update list
             this.fetchOrders();
         } catch (e) {
             console.error(e);
@@ -376,15 +452,14 @@ const App = {
 
     async handleSquare(orderId, amount, btn) {
         let cancelBtn = null;
-        // Pause main refresh
         this.state.autoRefresh = false; 
-        this.elements.autoRefreshToggle.checked = false;
-        this.elements.refreshCountdown.textContent = '--';
+        if (this.elements.autoRefreshToggle) this.elements.autoRefreshToggle.checked = false;
+        if (this.elements.refreshCountdown) this.elements.refreshCountdown.textContent = '--';
 
         const originalText = btn.innerHTML;
         btn.disabled = true;
         btn.innerHTML = 'Sending...';
-        // Add Cancel button next to Square while polling
+        
         cancelBtn = document.createElement('button');
         cancelBtn.className = 'btn btn-void action-btn';
         cancelBtn.textContent = 'Cancel';
@@ -393,7 +468,6 @@ const App = {
         btn.parentNode.appendChild(cancelBtn);
         
         try {
-            // Create Checkout
             const formData = new FormData();
             formData.append('action', 'create');
             formData.append('order_id', orderId);
@@ -445,11 +519,10 @@ const App = {
 
     pollSquare(checkoutId, orderId, btn, originalText, cancelBtn) {
         let attempts = 0;
-        const maxAttempts = 100; // ~5 mins at 3s interval
+        const maxAttempts = 100;
 
         const interval = setInterval(async () => {
             attempts++;
-            // Update button to show activity
             const dots = '.'.repeat((attempts % 3) + 1);
             btn.innerHTML = `Waiting${dots}`;
             if (cancelBtn) cancelBtn.style.display = '';
@@ -468,9 +541,8 @@ const App = {
                     if (status === 'COMPLETED') {
                         clearInterval(interval);
                         btn.innerHTML = 'SUCCESS';
-                        btn.className = 'btn btn-cash action-btn'; // Turn green
+                        btn.className = 'btn btn-cash action-btn'; 
                         if (cancelBtn) cancelBtn.remove();
-                        // Mark as paid in system
                         await this.handleAction('paid', orderId, null, {
                             payment_method: 'square',
                             transaction_id: data.payment_id
@@ -481,16 +553,15 @@ const App = {
                     } else if (status === 'CANCELED' || status === 'FAILED') {
                         clearInterval(interval);
                         btn.innerHTML = 'FAILED';
-                        btn.className = 'btn btn-void action-btn'; // Turn red
+                        btn.className = 'btn btn-void action-btn'; 
                         if (cancelBtn) cancelBtn.remove();
                         setTimeout(() => { 
                             btn.disabled = false; 
                             btn.innerHTML = originalText; 
-                            btn.className = 'btn btn-square action-btn'; // Reset
+                            btn.className = 'btn btn-square action-btn'; 
                             this.resumeRefresh();
                         }, 3000);
                     } else {
-                        // Still PENDING or IN_PROGRESS
                         if (attempts > maxAttempts) {
                             clearInterval(interval);
                             btn.innerHTML = 'TIMEOUT';
@@ -506,12 +577,12 @@ const App = {
             } catch (e) {
                 console.error("Polling error", e);
             }
-        }, 3000); // 3 seconds
+        }, 3000);
     },
 
     resumeRefresh() {
         this.state.autoRefresh = true;
-        this.elements.autoRefreshToggle.checked = true;
+        if (this.elements.autoRefreshToggle) this.elements.autoRefreshToggle.checked = true;
         this.startRefreshTimer();
     },
 
@@ -530,12 +601,12 @@ const App = {
                 this.elements.receiptContent.textContent = "Error: " + data.message;
             }
         } catch (e) {
-            this.elements.receiptContent.textContent = "Network error fetching receipt.";
+            if (this.elements.receiptContent) this.elements.receiptContent.textContent = "Network error fetching receipt.";
         }
     },
 
     closeModal() {
-        this.elements.modal.classList.remove('open');
+        if (this.elements.modal) this.elements.modal.classList.remove('open');
     }
 };
 
