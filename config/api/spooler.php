@@ -92,7 +92,6 @@ function google_api_call($url, $method, $token) {
     curl_setopt($ch, CURLOPT_TIMEOUT, 3);
     $resp = curl_exec($ch);
     $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
     return ['code' => $code, 'body' => json_decode($resp, true)];
 }
 

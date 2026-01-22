@@ -63,7 +63,6 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
 
 $response = curl_exec($ch);
 $tokenData = json_decode($response, true);
-curl_close($ch);
 
 if (isset($tokenData['error'])) {
     die("Error exchanging code: " . ($tokenData['error_description'] ?? $tokenData['error']) . "\n");
