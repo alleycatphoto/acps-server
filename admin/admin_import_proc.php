@@ -286,7 +286,7 @@ foreach ($images as $image) {
                 error_log("Failed to save numbered image: $numberedPath");
             } // Smaller image with numbering
             imagejpeg($im, $webPath, 100); // Larger image without numbering
-            imagejpeg($im, $rawPath, 100); // Larger image without numbering
+            imagejpeg($im, $rawPath, 90); // Larger image without numbering
             //imagejpeg($im, $webPath, 80); // Larger image without numbering
             if ($locationSlug === "Hawksnest") {
                 imagejpeg($im, $firePath2, 100); // Larger image without numbering

@@ -195,8 +195,12 @@ if ($responseMode == "approved") {
     mkdir($firePath, 0777, true);
     file_put_contents("$firePath/$orderID.txt", $message);
 
-    // --- Copy email photos ---
-    if ($txtEmail != '') {
+    // Check if pending (Cash Due) - do not spool yet
+    $isPending = (!$isQrPayment && strpos($message, 'CASH ORDER') !== false && strpos($message, 'DUE') !== false);
+
+    if (!$isPending) {
+        // --- Copy email photos ---
+        if ($txtEmail != '') {
         $toPath = "photos/" . $date_path . "/pending_email";
         $filePath = "photos/" . $date_path . "/emails/" . $txtEmail;
         mkdir($toPath, 0777, true);
@@ -263,6 +267,7 @@ if ($responseMode == "approved") {
             }
         }
     }
+        } // End isPending check
     $Cart->clearCart();
 }
 ?>
@@ -338,3 +343,4 @@ $(document).ready(function(){setTimeout(()=>{location.href="/";},60000);});
 </div>
 </body>
 </html>
+

@@ -10,6 +10,26 @@
     <title>ACPS Master Control</title>
     <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>">
     <link rel="icon" href="/favicon.ico">
+    <style>
+        .health-bar {
+            background: #111;
+            border-bottom: 1px solid #333;
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.85rem;
+        }
+        .health-item { display: flex; align-items: center; gap: 6px; color: #888; }
+        .health-dot { width: 8px; height: 8px; border-radius: 50%; background: #444; }
+        .health-dot.ok { background: #00c853; box-shadow: 0 0 5px #00c853; }
+        .health-dot.err { background: #d50000; box-shadow: 0 0 5px #d50000; }
+        .connect-btn { 
+            background: #4285f4; color: white; border: none; padding: 4px 10px; 
+            border-radius: 4px; cursor: pointer; font-size: 0.8rem; display: none; 
+        }
+        .connect-btn:hover { background: #357abd; }
+    </style>
 </head>
 <body>
 
@@ -36,8 +56,26 @@
             </div>
             <div id="clock" class="clock">00:00:00</div>
             <button id="refreshBtn" class="btn btn-icon" title="Refresh Now">↻</button>
+            <button onclick="window.open('debug.php', '_blank', 'width=1200,height=900')" class="btn btn-icon" title="Debug Console" style="margin-left:5px; color:#666;">⚙�</button>  
         </div>
     </header>
+
+    <div class="health-bar" id="health-bar">
+        <div style="display:flex; gap:20px;">
+            <div class="health-item">
+                <div class="health-dot" id="gmail-dot"></div>
+                <span>Gmail API</span>
+            </div>
+            <div class="health-item">
+                <div class="health-dot" id="drive-dot"></div>
+                <span>Google Drive</span>
+            </div>
+            <div class="health-item" id="account-info">
+                <span>Account: <span id="account-email">Checking...</span></span>
+            </div>
+        </div>
+        <a href="api/google_auth.php?action=start" class="connect-btn" id="connect-btn">Connect Google Account</a>
+    </div>
 
     <main class="app-shell">
         <div class="orders-panel">
@@ -47,8 +85,8 @@
                     <div class="tab-item tab-paid" data-tab="paid">Paid <span class="tab-count">(0)</span></div>
                     <div class="tab-item tab-void" data-tab="void">Void <span class="tab-count">(0)</span></div>
                     <div class="tab-item tab-all" data-tab="all">All <span class="tab-count">(0)</span></div>
-                    <div class="tab-item tab-printer" data-tab="printer">Printer <span class="badge badge-warning" style="display:none">0</span></div>
-                    <div class="tab-item tab-mailer" data-tab="mailer">Mailer <span class="badge badge-info" style="display:none">0</span></div>
+                    <div class="tab-item tab-printer" data-tab="printer">Printer <span class="tab-count" style="display:none">(0)</span></div>
+                    <div class="tab-item tab-mailer" data-tab="mailer">Mailer <span class="tab-count" style="display:none">(0)</span></div>
                 </div>
                 <div class="panel-actions">
                     <span id="status-text" class="status-text">Ready</span>
@@ -58,7 +96,7 @@
             <div class="date-header">
                 📅 <?php echo date('F j, Y'); ?>
             </div>
-            
+
             <div class="orders-list" id="orders-list">
                 <!-- Orders or Queue Items injected here by app.js -->
             </div>
@@ -89,3 +127,5 @@
     <script src="assets/js/app.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>
+
+

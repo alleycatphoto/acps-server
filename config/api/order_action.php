@@ -66,6 +66,44 @@ function acp_get_autoprint_status(): bool {
     return true;
 }
 
+
+function acp_watermark_image($source, $dest) {
+    $logoPath = __DIR__ . '/../../public/assets/images/alley_logo.png';
+    $logo_to_use = (!empty(getenv('LOCATION_LOGO'))) ? getenv('LOCATION_LOGO') : $logoPath;
+    
+    if (!file_exists($logo_to_use)) return copy($source, $dest);
+    
+    $stamp = @imagecreatefrompng($logo_to_use);
+    $photo = @imagecreatefromjpeg($source);
+    
+    if (!$stamp || !$photo) return copy($source, $dest);
+    
+    imagealphablending($stamp, true);
+    imagesavealpha($stamp, true);
+    
+    $pw = imagesx($photo); $ph = imagesy($photo);
+    $sw = imagesx($stamp); $sh = imagesy($stamp);
+    
+    $target_w = max(120, (int)round($pw * 0.18));
+    $scale = $target_w / $sw;
+    $target_h = (int)round($sh * $scale);
+    
+    $res_stamp = imagecreatetruecolor($target_w, $target_h);
+    imagealphablending($res_stamp, false);
+    imagesavealpha($res_stamp, true);
+    imagecopyresampled($res_stamp, $stamp, 0, 0, 0, 0, $target_w, $target_h, $sw, $sh);
+    
+    imagecopy($photo, $res_stamp, $pw - $target_w - 40, $ph - $target_h - 40, 0, 0, $target_w, $target_h);
+    
+    $success = imagejpeg($photo, $dest, 95);
+    
+    imagedestroy($photo);
+    imagedestroy($stamp);
+    imagedestroy($res_stamp);
+    
+    return $success;
+}
+
 function acp_log_event($orderID, $event) {
     $log_data = [
         'log_message' => "Order {$orderID} | {$event}",
@@ -327,7 +365,7 @@ if ($action === 'paid') {
 
                 for ($i = 1; $i <= $quantity; $i++) {
                     $filename = sprintf("%s-%s-%s%s-%d.jpg", $orderID, $photo_id, $prod_code, $orientation, $i);
-                    if (@copy($sourcefile, $printer_spool . $filename)) {
+                    if (acp_watermark_image($sourcefile, $printer_spool . $filename)) {
                         $copiedFiles[] = $filename;
                     }
                 }
@@ -443,3 +481,4 @@ echo json_encode([
     'email_raw'       => $emailRaw,
     'receipt'         => nl2br(htmlspecialchars($receiptData, ENT_QUOTES, 'UTF-8')),
 ]);
+

@@ -1,161 +1,322 @@
 <?php
-/**
- * GMailer - Google Workspace API Driver (Gmail + Drive)
- * Identity: hawksnest@alleycatphoto.com
- * Logic: Create Daily Root -> Create Order Subfolder -> Upload Binaries -> Share -> Email Link
- */
+//*********************************************************************//
+//       _____  .__  .__                 _________         __           //
+//      /  _  \ |  | |  |   ____ ___.__. \_   ___ \_____ _/  |_         //
+//     /  /_\  \|  | |  | _/ __ <   |  | /    \  \/\__  \\  __\        //
+//    /    |    \  |_|  |_\  ___/\___  | \     \____/ __ \|  |         //
+//    \____|__  /____/____/\___  > ____|  \______  (____  /__|         //
+//            \/               \/\/              \/     \/             //
+// *********************** INFORMATION ********************************//
+// AlleyCat PhotoStation v3.3.0 - GMailer Driver                       //
+// Author: Paul K. Smith (photos@alleycatphoto.net)                    //
+// Date: 01/20/2026                                                     //
+//*********************************************************************//
 
+require_once __DIR__ . '/admin/config.php';
+$credentialsPath = __DIR__ . '/config/google/credentials.json';
+$tokenPath = __DIR__ . '/config/google/token.json';
 define('SENDER_EMAIL', 'hawksnest@alleycatphoto.com');
-$daily_folder_name = 'ACPS_Photos_' . date("Y-m-d");
+
+error_reporting(E_ALL);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/logs/gmailer_error.log');
+ini_set('memory_limit', '-1');
+set_time_limit(0);
+ignore_user_abort();
 
 $order_id = $argv[1] ?? null;
-if (!$order_id) die("No Order ID provided.");
+if (!$order_id) die("No Order ID provided.\n");
 
-// Local Paths
 $date_path = date("Y/m/d");
 $spool_path = __DIR__ . "/photos/$date_path/spool/mailer/$order_id/";
 $archive_path = __DIR__ . "/photos/$date_path/emails/$order_id/";
 $info_file = $spool_path . "info.txt";
 
-if (!is_dir($spool_path) || !file_exists($info_file)) die("Spool folder for Order $order_id missing.");
+if (!is_dir($spool_path) || !file_exists($info_file)) die("Error: Spool folder missing.\n");
 
-$meta = json_decode(file_get_contents($info_file), true);
-$customer_email = $meta['email'] ?? null;
+// Parse info.txt
+$info_raw = file_get_contents($info_file);
+$meta = json_decode($info_raw, true);
 
-function get_access_token() {
-    $token = trim(shell_exec('gcloud auth application-default print-access-token 2>NUL'));
-    return $token ?: null;
+if (!$meta) {
+    $parts = explode('|', $info_raw);
+    $meta = [
+        'email' => trim($parts[0]),
+        'order_id' => $order_id,
+        'timestamp' => time(),
+        'location' => 'Unknown'
+    ];
 }
 
-/**
- * Helper for Google API Calls
- */
-function google_api_call($url, $method, $token, $payload = null, $content_type = "application/json") {
+$customer_email = $meta['email'] ?? null;
+if (!$customer_email) die("Error: No customer email found.\n");
+
+// --- LOGGING ---
+function acp_log_event($orderID, $event) {
+    $log_file = __DIR__ . '/logs/cash_orders_event.log';
+    if (!is_dir(dirname($log_file))) @mkdir(dirname($log_file), 0777, true);
+    $timestamp = date("Y-m-d H:i:s");
+    file_put_contents($log_file, "{$timestamp} | Order {$orderID} | {$event}\n", FILE_APPEND | LOCK_EX);
+}
+
+// --- TOKEN MGMT ---
+function get_valid_token($credPath, $tokenPath) {
+    if (!file_exists($tokenPath)) return null;
+    $token = json_decode(file_get_contents($tokenPath), true);
+    if (($token['created'] + ($token['expires_in'] ?? 3600) - 60) < time()) {
+        $creds = json_decode(file_get_contents($credPath), true)['installed'];
+        $ch = curl_init('https://oauth2.googleapis.com/token');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+            'client_id' => $creds['client_id'],
+            'client_secret' => $creds['client_secret'],
+            'refresh_token' => $token['refresh_token'],
+            'grant_type' => 'refresh_token'
+        ]));
+        $res = json_decode(curl_exec($ch), true);
+        if (isset($res['access_token'])) {
+            $token['access_token'] = $res['access_token'];
+            $token['created'] = time();
+            file_put_contents($tokenPath, json_encode($token, JSON_PRETTY_PRINT));
+        }
+    }
+    return $token['access_token'];
+}
+
+function google_api_call($url, $method, $token, $payload = null) {
     $ch = curl_init($url);
-    $headers = [
-        "Authorization: Bearer $token",
-        "Content-Type: $content_type"
-    ];
-    
+    $headers = ["Authorization: Bearer $token", "Content-Type: application/json"];
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
-    
-    if ($payload) {
-        curl_setopt($ch, CURLOPT_POSTFIELDS, is_array($payload) ? json_encode($payload) : $payload);
-    }
-    
+    if ($payload) curl_setopt($ch, CURLOPT_POSTFIELDS, is_array($payload) ? json_encode($payload) : $payload);
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     $resp = curl_exec($ch);
     $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
-    
-    return ['code' => $code, 'body' => json_decode($resp, true), 'raw' => $resp];
+    return ['code' => $code, 'body' => json_decode($resp, true)];
 }
 
-/**
- * Manages the Drive hierarchy and binary uploads
- */
-function process_drive_upload($order_id, $folder_path, $daily_name, $token) {
-    // 1. Find or Create Daily Root Folder
-    $q = urlencode("name='$daily_name' and mimeType='application/vnd.google-apps.folder' and trashed=false");
-    $search = google_api_call("https://www.googleapis.com/drive/v3/files?q=$q", "GET", $token);
-    $daily_id = $search['body']['files'][0]['id'] ?? null;
+// --- WATERMARKING & THUMBNAIL GRID ---
+function process_images($folder, $logoPath) {
+    $files = glob($folder . "*.jpg");
+    // Filter out previous preview if it exists
+    $files = array_filter($files, function($f) { return basename($f) !== 'preview_grid.jpg'; });
+    if (empty($files)) return null;
 
+    // 1. Apply Watermarks (Branding Overlay)
+    if (file_exists($logoPath)) {
+        $logo_to_use = (!empty(getenv('LOCATION_LOGO'))) ? getenv('LOCATION_LOGO') : $logoPath;
+        $stamp = @imagecreatefrompng($logo_to_use);
+        if ($stamp) {
+            imagealphablending($stamp, true);
+            imagesavealpha($stamp, true);
+            $sw = imagesx($stamp); $sh = imagesy($stamp);
+
+            foreach ($files as $image) {
+                $photo = @imagecreatefromjpeg($image);
+                if (!$photo) continue;
+                $pw = imagesx($photo); $ph = imagesy($photo);
+                
+                // Scale logo to ~18% of photo width
+                $target_w = max(120, (int)round($pw * 0.18));
+                $scale = $target_w / $sw;
+                $target_h = (int)round($sh * $scale);
+                
+                $res_stamp = imagecreatetruecolor($target_w, $target_h);
+                imagealphablending($res_stamp, false); 
+                imagesavealpha($res_stamp, true);
+                imagecopyresampled($res_stamp, $stamp, 0, 0, 0, 0, $target_w, $target_h, $sw, $sh);
+                
+                // Place bottom-right
+                imagecopy($photo, $res_stamp, $pw - $target_w - 40, $ph - $target_h - 40, 0, 0, $target_w, $target_h);
+                imagejpeg($photo, $image, 90);
+                
+            }
+
+        }
+    }
+
+    // 2. Generate 600px Thumbnail Grid (3 across, black background)
+    $cols = 3;
+    $thumb_w = 195; 
+    $margin = 5;
+    $rows = ceil(count($files) / $cols);
+    $grid_h = $rows * ($thumb_w + $margin) + $margin;
+    
+    $grid = imagecreatetruecolor(600, $grid_h);
+    $black = imagecolorallocate($grid, 0, 0, 0); 
+    imagefill($grid, 0, 0, $black);
+
+    $index = 0;
+    foreach ($files as $image) {
+        $src = @imagecreatefromjpeg($image);
+        if (!$src) continue;
+        
+        $r = floor($index / $cols);
+        $c = $index % $cols;
+        $dx = $margin + ($c * ($thumb_w + $margin));
+        $dy = $margin + ($r * ($thumb_w + $margin));
+        
+        $src_w = imagesx($src); $src_h = imagesy($src);
+        $size = min($src_w, $src_h);
+        $offX = ($src_w - $size) / 2;
+        $offY = ($src_h - $size) / 2;
+        
+        imagecopyresampled($grid, $src, $dx, $dy, $offX, $offY, $thumb_w, $thumb_w, $size, $size); 
+        imagedestroy($src);
+        $index++;
+    }
+    
+    $preview_path = $folder . "preview_grid.jpg";
+    imagejpeg($grid, $preview_path, 85);
+    imagedestroy($grid);
+    return $preview_path;
+}
+
+// --- DRIVE LOGIC ---
+function process_drive($order_id, $folder_path, $token) {
+    $daily_name = 'ACPS_Photos_' . date("Y-m-d");
+    $search = google_api_call("https://www.googleapis.com/drive/v3/files?q=" . urlencode("name='$daily_name' and mimeType='application/vnd.google-apps.folder' and trashed=false"), "GET", $token);
+    $daily_id = $search['body']['files'][0]['id'] ?? null;
     if (!$daily_id) {
-        $create = google_api_call("https://www.googleapis.com/drive/v3/files", "POST", $token, [
-            'name' => $daily_name, 
-            'mimeType' => 'application/vnd.google-apps.folder'
-        ]);
+        $create = google_api_call("https://www.googleapis.com/drive/v3/files", "POST", $token, ['name' => $daily_name, 'mimeType' => 'application/vnd.google-apps.folder']);
         $daily_id = $create['body']['id'];
     }
+    $create_order = google_api_call("https://www.googleapis.com/drive/v3/files", "POST", $token, ['name' => "Order_$order_id", 'mimeType' => 'application/vnd.google-apps.folder', 'parents' => [$daily_id]]);
+    $order_fid = $create_order['body']['id'];
 
-    // 2. Create Order-Specific Subfolder
-    $order_folder_name = "Order_$order_id";
-    $create_order = google_api_call("https://www.googleapis.com/drive/v3/files", "POST", $token, [
-        'name' => $order_folder_name,
-        'mimeType' => 'application/vnd.google-apps.folder',
-        'parents' => [$daily_id]
-    ]);
-    $order_folder_id = $create_order['body']['id'];
-
-    // 3. Binary Upload for each JPG
     foreach (glob($folder_path . "*.jpg") as $file) {
-        $name = basename($file);
+        if (basename($file) == 'preview_grid.jpg') continue; 
         $file_content = file_get_contents($file);
-        
-        // Step A: Create File Metadata in the folder
-        $meta_res = google_api_call("https://www.googleapis.com/drive/v3/files", "POST", $token, [
-            'name' => $name,
-            'parents' => [$order_folder_id]
-        ]);
-        $file_id = $meta_res['body']['id'];
-
-        // Step B: Upload the actual binary data
-        $upload_url = "https://www.googleapis.com/upload/drive/v3/files/$file_id?uploadType=media";
-        $ch = curl_init($upload_url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $m_res = google_api_call("https://www.googleapis.com/drive/v3/files", "POST", $token, ['name' => basename($file), 'parents' => [$order_fid]]);
+        $file_id = $m_res['body']['id'];
+        $ch = curl_init("https://www.googleapis.com/upload/drive/v3/files/$file_id?uploadType=media");
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PATCH");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $file_content);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            "Authorization: Bearer $token",
-            "Content-Type: image/jpeg"
-        ]);
-        curl_exec($ch);
-        curl_close($ch);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: Bearer $token", "Content-Type: image/jpeg"]);
+        curl_exec($ch); curl_close($ch);
     }
-
-    // 4. Set Order Folder permissions to "Anyone with link"
-    google_api_call("https://www.googleapis.com/drive/v3/files/$order_folder_id/permissions", "POST", $token, [
-        'role' => 'reader',
-        'type' => 'anyone'
-    ]);
-
-    return "https://drive.google.com/drive/folders/$order_folder_id";
+    google_api_call("https://www.googleapis.com/drive/v3/files/$order_fid/permissions", "POST", $token, ['role' => 'reader', 'type' => 'anyone']);
+    return "https://drive.google.com/drive/folders/$order_fid";
 }
 
-function send_formatted_email($to, $order_id, $folder_link, $token) {
-    $subject = "Your Alley Cat Photos - Order #$order_id";
-    $body = "
-        <div style='font-family: Arial, sans-serif; padding: 20px; color: #333;'>
-            <h2 style='color: #d9534f;'>Thank You!</h2>
-            <p>Your photos from order <strong>#$order_id</strong> are ready.</p>
-            <p>We've created a private gallery for you on Google Drive:</p>
-            <div style='margin: 30px 0;'>
-                <a href='$folder_link' style='background: #d9534f; color: white; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;'>VIEW MY GALLERY</a>
-            </div>
-            <p style='font-size: 12px; color: #777;'>Links are valid for 30 days. Please download your photos to keep them permanently.</p>
-        </div>
-    ";
-    
-    $raw = "MIME-Version: 1.0\r\n" .
-           "To: $to\r\n" .
-           "From: Alley Cat Photo <" . SENDER_EMAIL . ">\r\n" .
-           "Subject: $subject\r\n" .
-           "Content-Type: text/html; charset=utf-8\r\n\r\n" .
-           $body;
+// --- MAIN EXECUTION ---
+$token = get_valid_token($credentialsPath, $tokenPath);
+if (!$token) die("Error: Authentication missing. Run auth_setup.php\n");
 
-    $encodedMail = strtr(base64_encode($raw), array('+' => '-', '/' => '_'));
-    $res = google_api_call("https://gmail.googleapis.com/gmail/v1/users/me/messages/send", "POST", $token, ['raw' => $encodedMail]);
-    
-    return ($res['code'] == 200);
+echo "Watermarking images and generating black background preview for Order $order_id...\n";
+$brandingLogoPath = __DIR__ . '/public/assets/images/alley_logo.png';
+$preview_img = process_images($spool_path, $brandingLogoPath);
+
+echo "Uploading to Google Drive...\n";
+$folder_link = process_drive($order_id, $spool_path, $token);
+
+// --- EMAIL CONSTRUCTION ---
+$logo_cid = "logo_img";
+$preview_cid = "preview_img";
+
+$copyrightText = "Dear Sir/Madam:\n\nThank you for your purchase from AlleycatPhoto. Enclosed with this correspondence are the digital image files you have acquired, along with this copyright release for your records. This letter confirms that you have purchased and paid in full for the rights to the accompanying photographs. AlleycatPhoto hereby grants you express written permission to use, reproduce, print, and distribute these digital files without limitation for personal or professional purposes. While AlleycatPhoto retains the original copyright ownership of the images, you are authorized to use them freely in any lawful manner you choose, without further obligation or restriction. We sincerely appreciate your business and trust in our work. Please retain this release for your records as proof of usage rights.\n\nSincerely,\nJosh Silva\nPresident\nAlleycatPhoto";
+
+$html = "
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <link href='https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap' rel='stylesheet'>
+    <style>
+        body { font-family: 'Poppins', Arial, sans-serif !important; }
+    </style>
+</head>
+<body style='background-color: #0a0a0a; color: #e0e0e0; font-family: \"Poppins\", sans-serif; margin: 0; padding: 0;'>
+    <table width='100%' cellpadding='0' cellspacing='0' style='background-color: #0a0a0a;'>
+        <tr>
+            <td align='center' style='padding: 20px;'>
+                <table width='600' cellpadding='0' cellspacing='0' style='background-color: #141414; border: 1px solid #e70017; border-radius: 12px; overflow: hidden; text-align: left;'>
+                    <tr>
+                        <td style='padding: 30px; text-align: center; border-bottom: 1px solid #333;'>
+                            <img src='cid:$logo_cid' alt='Alley Cat Photo' style='display: block; margin: 0 auto; max-width: 100%; width: 400px;'>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style='padding: 40px;'>
+                            <h1 style='margin: 0; font-size: 32px; color: #fff; font-weight: 800;'>Order #$order_id</h1>
+                            <p style='margin: 5px 0 25px 0; color: #888; font-size: 16px;'>" . date('F j, Y') . "</p>
+                            
+                            <p style='font-size: 18px; line-height: 1.6; color: #bbb; margin-bottom: 25px;'>
+                                Thank you for choosing <strong>Alley Cat Photo</strong>! Your digital photos are ready for download. We have processed your images and included a copyright release below.
+                            </p>
+
+                            <div style='text-align: center; margin-bottom: 30px;'>
+                                <img src='cid:$preview_cid' style='width: 100%; border-radius: 8px; border: 1px solid #333;'>
+                            </div>
+
+                            <div style='text-align: center; margin: 30px 0; padding: 30px; border: 2px solid #e70017; border-radius: 8px; background-color: #000000;'>
+                                <p style='color: #e4e4e4; font-size: 20px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;'>Download Your Photos</p>
+                                <a href='$folder_link' style='background-color: #e70017; color: #ffffff; text-decoration: none; font-size: 24px; font-weight: 800; padding: 15px 30px; border-radius: 5px; display: inline-block; text-transform: uppercase;'>VIEW MY GALLERY</a>
+                                <p style='color: #ffab00; font-size: 18px; text-transform: uppercase; margin-top: 20px; font-weight: bold;'>⚠️ Be sure to copy these! This link will only be available for 7 days.</p>
+                            </div>
+
+                            <div style='background-color: #1a1a1a; padding: 25px; border-radius: 8px; border-left: 4px solid #e70017;'>
+                                <span style='color: #fff; font-weight: bold; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 15px;'>Legal Copyright Release</span>
+                                <div style='color: #999; font-size: 14px; line-height: 1.7;'>
+                                    " . nl2br($copyrightText) . "
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style='padding: 30px; background-color: #0f0f0f; border-top: 1px solid #333; text-align: center;'>
+                            <p style='margin: 0; color: #555; font-size: 14px;'>&copy; " . date('Y') . " Alley Cat Photo Station | <a href='https://alleycatphoto.net' style='color: #e70017; text-decoration: none; font-weight: 600;'>alleycatphoto.net</a></p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>";
+
+// Build Multipart MIME
+$boundary = "acps_rel_" . md5(time());
+$headers = "MIME-Version: 1.0\r\n";
+$headers .= "Content-Type: multipart/related; boundary=\"$boundary\"\r\n";
+
+$body_mime = "--$boundary\r\n";
+$body_mime .= "Content-Type: text/html; charset=utf-8\r\n\r\n";
+$body_mime .= $html . "\r\n";
+
+// Attach Header Logo CID (Use alley_logo_wide.png or alley_logo.png as you prefer)
+$headerLogoPath = __DIR__ . '/public/assets/images/alley_logo_sm.png';
+if (file_exists($headerLogoPath)) {
+    $body_mime .= "--$boundary\r\n";
+    $body_mime .= "Content-Type: image/png; name=\"logo.png\"\r\n";
+    $body_mime .= "Content-Transfer-Encoding: base64\r\n";
+    $body_mime .= "Content-ID: <$logo_cid>\r\n\r\n";
+    $body_mime .= chunk_split(base64_encode(file_get_contents($headerLogoPath))) . "\r\n";
 }
 
-// Execution flow
-$token = get_access_token();
-if (!$token) {
-    die("Error: GCloud not authorized. Run the login command from SPOOLER.md first.");
+// Attach Preview Grid CID
+if (file_exists($preview_img)) {
+    $body_mime .= "--$boundary\r\n";
+    $body_mime .= "Content-Type: image/jpeg; name=\"preview.jpg\"\r\n";
+    $body_mime .= "Content-Transfer-Encoding: base64\r\n";
+    $body_mime .= "Content-ID: <$preview_cid>\r\n\r\n";
+    $body_mime .= chunk_split(base64_encode(file_get_contents($preview_img))) . "\r\n";
 }
+$body_mime .= "--$boundary--";
 
-echo "Processing Order $order_id...\n";
-$folder_link = process_drive_upload($order_id, $spool_path, $daily_folder_name, $token);
-echo "Drive folder created: $folder_link\n";
+$full_raw = "To: $customer_email\r\nSubject: Your Photos from Alley Cat #$order_id\r\n" . $headers . "\r\n" . $body_mime;
+$encoded_msg = strtr(base64_encode($full_raw), ['+' => '-', '/' => '_']);
 
-$success = send_formatted_email($customer_email, $order_id, $folder_link, $token);
+$res = google_api_call("https://gmail.googleapis.com/gmail/v1/users/me/messages/send", "POST", $token, ['raw' => $encoded_msg]);
 
-if ($success) {
+if ($res['code'] == 200) {
     if (!is_dir(dirname($archive_path))) mkdir(dirname($archive_path), 0777, true);
     rename($spool_path, $archive_path);
-    echo "SUCCESS: Order $order_id processed and email sent to $customer_email.";
+    acp_log_event($order_id, "GMAIL_SUCCESS_WITH_GRID");
+    echo "SUCCESS: Order $order_id sent with branded watermarks and black-background preview.\n";
 } else {
-    echo "ERROR: Email delivery failed.";
+    file_put_contents($spool_path . "error.log", json_encode($res['body']));
+    echo "ERROR: Check error.log in the order folder.\n";
 }
+

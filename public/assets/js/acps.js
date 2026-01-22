@@ -12,7 +12,7 @@ function goToView(id) {
     $('.app-view').removeClass('active');
     $('#' + id).addClass('active');
     
-    // Always hide keyboard on view change (it will reappear if user taps an input)
+    // Always hide keyboard on view change
     if(window.ModernKeyboard && ModernKeyboard.hide) {
         ModernKeyboard.hide();
     } else if(window.jsKeyboard && jsKeyboard.hide) {
@@ -35,19 +35,17 @@ function showErrorModal(msg) {
 function handleEmailSubmit() {
     const email = $('#input-email').val().trim();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
+
     if (!email || !emailRegex.test(email)) {
-        showErrorModal('Please enter a valid<br>email address.');
+        showErrorModal('Please enter a valid<br>email address.');    
         return;
     }
-    
+
     state.email = email;
-    
+
     if (state.skipDelivery) {
-        // Email only order -> Payment
         initPayment();
     } else {
-        // Needs delivery selection
         goToView('view-delivery');
     }
 }
@@ -82,12 +80,12 @@ function validateAddress() {
     const zip  = $('#input-zip').val();
 
     if(!name || !addr || !city || !st || !zip) {
-        showErrorModal("All address fields<br>are required.");
+        showErrorModal("All address fields<br>are required.");       
         return;
     }
 
     showLoader('Validating Address...');
-    
+
     $.ajax({
         type: 'POST',
         url: 'validate_address.php',
@@ -96,20 +94,18 @@ function validateAddress() {
         success: function(resp) {
             hideLoader();
             if (resp.status === 'success') {
-                // Update state with validated data
                 state.address.name = name;
-                state.address.street = resp.validatedAddress.street;
-                state.address.city = resp.validatedAddress.city;
-                state.address.state = resp.validatedAddress.state;
-                
+                state.address.street = resp.validatedAddress.street; 
+                state.address.city = resp.validatedAddress.city;     
+                state.address.state = resp.validatedAddress.state;   
+
                 let fullZip = resp.validatedAddress.zipCode;
                 if(resp.validatedAddress.zipPlus4) fullZip += '-' + resp.validatedAddress.zipPlus4;
                 state.address.zip = fullZip;
-                
-                // Proceed
+
                 initPayment();
             } else {
-                showErrorModal(resp.message || "Address invalid.");
+                showErrorModal(resp.message || "Address invalid.");  
             }
         },
         error: function() {
@@ -122,28 +118,21 @@ function validateAddress() {
 // --- Step 4: Payment ---
 function initPayment() {
     goToView('view-payment');
-    
-    // 1. Generate QR Code dynamically with user email
     fetchQR();
-    
-    // 2. Initialize Card Reader
     initCardReader();
-    
-    // 3. Start Polling logic is handled inside fetchQR success now
 }
 
 function fetchQR() {
     const email = state.email;
     const total = window.acps_base_total;
-    
+
     if (!email || total <= 0) {
         console.error("Cannot generate QR: Missing email or total.");
         return;
     }
-    
-    // Show loading state
+
     $('#qr-placeholder').html('<p style="color:black; font-weight:bold;">Generating QR...</p>');
-    
+
     $.ajax({
         type: 'POST',
         url: 'cart_generate_qr.php',
@@ -151,15 +140,9 @@ function fetchQR() {
         dataType: 'json',
         success: function(resp) {
             if (resp.status === 'success') {
-                // Update QR Image
                 $('#qr-placeholder').html('<img src="' + resp.qr_url + '" alt="QR Code" />');
-                
-                // Update Order ID for polling and submission
                 $('#square_order_id').val(resp.order_id);
-                
-                // Start polling with the NEW order ID
                 startQrPolling(resp.order_id);
-                
             } else {
                 $('#qr-placeholder').html('<p style="color:red;">QR Error</p>');
                 showErrorModal(resp.message || "Could not generate QR code.");
@@ -174,7 +157,7 @@ function fetchQR() {
 
 // Card Reader Logic
 function initCardReader() {
-    if (window.CardReader && !window._cardReaderInitialized) {
+    if (window.CardReader && !window._cardReaderInitialized) {       
         window._cardReaderInitialized = true;
         var reader = new CardReader();
         reader.observe(window);
@@ -184,10 +167,11 @@ function initCardReader() {
     }
 }
 
+// --- NEW PROCESSORS USING CHECKOUT.PHP ---
+
 function processSwipe(swipeData) {
     showLoader('Processing Card...');
-    
-    // Parse Swipe
+
     try {
         const parts = swipeData.split("^");
         const nameParts = parts[1]?.split("/") || ["",""];
@@ -195,50 +179,86 @@ function processSwipe(swipeData) {
         const lastPart = parts[2] || "";
         const expYear = lastPart.substring(0,2);
         const expMonth = lastPart.substring(2,4);
+
+        const formData = new FormData();
+        formData.append('payment_method', 'credit');
+        formData.append('swipe_data', swipeData);
+        formData.append('card_num', cardNum);
+        formData.append('exp_month', expMonth);
+        formData.append('exp_year', expYear);
+        formData.append('email', state.email);
+        formData.append('amount', window.acps_base_total); // Tax calculated in PHP for receipt, but ePN takes total? ePN logic in checkout.php takes 'Total' which is formatted from passed amount. Passed amount should be total including tax. Wait, pay.php said "Input is Tax Inclusive" for cart_process.
+        // window.acps_base_total is from $_GET['amt'].
+        // Checkout.php takes 'amount' and formats it.
         
-        // Fill Form
-        $('#txtSwipeData').val(swipeData);
-        $('#txtFname').val(nameParts[1]);
-        $('#txtLname').val(nameParts[0]);
-        $('#txtCardNum').val(cardNum);
-        $('#txtExpMonth').val(expMonth);
-        $('#txtExpYear').val(expYear);
-        
-        // Fill Other Data
-        fillFinalForm();
-        
-        // Submit
-        document.getElementById('frmFinal').submit();
-        
+        // Add Common Fields
+        appendCommonFields(formData);
+
+        fetch('config/api/checkout.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.status === 'success') {
+                window.location.href = `thankyou.php?order=${data.order_id}&status=paid&onsite=${state.onsite}`;
+            } else {
+                hideLoader();
+                showErrorModal(data.message || "Card Declined");
+            }
+        })
+        .catch(err => {
+            hideLoader();
+            console.error(err);
+            showErrorModal("Payment Error. Try Again.");
+        });
+
     } catch(e) {
         hideLoader();
-        showErrorModal("Card Read Error.<br>Please Try Again.");
+        showErrorModal("Card Read Error.<br>Please Try Again.");     
     }
 }
 
 function processCash() {
-    // Redirect to cash handler
-    // Ensure taxFreeAmt is available (passed from PHP via global or data attr)
-    // We will read it from a hidden input or global var set in pay.php
-    // Use amount without tax for Cash orders (Base Price)
-    const baseAmt = window.acps_amount_without_tax; 
+    showLoader('Creating Order...');
     
-    const q = `?txtAmt=${baseAmt}&isOnsite=${state.onsite}&txtEmail=${encodeURIComponent(state.email)}` +
-              `&txtName=${encodeURIComponent(state.address.name)}&txtAddr=${encodeURIComponent(state.address.street)}` +
-              `&txtCity=${encodeURIComponent(state.address.city)}&txtState=${encodeURIComponent(state.address.state)}` +
-              `&txtZip=${encodeURIComponent(state.address.zip)}`;
+    // Cash Amount (Base)
+    const baseAmt = window.acps_amount_without_tax; // Passed from pay.php
     
-    window.location.href = 'cart_process_cash.php' + q;
+    const formData = new FormData();
+    formData.append('payment_method', 'cash');
+    formData.append('amount', baseAmt); // Cash pending uses base amount
+    formData.append('email', state.email);
+    
+    appendCommonFields(formData);
+
+    fetch('config/api/checkout.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.status === 'success') {
+            window.location.href = `thankyou.php?order=${data.order_id}&status=pending&onsite=${state.onsite}`;
+        } else {
+            hideLoader();
+            showErrorModal(data.message || "Order Error");
+        }
+    })
+    .catch(err => {
+        hideLoader();
+        console.error(err);
+        showErrorModal("Connection Error.");
+    });
 }
 
-function fillFinalForm() {
-    $('#final-email').val(state.email);
-    $('#final-onsite').val(state.onsite);
-    $('#final-name').val(state.address.name);
-    $('#final-addr').val(state.address.street);
-    $('#final-city').val(state.address.city);
-    $('#final-state').val(state.address.state);
-    $('#final-zip').val(state.address.zip);
+function appendCommonFields(formData) {
+    formData.append('delivery_method', state.onsite === 'yes' ? 'pickup' : 'mail');
+    formData.append('name', state.address.name);
+    formData.append('address', state.address.street);
+    formData.append('city', state.address.city);
+    formData.append('state', state.address.state);
+    formData.append('zip', state.address.zip);
 }
 
 function debugSwipe() {
@@ -268,26 +288,27 @@ function startQrPolling(orderId) {
           if (data && data.result === true) {
             isProcessing = true;
             clearInterval(pollingInterval);
-            console.log("Payment confirmed for order " + orderId);
-
+            console.log("Payment confirmed for order " + orderId);   
             showLoader("Processing QR Payment...");
 
-            const form = document.getElementById('frmFinal');
+            // Process via Checkout API
+            const formData = new FormData();
+            formData.append('payment_method', 'qr');
+            formData.append('email', state.email);
+            formData.append('amount', window.acps_base_total); // QR paid full amount? 
+            // Logic in checkout.php for QR doesn't re-calc tax, it just prints receipt.
+            // Assuming base_total is correct for receipt.
             
-            // Set QR flags
-            $('#is_qr_payment').val('1');
-            $('#square_order_id').val(orderId);
-            
-            // For Square/QR, we need to send the PRE-TAX amount because cart_process_cash.php adds tax.
-            // window.acps_total is the TAXED total.
-            // Calculate pre-tax: Total / 1.0675
-            if (window.acps_total > 0) {
-                const preTaxAmt = window.acps_total / 1.0675;
-                $('input[name="txtAmt"]').val(preTaxAmt.toFixed(2));
-            }
-            
-            fillFinalForm();
-            form.submit();
+            appendCommonFields(formData);
+
+            fetch('config/api/checkout.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(r => r.json())
+            .then(data => {
+                 window.location.href = `thankyou.php?order=${data.order_id}&status=paid&onsite=${state.onsite}`;
+            });
           }
         } catch (error) {
           console.error("Polling error:", error);
@@ -299,20 +320,17 @@ function startQrPolling(orderId) {
 
 // Init Logic
 $(document).ready(function() {
-    // Initialize state from PHP variables
     if (typeof window.acps_skip_delivery !== 'undefined') {
         state.skipDelivery = window.acps_skip_delivery;
     }
     if (typeof window.acps_total !== 'undefined') {
         state.total = window.acps_total;
     }
-    
-    // Initialize Virtual Keyboard
+
     if(window.jsKeyboard) {
         jsKeyboard.init("virtualKeyboard");
     }
-    
-    // Handle retry mode - pre-populate and skip to payment
+
     if (window.acps_is_retry) {
         state.email = window.acps_retry_email || '';
         state.onsite = window.acps_retry_onsite || 'yes';
@@ -321,19 +339,6 @@ $(document).ready(function() {
         state.address.city = window.acps_retry_city || '';
         state.address.state = window.acps_retry_state || '';
         state.address.zip = window.acps_retry_zip || '';
-        
-        // Pre-fill the hidden form fields
-        $('#final-email').val(state.email);
-        $('#final-onsite').val(state.onsite);
-        $('#final-name').val(state.address.name);
-        $('#final-addr').val(state.address.street);
-        $('#final-city').val(state.address.city);
-        $('#final-state').val(state.address.state);
-        $('#final-zip').val(state.address.zip);
-        
-        // Skip directly to payment screen
-        setTimeout(function() {
-            initPayment();
-        }, 100);
+        setTimeout(function() { initPayment(); }, 100);
     }
 });

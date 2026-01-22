@@ -98,7 +98,7 @@ body.gallery-page th {
 function loadLarge(pid, zoom, zoomType) {
 	var large_image = document.getElementById('large_image');
 	var cart_image = document.getElementById('cart_image');
-	var cartURL = 'cart_add.php?p=' + pid + '&<?php echo $queryString; ?>';
+	var cartURL = 'cart_add.php?p=' + pid + '&<?php echo is_array($queryString) ? http_build_query($queryString) : $queryString; ?>';
 	
 	// Display large image with click handler to open cart modal
 	large_image.innerHTML = '<div class="gallery-image-wrapper">' +
@@ -262,3 +262,4 @@ window.onload = function(){
 
 </body>
 </html>
+

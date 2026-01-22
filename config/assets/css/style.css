@@ -393,3 +393,250 @@ input:checked + .slider:before { transform: translateX(14px); }
     animation: spin 0.8s linear infinite;
     display: inline-block;
 }
+/* Spooler Alerts */
+@keyframes blink-red {
+    0% { color: var(--text-muted); border-bottom-color: transparent; }
+    50% { color: var(--danger-color); border-bottom-color: var(--danger-color); text-shadow: 0 0 5px var(--danger-color); }
+    100% { color: var(--text-muted); border-bottom-color: transparent; }
+}
+
+.tab-item.alert-warning {
+    color: var(--warning-color) !important;
+    border-bottom-color: var(--warning-color) !important;
+}
+
+.tab-item.alert-critical {
+    color: var(--danger-color) !important;
+    border-bottom-color: var(--danger-color) !important;
+    animation: blink-red 1s infinite;
+}
+
+
+.badge-fire { background: #e65100; color: #fff; border: 1px solid #ff9800; }
+.badge-main { background: #006064; color: #fff; border: 1px solid #00acc1; }
+.row-void { opacity: 0.5; text-decoration: line-through; }
+
+/* Responsive Fixes */
+@media (max-width: 900px) {
+    .orders-table thead { display: none; }
+    .orders-table, .orders-table tbody, .orders-table tr, .orders-table td {
+        display: block;
+        width: 100%;
+    }
+    .orders-table tr {
+        margin-bottom: 8px;
+        background: #1f1f1f;
+        border: 1px solid #333;
+        border-radius: 6px;
+        padding: 8px;
+        position: relative;
+    }
+    
+    .orders-table td {
+        padding: 2px 5px;
+        text-align: left !important;
+        border: none;
+    }
+
+    .cell-station {
+        position: absolute;
+        left: 8px;
+        top: 10px;
+        width: 30px;
+    }
+    
+    .cell-id, .cell-time, .cell-customer, .cell-total {
+        display: inline-block;
+        vertical-align: middle;
+    }
+    
+    .cell-id { font-size: 1rem; margin-left: 30px; width: 70px; }
+    .cell-time { font-size: 0.8rem; width: 70px; color: #aaa; }
+    .cell-customer { font-size: 0.9rem; width: calc(100% - 240px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .cell-total { float: right; font-size: 1rem; color: #28a745; font-weight: bold; }
+
+    .cell-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 5px;
+        margin-top: 8px;
+        border-top: 1px solid #333;
+        padding-top: 8px !important;
+    }
+    
+    .btn { padding: 6px 12px; font-size: 0.8rem; flex: 1; }
+    .view-receipt-btn { flex: 0; min-width: 60px; }
+}
+
+/* SEXY BAR LAYOUT */
+.order-bar {
+    display: flex;
+    align-items: center;
+    background: #1a1a1a;
+    margin-bottom: 10px;
+    padding: 8px 15px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    gap: 15px;
+    border: 1px solid #333; /* Fallback border */
+    /* border-left is inline set by JS */
+}
+
+.bar-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.section-id { width: 100px; }
+.section-time { width: 100px; }
+.section-customer { flex: 1; min-width: 200px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.section-total { width: 80px; text-align: right; font-weight: bold; color: #28a745; }
+.section-actions { margin-left: auto; display: flex; gap: 8px; }
+
+.station-icon { font-size: 1.2rem; }
+.text-fire { color: #ff5722; }
+.text-main { color: #00bcd4; }
+
+.status-pill {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    background: #333;
+    color: #aaa;
+}
+.status-pill.paid { background: #28a745; color: white; }
+.status-pill.void { background: #dc3545; color: white; }
+.status-pill.cash-pending { background: #ffc107; color: black; }
+
+/* --- GEMICUNT REFINEMENTS --- */
+
+/* Health Bar Polish */
+.health-bar {
+    background: #0f0f0f;
+    padding: 6px 15px;
+    height: 36px;
+}
+.health-item {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #555;
+    letter-spacing: 0.5px;
+}
+.health-item span span { /* The email address */
+    text-transform: none;
+    color: #888;
+    font-weight: 600;
+    margin-left: 4px;
+}
+.health-dot {
+    width: 6px;
+    height: 6px;
+    margin-right: 6px;
+}
+
+/* Order Bar Polish */
+.order-bar {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping */
+    align-items: center;
+    padding: 10px 15px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    /* Border-left handled inline */
+    gap: 10px;
+}
+
+.bar-section {
+    display: flex;
+    align-items: center;
+}
+
+/* Typography Uniformity */
+.order-id, .time-text, .elapsed-time, .customer-email, .total-text, .btn {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.order-id { font-weight: 700; font-size: 0.95rem; color: #fff; }
+.time-text { font-size: 0.9rem; color: #ccc; }
+.elapsed-time { font-size: 0.8rem; margin-left: 6px; font-weight: normal; font-style: normal; }
+
+.customer-email {
+    font-size: 0.9rem;
+    color: #4da3ff;
+    text-decoration: none;
+    cursor: pointer;
+    border-bottom: none;
+}
+.customer-email:hover { color: #fff; }
+
+.total-text { font-weight: 700; font-size: 0.95rem; color: #28a745; }
+
+/* Desktop Layout (Default) */
+.section-id { width: 90px; }
+.section-time { width: 140px; }
+.section-customer { flex: 1; min-width: 150px; }
+.section-total { width: 90px; text-align: right; }
+.section-actions { width: 320px; justify-content: flex-end; gap: 6px; }
+
+.btn {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    height: 30px;
+    letter-spacing: 0.3px;
+}
+
+/* Responsive Breakpoint (< 1000px) */
+@media (max-width: 1000px) {
+    .order-bar {
+        padding: 10px;
+        gap: 5px;
+        justify-content: space-between;
+    }
+
+    /* Top Row: Data */
+    .section-id, .section-time, .section-total { width: auto; }
+    .section-customer { width: 100%; order: 10; margin-top: 2px; } /* Email moves to own line if needed, or stays inline */
+    
+    /* Better Compact Layout for Sidebar usage */
+    .section-customer { 
+        flex: 1 1 100%; /* Force new line? User said "cleanly drop underneath" referring to buttons */
+        /* Wait, user said "buttons start going off... drop underneath" */
+    }
+
+    /* Actually, user said: "if it's less than 1000... buttons need to cleanly drop underneath" */
+    
+    .section-id { order: 1; }
+    .section-time { order: 2; margin-left: 10px; }
+    .section-customer { order: 3; flex: 1; margin-left: 10px; text-align: left; }
+    .section-total { order: 4; margin-left: auto; }
+
+    .section-actions {
+        order: 5;
+        width: 100%; /* Full width row */
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid #333;
+        justify-content: flex-start; /* Or space-between? */
+    }
+    
+    .btn { flex: 1; text-align: center; }
+    .view-receipt-btn { flex: 0 0 auto; width: auto; }
+}
+
+/* Station Icons */
+.station-icon { font-size: 1rem; margin-right: 6px; }
+
+/* UNIFORM TYPOGRAPHY */
+body, .tab-item, .order-bar, .btn, .health-item, .status-pill {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+    text-transform: uppercase !important;
+}
+.tab-count { font-weight: normal; opacity: 0.7; }
+.order-name, .customer-email { text-transform: lowercase !important; } /* Keep emails readable */
+
