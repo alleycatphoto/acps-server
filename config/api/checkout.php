@@ -33,6 +33,55 @@ function acp_get_autoprint_status() {
     return ($f && file_exists($f) && trim(file_get_contents($f)) === '0') ? false : true;
 }
 
+// Helper: Watermark Image
+function acp_watermark_image($source, $dest) {
+    $logoPath = __DIR__ . '/../../public/assets/images/alley_logo.png';
+    $logo_to_use = null;
+    
+    if (!empty(getenv('LOCATION_LOGO'))) {
+        $env_logo = getenv('LOCATION_LOGO');
+        if (is_string($env_logo) && file_exists($env_logo)) {
+            $logo_to_use = $env_logo;
+        }
+    }
+    
+    if (!$logo_to_use && file_exists($logoPath)) {
+        $logo_to_use = $logoPath;
+    }
+    
+    if (!$logo_to_use) return copy($source, $dest);
+    
+    $stamp = @imagecreatefrompng($logo_to_use);
+    $photo = @imagecreatefromjpeg($source);
+    
+    if (!$stamp || !$photo) return copy($source, $dest);
+    
+    imagealphablending($stamp, true);
+    imagesavealpha($stamp, true);
+    
+    $pw = imagesx($photo); $ph = imagesy($photo);
+    $sw = imagesx($stamp); $sh = imagesy($stamp);
+    
+    $target_w = max(120, (int)round($pw * 0.18));
+    $scale = $target_w / $sw;
+    $target_h = (int)round($sh * $scale);
+    
+    $res_stamp = imagecreatetruecolor($target_w, $target_h);
+    imagealphablending($res_stamp, false);
+    imagesavealpha($res_stamp, true);
+    imagecopyresampled($res_stamp, $stamp, 0, 0, 0, 0, $target_w, $target_h, $sw, $sh);
+    
+    imagecopy($photo, $res_stamp, $pw - $target_w - 40, $ph - $target_h - 40, 0, 0, $target_w, $target_h);
+    
+    $success = imagejpeg($photo, $dest, 95);
+    
+    imagedestroy($photo);
+    imagedestroy($stamp);
+    imagedestroy($res_stamp);
+    
+    return $success;
+}
+
 // Helper: Get Image ID
 function getImageID_Fallback($order_code) {
     $p = explode('-', $order_code);
@@ -252,9 +301,34 @@ if ($isPaid) {
         ]));
     }
 
-    // B. SPOOL PRINTS - DO NOT CREATE FILES IN C:/ORDERS
-    // Printing only happens via order_action.php when staff clicks "Paid" button in dashboard
-    // This ensures single source of truth and prevents duplicate files
+    // B. SPOOL PRINTS
+    if (acp_get_autoprint_status()) {
+        $printer_spool = $dirname . $date_path . "/spool/printer/";
+        if (!is_dir($printer_spool)) @mkdir($printer_spool, 0777, true);
+
+        foreach ($items as $order_code => $quantity) {
+            [$prod_code, $photo_id] = explode('-', $order_code);
+            $prod_code = trim($prod_code);
+            
+            if ($prod_code !== 'EML' && $quantity > 0) {
+                $sourcefile = $dirname . $date_path . "/raw/$photo_id.jpg";
+                if (file_exists($sourcefile)) {
+                    $orientation = 'V';
+                    $imgInfo = @getimagesize($sourcefile);
+                    if ($imgInfo && isset($imgInfo[0], $imgInfo[1])) {
+                        $orientation = ($imgInfo[0] > $imgInfo[1]) ? 'H' : 'V';
+                    }
+
+                    for ($i = 1; $i <= $quantity; $i++) {
+                        $filename = sprintf("%s-%s-%s%s-%d.jpg", $orderID, $photo_id, $prod_code, $orientation, $i);
+                        acp_watermark_image($sourcefile, $printer_spool . $filename);
+                    }
+                }
+            }
+        }
+        // Log receipt for reference in spool
+        @file_put_contents($printer_spool . $orderID . ".txt", $message);
+    }
 
     // C. UPDATE SALES CSV (when payment is approved)
     if ($isPaid) {
