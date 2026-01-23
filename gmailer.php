@@ -279,35 +279,109 @@ function process_drive($order_id, $folder_path, $token) {
     if (substr($folder_path, -1) !== '/') $folder_path .= '/';
     
     $daily_name = 'ACPS_Photos_' . date("Y-m-d");
+    acp_log_event($order_id, "DRIVE_SEARCHING: Looking for folder '$daily_name'");
     $search = google_api_call("https://www.googleapis.com/drive/v3/files?q=" . urlencode("name='$daily_name' and mimeType='application/vnd.google-apps.folder' and trashed=false"), "GET", $token);
+    
+    if ($search['code'] !== 200) {
+        throw new Exception("Google Drive search failed (code {$search['code']}): " . json_encode($search['body']));
+    }
+    
     $daily_id = $search['body']['files'][0]['id'] ?? null;
     if (!$daily_id) {
+        acp_log_event($order_id, "DRIVE_CREATING_DAILY: Creating daily folder '$daily_name'");
         $create = google_api_call("https://www.googleapis.com/drive/v3/files", "POST", $token, ['name' => $daily_name, 'mimeType' => 'application/vnd.google-apps.folder']);
-        $daily_id = $create['body']['id'];
+        if ($create['code'] !== 200) {
+            throw new Exception("Google Drive daily folder creation failed (code {$create['code']}): " . json_encode($create['body']));
+        }
+        $daily_id = $create['body']['id'] ?? null;
+        if (!$daily_id) {
+            throw new Exception("Google Drive daily folder created but no ID returned");
+        }
+        acp_log_event($order_id, "DRIVE_DAILY_CREATED: Folder ID $daily_id");
+    } else {
+        acp_log_event($order_id, "DRIVE_DAILY_FOUND: Using existing folder ID $daily_id");
     }
+    
+    acp_log_event($order_id, "DRIVE_CREATING_ORDER_FOLDER: Creating order folder 'Order_$order_id' under parent $daily_id");
     $create_order = google_api_call("https://www.googleapis.com/drive/v3/files", "POST", $token, ['name' => "Order_$order_id", 'mimeType' => 'application/vnd.google-apps.folder', 'parents' => [$daily_id]]);
-    $order_fid = $create_order['body']['id'];
+    if ($create_order['code'] !== 200) {
+        throw new Exception("Google Drive order folder creation failed (code {$create_order['code']}): " . json_encode($create_order['body']));
+    }
+    $order_fid = $create_order['body']['id'] ?? null;
+    if (!$order_fid) {
+        throw new Exception("Google Drive order folder created but no ID returned");
+    }
+    acp_log_event($order_id, "DRIVE_ORDER_FOLDER_CREATED: Order folder ID $order_fid");
 
-    foreach (glob($folder_path . "*.jpg") as $file) {
-        if (basename($file) == 'preview_grid.jpg') continue; 
-        $file_content = file_get_contents($file);
+    $files = glob($folder_path . "*.jpg");
+    if (!$files) {
+        acp_log_event($order_id, "WARNING: No JPG files found in $folder_path");
+        $files = [];
+    } else {
+        acp_log_event($order_id, "DRIVE_UPLOADING_FILES: Found " . count($files) . " files to upload");
+    }
+    
+    foreach ($files as $file) {
+        if (basename($file) == 'preview_grid.jpg') {
+            acp_log_event($order_id, "DRIVE_SKIP_PREVIEW: Skipping preview_grid.jpg");
+            continue;
+        }
+        
+        acp_log_event($order_id, "DRIVE_FILE_UPLOAD_START: Uploading " . basename($file));
+        $file_content = @file_get_contents($file);
+        if (!$file_content) {
+            acp_log_event($order_id, "WARNING: Failed to read file $file");
+            continue;
+        }
+        
         $m_res = google_api_call("https://www.googleapis.com/drive/v3/files", "POST", $token, ['name' => basename($file), 'parents' => [$order_fid]]);
-        $file_id = $m_res['body']['id'];
+        if ($m_res['code'] !== 200) {
+            throw new Exception("Google Drive file create failed for " . basename($file) . " (code {$m_res['code']}): " . json_encode($m_res['body']));
+        }
+        
+        $file_id = $m_res['body']['id'] ?? null;
+        if (!$file_id) {
+            throw new Exception("Google Drive file created but no ID returned for " . basename($file));
+        }
+        
+        acp_log_event($order_id, "DRIVE_FILE_CREATED: File ID $file_id for " . basename($file));
+        
         $ch = curl_init("https://www.googleapis.com/upload/drive/v3/files/$file_id?uploadType=media");
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PATCH");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $file_content);
         curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: Bearer $token", "Content-Type: image/jpeg"]);
-        curl_exec($ch); curl_close($ch);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $upload_res = curl_exec($ch);
+        $upload_err = curl_error($ch);
+        curl_close($ch);
+        
+        if ($upload_err) {
+            throw new Exception("File upload curl error for " . basename($file) . ": $upload_err");
+        }
+        acp_log_event($order_id, "DRIVE_FILE_UPLOADED: " . basename($file));
     }
-    google_api_call("https://www.googleapis.com/drive/v3/files/$order_fid/permissions", "POST", $token, ['role' => 'reader', 'type' => 'anyone']);
+    
+    acp_log_event($order_id, "DRIVE_SETTING_PERMISSIONS: Making folder readable to anyone");
+    $perm_res = google_api_call("https://www.googleapis.com/drive/v3/files/$order_fid/permissions", "POST", $token, ['role' => 'reader', 'type' => 'anyone']);
+    if ($perm_res['code'] !== 200) {
+        acp_log_event($order_id, "WARNING: Permission setting failed (code {$perm_res['code']}), but continuing");
+    }
+    
+    acp_log_event($order_id, "DRIVE_COMPLETE: All files uploaded to $order_fid");
     return "https://drive.google.com/drive/folders/$order_fid";
 }
 
 // --- MAIN EXECUTION ---
+acp_log_event($order_id, "TOKEN_RETRIEVAL_STARTING");
 $token = get_valid_token($credentialsPath, $tokenPath);
 if (!$token) {
-    acp_log_event($order_id, "GMAILER_FATAL: Token authentication failed");
+    acp_log_event($order_id, "GMAILER_FATAL: Token authentication failed - get_valid_token returned null");
     die("Error: Authentication missing. Run auth_setup.php\n");
+}
+acp_log_event($order_id, "TOKEN_RETRIEVAL_SUCCESS: Token obtained");
+if (!is_file($credentialsPath)) {
+    acp_log_event($order_id, "GMAILER_FATAL: Credentials file missing at $credentialsPath");
+    die("Error: Credentials file not found\n");
 }
 
 // Normalize paths
@@ -320,10 +394,25 @@ $preview_img = process_images($spool_path, $brandingLogoPath);
 
 if ($preview_img) {
     echo "Preview grid created: $preview_img\n";
+    acp_log_event($order_id, "PREVIEW_GRID_CREATED: $preview_img");
+} else {
+    acp_log_event($order_id, "WARNING: No preview grid created (no images found)");
 }
 
 echo "Uploading to Google Drive...\n";
-$folder_link = process_drive($order_id, $spool_path, $token);
+acp_log_event($order_id, "DRIVE_UPLOAD_STARTING");
+
+try {
+    $folder_link = process_drive($order_id, $spool_path, $token);
+    if (!$folder_link) {
+        throw new Exception("process_drive returned null");
+    }
+    acp_log_event($order_id, "DRIVE_UPLOAD_SUCCESS: $folder_link");
+    echo "Drive upload complete: $folder_link\n";
+} catch (Exception $e) {
+    acp_log_event($order_id, "DRIVE_UPLOAD_FAILED: " . $e->getMessage());
+    die("ERROR: Google Drive upload failed: " . $e->getMessage() . "\n");
+}
 
 // --- EMAIL CONSTRUCTION ---
 $logo_cid = "logo_img";
@@ -391,49 +480,77 @@ $html = "
 </html>";
 
 // Build Multipart MIME
-$boundary = "acps_rel_" . md5(time());
-$headers = "MIME-Version: 1.0\r\n";
-$headers .= "Content-Type: multipart/related; boundary=\"$boundary\"\r\n";
+try {
+    acp_log_event($order_id, "EMAIL_CONSTRUCTION_STARTING");
+    
+    $boundary = "acps_rel_" . md5(time());
+    $headers = "MIME-Version: 1.0\r\n";
+    $headers .= "Content-Type: multipart/related; boundary=\"$boundary\"\r\n";
+    acp_log_event($order_id, "EMAIL_HEADERS_BUILT: boundary=$boundary");
 
-$body_mime = "--$boundary\r\n";
-$body_mime .= "Content-Type: text/html; charset=utf-8\r\n\r\n";
-$body_mime .= $html . "\r\n";
+    $body_mime = "--$boundary\r\n";
+    $body_mime .= "Content-Type: text/html; charset=utf-8\r\n\r\n";
+    $body_mime .= $html . "\r\n";
+    acp_log_event($order_id, "EMAIL_HTML_ADDED: " . strlen($html) . " bytes");
 
-// Attach Header Logo CID (Use alley_logo_wide.png or alley_logo.png as you prefer)
-$headerLogoPath = __DIR__ . '/public/assets/images/alley_logo_sm.png';
-if (file_exists($headerLogoPath)) {
-    $body_mime .= "--$boundary\r\n";
-    $body_mime .= "Content-Type: image/png; name=\"logo.png\"\r\n";
-    $body_mime .= "Content-Transfer-Encoding: base64\r\n";
-    $body_mime .= "Content-ID: <$logo_cid>\r\n\r\n";
-    $body_mime .= chunk_split(base64_encode(file_get_contents($headerLogoPath))) . "\r\n";
-}
+    // Attach Header Logo CID (Use alley_logo_wide.png or alley_logo.png as you prefer)
+    $headerLogoPath = __DIR__ . '/public/assets/images/alley_logo_sm.png';
+    if (file_exists($headerLogoPath)) {
+        acp_log_event($order_id, "EMAIL_LOGO_ATTACHING: $headerLogoPath");
+        $logo_data = file_get_contents($headerLogoPath);
+        if (!$logo_data) throw new Exception("Failed to read logo file");
+        $body_mime .= "--$boundary\r\n";
+        $body_mime .= "Content-Type: image/png; name=\"logo.png\"\r\n";
+        $body_mime .= "Content-Transfer-Encoding: base64\r\n";
+        $body_mime .= "Content-ID: <$logo_cid>\r\n\r\n";
+        $body_mime .= chunk_split(base64_encode($logo_data)) . "\r\n";
+        acp_log_event($order_id, "EMAIL_LOGO_ATTACHED: " . strlen($logo_data) . " bytes");
+    } else {
+        acp_log_event($order_id, "WARNING: Logo file not found at $headerLogoPath");
+    }
 
-// Attach Preview Grid CID
-if (file_exists($preview_img)) {
-    $body_mime .= "--$boundary\r\n";
-    $body_mime .= "Content-Type: image/jpeg; name=\"preview.jpg\"\r\n";
-    $body_mime .= "Content-Transfer-Encoding: base64\r\n";
-    $body_mime .= "Content-ID: <$preview_cid>\r\n\r\n";
-    $body_mime .= chunk_split(base64_encode(file_get_contents($preview_img))) . "\r\n";
-}
-$body_mime .= "--$boundary--";
+    // Attach Preview Grid CID
+    if (file_exists($preview_img)) {
+        acp_log_event($order_id, "EMAIL_PREVIEW_ATTACHING: $preview_img");
+        $preview_data = file_get_contents($preview_img);
+        if (!$preview_data) throw new Exception("Failed to read preview image");
+        $body_mime .= "--$boundary\r\n";
+        $body_mime .= "Content-Type: image/jpeg; name=\"preview.jpg\"\r\n";
+        $body_mime .= "Content-Transfer-Encoding: base64\r\n";
+        $body_mime .= "Content-ID: <$preview_cid>\r\n\r\n";
+        $body_mime .= chunk_split(base64_encode($preview_data)) . "\r\n";
+        acp_log_event($order_id, "EMAIL_PREVIEW_ATTACHED: " . strlen($preview_data) . " bytes");
+    } else {
+        acp_log_event($order_id, "WARNING: Preview image not found at $preview_img");
+    }
+    $body_mime .= "--$boundary--";
+    acp_log_event($order_id, "EMAIL_MIME_COMPLETE: " . strlen($body_mime) . " bytes");
 
-$full_raw = "To: $customer_email\r\nSubject: Your Photos from Alley Cat #$order_id\r\n" . $headers . "\r\n" . $body_mime;
-$encoded_msg = strtr(base64_encode($full_raw), ['+' => '-', '/' => '_']);
+    $full_raw = "To: $customer_email\r\nSubject: Your Photos from Alley Cat #$order_id\r\n" . $headers . "\r\n" . $body_mime;
+    acp_log_event($order_id, "EMAIL_RAW_BUILT: " . strlen($full_raw) . " bytes");
+    
+    $encoded_msg = strtr(base64_encode($full_raw), ['+' => '-', '/' => '_']);
+    acp_log_event($order_id, "EMAIL_ENCODED: " . strlen($encoded_msg) . " bytes");
 
-acp_log_event($order_id, "GMAIL_SENDING: Calling Gmail API for $customer_email");
+    acp_log_event($order_id, "GMAIL_SENDING: Calling Gmail API for $customer_email");
 
-$res = google_api_call("https://gmail.googleapis.com/gmail/v1/users/me/messages/send", "POST", $token, ['raw' => $encoded_msg]);
+    $res = google_api_call("https://gmail.googleapis.com/gmail/v1/users/me/messages/send", "POST", $token, ['raw' => $encoded_msg]);
+    acp_log_event($order_id, "GMAIL_API_RESPONSE: code=" . $res['code']);
 
-if ($res['code'] == 200) {
-    if (!is_dir(dirname($archive_path))) mkdir(dirname($archive_path), 0777, true);
-    rename($spool_path, $archive_path);
-    acp_log_event($order_id, "GMAIL_SUCCESS: Email sent to $customer_email - moved to archive");
-    echo "SUCCESS: Order $order_id sent with branded watermarks and black-background preview.\n";
-} else {
-    acp_log_event($order_id, "GMAIL_ERROR: API returned code {$res['code']}, response: " . json_encode($res['body']));
-    file_put_contents($spool_path . "error.log", json_encode($res['body']));
-    echo "ERROR: Check error.log in the order folder.\n";
+    if ($res['code'] == 200) {
+        if (!is_dir(dirname($archive_path))) mkdir(dirname($archive_path), 0777, true);
+        rename($spool_path, $archive_path);
+        acp_log_event($order_id, "GMAIL_SUCCESS: Email sent to $customer_email - moved to archive");
+        echo "SUCCESS: Order $order_id sent with branded watermarks and black-background preview.\n";
+    } else {
+        $error_detail = json_encode($res['body']);
+        acp_log_event($order_id, "GMAIL_ERROR: API returned code {$res['code']}, response: $error_detail");
+        file_put_contents($spool_path . "error.log", $error_detail);
+        echo "ERROR: Check error.log in the order folder. API Response: $error_detail\n";
+    }
+} catch (Exception $e) {
+    acp_log_event($order_id, "EMAIL_CONSTRUCTION_ERROR: " . $e->getMessage());
+    file_put_contents($spool_path . "construction_error.log", $e->getMessage() . "\n" . $e->getTraceAsString());
+    die("ERROR: Email construction failed: " . $e->getMessage() . "\n");
 }
 
