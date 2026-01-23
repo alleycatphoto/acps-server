@@ -412,7 +412,10 @@ const App = {
             html += queueItems.map(item => `
                 <div class="queue-item" style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #222; background:#111;">
                     <span style="font-family:monospace; color:#eee;">Order #${item}</span>
-                    <span class="badge badge-info"><span class="spinner" style="width:12px;height:12px;border-width:2px;"></span> Sending...</span>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <span class="badge badge-info"><span class="spinner" style="width:12px;height:12px;border-width:2px;"></span> Sending...</span>
+                        <button onclick="App.forceMailerRetry('${item}')" class="btn btn-danger" style="padding:5px 12px; font-size:12px; background:#ff5252; border:1px solid #ff5252;">Force Send</button>
+                    </div>
                 </div>
             `).join('');
         } else {
@@ -435,6 +438,47 @@ const App = {
         }
         html += '</div>';
         container.innerHTML = html;
+    },
+
+    async forceMailerRetry(orderId) {
+        const btn = event.target;
+        const originalText = btn.innerText;
+        btn.innerText = '⏳ Retrying...';
+        btn.disabled = true;
+        btn.style.background = '#ff9800';
+        
+        try {
+            const resp = await fetch(`/config/api/mail_queue.php?action=retry&order_id=${encodeURIComponent(orderId)}`);
+            const data = await resp.json();
+            
+            if (data.status === 'success') {
+                btn.innerText = '✓ Queued';
+                btn.style.background = '#4caf50';
+                setTimeout(() => {
+                    this.tickSpooler();
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                    btn.style.background = '#ff5252';
+                }, 1500);
+            } else {
+                btn.innerText = '✗ Error';
+                btn.style.background = '#f44336';
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                    btn.style.background = '#ff5252';
+                }, 2000);
+            }
+        } catch (err) {
+            console.error('Force retry error:', err);
+            btn.innerText = '✗ Failed';
+            btn.style.background = '#f44336';
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.disabled = false;
+                btn.style.background = '#ff5252';
+            }, 2000);
+        }
     },
 
     async handleSpoolAction(action, target) {
