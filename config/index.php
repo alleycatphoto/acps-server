@@ -47,7 +47,7 @@
         }
         
         .debug-panel.open {
-            height: 50vh;
+            height: calc(100vh - 60px);
         }
         
         .debug-panel-header {
@@ -204,7 +204,7 @@
             <button onclick="toggleDebugPanel()">Close</button>
         </div>
         <div class="debug-panel-content">
-            <iframe src="debug.php" id="debugFrame"></iframe>
+            <iframe src="/debug.php" id="debugFrame"></iframe>
         </div>
     </div>
 
