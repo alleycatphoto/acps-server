@@ -518,13 +518,6 @@ const App = {
             }, 3000);
         }
     },
-            setTimeout(() => {
-                btn.innerText = originalText;
-                btn.disabled = false;
-                btn.style.background = '#ff5252';
-            }, 2000);
-        }
-    },
 
     async handleSpoolAction(action, target) {
         if (!confirm(`Are you sure you want to ${action.replace('_', ' ')} for ${target}?`)) return;
