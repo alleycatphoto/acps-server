@@ -29,6 +29,95 @@
             border-radius: 4px; cursor: pointer; font-size: 0.8rem; display: none; 
         }
         .connect-btn:hover { background: #357abd; }
+        
+        /* Debug Panel Styles */
+        .debug-panel {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 0;
+            background: #0a0a0a;
+            border-top: 2px solid #333;
+            transition: height 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            z-index: 10000;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
+        }
+        
+        .debug-panel.open {
+            height: 50vh;
+        }
+        
+        .debug-panel-header {
+            background: #1a1a1a;
+            border-bottom: 1px solid #333;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+        
+        .debug-panel-header h3 {
+            margin: 0;
+            color: #c41e3a;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .debug-panel-header button {
+            background: #333;
+            border: 1px solid #555;
+            color: #aaa;
+            padding: 4px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .debug-panel-header button:hover {
+            background: #444;
+            color: #fff;
+        }
+        
+        .debug-panel-content {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+        }
+        
+        .debug-panel iframe {
+            border: none;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .debug-toggle-btn {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            background: #c41e3a;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            z-index: 9999;
+            transition: all 0.2s ease;
+        }
+        
+        .debug-toggle-btn:hover {
+            background: #ff3c4f;
+            transform: scale(1.05);
+        }
+        
+        .debug-toggle-btn.open {
+            bottom: calc(50vh + 15px);
+        }
     </style>
 </head>
 <body>
@@ -56,7 +145,7 @@
             </div>
             <div id="clock" class="clock">00:00:00</div>
             <button id="refreshBtn" class="btn btn-icon" title="Refresh Now">↻</button>
-            <button onclick="window.open('debug.php', '_blank', 'width=1200,height=900')" class="btn btn-icon" title="Debug Console" style="margin-left:5px; color:#666;">⚙�</button>  
+            <button onclick="toggleDebugPanel()" class="btn btn-icon" title="Debug Console" style="margin-left:5px; color:#666;">⚙</button>
         </div>
     </header>
 
@@ -108,28 +197,42 @@
         </div>
     </main>
 
-    <!-- Receipt Modal -->
-    <div id="receipt-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modal-title">Receipt View</h3>
-                <button class="close-btn">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="receipt-wrapper">
-                    <pre id="receipt-content">Loading...</pre>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary close-btn">Close</button>
-                <button class="btn btn-primary" id="print-btn">Print</button>
-            </div>
+    <!-- Debug Panel -->
+    <div class="debug-panel" id="debugPanel">
+        <div class="debug-panel-header">
+            <h3>🛠️ Debug Console</h3>
+            <button onclick="toggleDebugPanel()">Close</button>
+        </div>
+        <div class="debug-panel-content">
+            <iframe src="debug.php" id="debugFrame"></iframe>
         </div>
     </div>
 
     <!-- jQuery needed for the script below -->
     <script src="/public/assets/js/jquery-3.2.1.min.js"></script>
     <script src="assets/js/app.js?v=<?php echo time(); ?>"></script>
+    
+    <script>
+        // Debug Panel Toggle
+        function toggleDebugPanel() {
+            const panel = document.getElementById('debugPanel');
+            panel.classList.toggle('open');
+            
+            // If opening, scroll the iframe to top
+            if (panel.classList.contains('open')) {
+                setTimeout(() => {
+                    const frame = document.getElementById('debugFrame');
+                    if (frame && frame.contentWindow) {
+                        try {
+                            frame.contentWindow.scrollTo(0, 0);
+                        } catch (e) {
+                            // Cross-origin, ignore
+                        }
+                    }
+                }, 100);
+            }
+        }
+    </script>
 </body>
 </html>
 
