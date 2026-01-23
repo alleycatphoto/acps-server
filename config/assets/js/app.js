@@ -410,11 +410,11 @@ const App = {
         html += '<h3 style="color:#29b6f6; border-bottom:1px solid #333; padding-bottom:5px;">Sending Queue</h3>';
         if (queueItems && queueItems.length > 0) {
             html += queueItems.map(item => `
-                <div class="queue-item" style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #222; background:#111;">
+                <div class="queue-item" id="queue-item-${item}" style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #222; background:#111;">
                     <span style="font-family:monospace; color:#eee;">Order #${item}</span>
                     <div style="display:flex; gap:8px; align-items:center;">
-                        <span class="badge badge-info"><span class="spinner" style="width:12px;height:12px;border-width:2px;"></span> Sending...</span>
-                        <button onclick="App.forceMailerRetry('${item}')" class="btn btn-danger" style="padding:5px 12px; font-size:12px; background:#ff5252; border:1px solid #ff5252;">Force Send</button>
+                        <span class="badge badge-info" id="badge-${item}"><span class="spinner" style="width:12px;height:12px;border-width:2px;"></span> Sending...</span>
+                        <button id="force-btn-${item}" onclick="App.forceMailerRetry('${item}')" class="btn btn-danger" style="padding:5px 12px; font-size:12px; background:#ff5252; border:1px solid #ff5252;">Force Send</button>
                     </div>
                 </div>
             `).join('');
@@ -441,38 +441,83 @@ const App = {
     },
 
     async forceMailerRetry(orderId) {
-        const btn = event.target;
+        const btn = document.getElementById(`force-btn-${orderId}`);
+        const badge = document.getElementById(`badge-${orderId}`);
         const originalText = btn.innerText;
-        btn.innerText = '⏳ Retrying...';
+        
+        // Remove spinner and show "Please wait..."
+        if (badge) {
+            badge.style.display = 'none';
+        }
+        
+        btn.innerText = '⏳ Please wait...';
         btn.disabled = true;
-        btn.style.background = '#ff9800';
+        btn.style.background = '#ffb300';
+        btn.style.color = '#000';
+        btn.style.fontWeight = 'bold';
         
         try {
             const resp = await fetch(`/config/api/mail_queue.php?action=retry&order_id=${encodeURIComponent(orderId)}`);
             const data = await resp.json();
             
             if (data.status === 'success') {
-                btn.innerText = '✓ Queued';
-                btn.style.background = '#4caf50';
-                setTimeout(() => {
+                // Check if there was an error in the output
+                if (data.output && data.output.includes('ERROR') || data.output.includes('Exception')) {
+                    btn.innerText = `✗ Error: Check logs`;
+                    btn.style.background = '#f44336';
+                    btn.style.color = '#fff';
+                    console.error(`Order ${orderId} gmailer output:`, data.output);
+                    
+                    setTimeout(() => {
+                        if (badge) badge.style.display = '';
+                        btn.innerText = originalText;
+                        btn.disabled = false;
+                        btn.style.background = '#ff5252';
+                        btn.style.color = '#fff';
+                        btn.style.fontWeight = 'normal';
+                    }, 4000);
+                } else {
+                    btn.innerText = '✓ Sent! Refreshing...';
+                    btn.style.background = '#4caf50';
+                    btn.style.color = '#fff';
+                    
+                    // Wait a moment then refresh queue
+                    await new Promise(resolve => setTimeout(resolve, 1500));
                     this.tickSpooler();
-                    btn.innerText = originalText;
-                    btn.disabled = false;
-                    btn.style.background = '#ff5252';
-                }, 1500);
+                    
+                    // Button will be removed when queue refreshes
+                }
             } else {
-                btn.innerText = '✗ Error';
+                btn.innerText = `✗ ${data.message || 'Error'}`;
                 btn.style.background = '#f44336';
+                btn.style.color = '#fff';
+                
+                // Restore after showing error
                 setTimeout(() => {
+                    if (badge) badge.style.display = '';
                     btn.innerText = originalText;
                     btn.disabled = false;
                     btn.style.background = '#ff5252';
-                }, 2000);
+                    btn.style.color = '#fff';
+                    btn.style.fontWeight = 'normal';
+                }, 3000);
             }
         } catch (err) {
             console.error('Force retry error:', err);
-            btn.innerText = '✗ Failed';
+            btn.innerText = `✗ Network error`;
             btn.style.background = '#f44336';
+            btn.style.color = '#fff';
+            
+            setTimeout(() => {
+                if (badge) badge.style.display = '';
+                btn.innerText = originalText;
+                btn.disabled = false;
+                btn.style.background = '#ff5252';
+                btn.style.color = '#fff';
+                btn.style.fontWeight = 'normal';
+            }, 3000);
+        }
+    },
             setTimeout(() => {
                 btn.innerText = originalText;
                 btn.disabled = false;
