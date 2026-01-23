@@ -49,9 +49,22 @@ try {
         $state = $order->getState(); // OPEN, COMPLETED, CANCELED
         $totalMoney = $order->getTotalMoney();
         $totalAmount = $totalMoney ? $totalMoney->getAmount() : 0;
+        $tenders = $order->getTenders();
         
         // Check if payment was received
-        $isPaid = ($state === 'COMPLETED');
+        // An order is considered "paid" if:
+        // 1. State is COMPLETED, OR
+        // 2. Net amount due is 0 AND there are tenders (covers 100% discount orders), OR
+        // 3. Total is 0 AND there are tenders (zero-dollar orders with payment method selected)
+        $netAmountDue = 0;
+        if ($order->getNetAmountDueMoney()) {
+            $netAmountDue = $order->getNetAmountDueMoney()->getAmount();
+        }
+        
+        $hasTenders = is_array($tenders) && count($tenders) > 0;
+        $isPaid = ($state === 'COMPLETED') || 
+                  ($netAmountDue === 0 && $hasTenders) || 
+                  ($totalAmount === 0 && $hasTenders);
         
         echo json_encode([
             'status' => 'success',
@@ -59,6 +72,9 @@ try {
             'state' => $state,
             'is_paid' => $isPaid,
             'total_amount' => $totalAmount,
+            'net_amount_due' => $netAmountDue,
+            'has_tenders' => $hasTenders,
+            'tender_count' => $hasTenders ? count($tenders) : 0,
             'message' => $isPaid ? 'Payment received' : 'Awaiting payment'
         ]);
     } else {

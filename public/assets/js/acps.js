@@ -4,7 +4,8 @@ let state = {
     onsite: 'yes',
     address: { name:'', street:'', city:'', state:'', zip:'' },
     skipDelivery: false,
-    total: 0
+    total: 0,
+    isCheckoutProcessing: false  // PREVENT CONCURRENT CHECKOUTS
 };
 
 // --- Navigation ---
@@ -170,6 +171,13 @@ function initCardReader() {
 // --- NEW PROCESSORS USING CHECKOUT.PHP ---
 
 function processSwipe(swipeData) {
+    // PREVENT CONCURRENT CHECKOUT CALLS
+    if (state.isCheckoutProcessing) {
+        console.warn("Checkout already processing, ignoring duplicate swipe");
+        return;
+    }
+    
+    state.isCheckoutProcessing = true;
     showLoader('Processing Card...');
 
     try {
@@ -200,6 +208,7 @@ function processSwipe(swipeData) {
         })
         .then(r => r.json())
         .then(data => {
+            state.isCheckoutProcessing = false;  // UNLOCK
             if (data.status === 'success') {
                 window.location.href = `thankyou.php?order=${data.order_id}&status=paid&onsite=${state.onsite}`;
             } else {
@@ -208,18 +217,27 @@ function processSwipe(swipeData) {
             }
         })
         .catch(err => {
+            state.isCheckoutProcessing = false;  // UNLOCK
             hideLoader();
             console.error(err);
             showErrorModal("Payment Error. Try Again.");
         });
 
     } catch(e) {
+        state.isCheckoutProcessing = false;  // UNLOCK
         hideLoader();
         showErrorModal("Card Read Error.<br>Please Try Again.");     
     }
 }
 
 function processCash() {
+    // PREVENT CONCURRENT CHECKOUT CALLS
+    if (state.isCheckoutProcessing) {
+        console.warn("Checkout already processing, ignoring duplicate cash submission");
+        return;
+    }
+    
+    state.isCheckoutProcessing = true;
     showLoader('Creating Order...');
     
     // Cash Amount (Base)
@@ -238,6 +256,7 @@ function processCash() {
     })
     .then(r => r.json())
     .then(data => {
+        state.isCheckoutProcessing = false;  // UNLOCK
         if (data.status === 'success') {
             window.location.href = `thankyou.php?order=${data.order_id}&status=pending&onsite=${state.onsite}`;
         } else {
@@ -246,6 +265,7 @@ function processCash() {
         }
     })
     .catch(err => {
+        state.isCheckoutProcessing = false;  // UNLOCK
         hideLoader();
         console.error(err);
         showErrorModal("Connection Error.");
@@ -274,12 +294,13 @@ function startQrPolling(squareOrderId) {
     }
     
     let pollingInterval = null;
-    let isProcessing = false;
+    let isProcessing = false;  // LOCAL flag for this polling instance
     let pollCount = 0;
     const maxPolls = 600; // 10 minutes at 1-second intervals
 
     async function checkPaymentStatus() {
-        if (isProcessing || !squareOrderId || pollCount >= maxPolls) return;
+        // PREVENT CONCURRENT CHECKOUTS AT GLOBAL LEVEL
+        if (state.isCheckoutProcessing || isProcessing || !squareOrderId || pollCount >= maxPolls) return;
         
         pollCount++;
 
@@ -297,7 +318,10 @@ function startQrPolling(squareOrderId) {
             
             // Check if payment was received
             if (data.status === 'success' && data.is_paid) {
+                // LOCK BOTH GLOBAL AND LOCAL FLAGS BEFORE CLEARING INTERVAL
                 isProcessing = true;
+                state.isCheckoutProcessing = true;
+                
                 clearInterval(pollingInterval);
                 console.log("QR Payment confirmed for Square order " + squareOrderId);
                 showLoader("Processing QR Payment...");
@@ -317,6 +341,7 @@ function startQrPolling(squareOrderId) {
                 })
                 .then(r => r.json())
                 .then(data => {
+                    state.isCheckoutProcessing = false;  // UNLOCK GLOBAL
                     if (data.status === 'success') {
                         // Display big yellow order number
                         showOrderNumber(data.order_id);
@@ -329,6 +354,7 @@ function startQrPolling(squareOrderId) {
                     }
                 })
                 .catch(err => {
+                    state.isCheckoutProcessing = false;  // UNLOCK GLOBAL
                     hideLoader();
                     console.error("Checkout error:", err);
                     showErrorModal("Connection error during checkout");

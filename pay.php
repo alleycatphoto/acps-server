@@ -387,8 +387,11 @@ if (typeof window.processCash === 'function') {
 window.processCash = function() {
     var btn = document.getElementById('cashPayBtn');
     if (btn) {
-        // Stop if already disabled
-        if (btn.disabled || btn.getAttribute('disabled') === 'disabled') return;
+        // Stop if already disabled (double-click protection)
+        if (btn.disabled || btn.getAttribute('disabled') === 'disabled') {
+            console.warn("Cash pay button already disabled, ignoring duplicate click");
+            return;
+        }
 
         // Immediate UI Lock
         btn.disabled = true;
