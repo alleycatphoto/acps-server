@@ -184,19 +184,27 @@ function google_api_call($url, $method, $token, $payload = null) {
 
 // --- WATERMARKING & THUMBNAIL GRID ---
 function process_images($folder, $logoPath) {
+    global $order_id;
     // Normalize path separators for Windows/Linux compatibility
     $folder = str_replace('\\', '/', $folder);
     if (substr($folder, -1) !== '/') $folder .= '/';
     
+    acp_log_event($order_id, "PROCESS_IMAGES_START: folder=$folder, logo=$logoPath");
+    
     $files = glob($folder . "*.jpg");
+    acp_log_event($order_id, "GLOB_RESULT: Found " . (is_array($files) ? count($files) : 0) . " jpg files");
+    
     // Filter out previous preview if it exists
     $files = array_filter($files, function($f) { return basename($f) !== 'preview_grid.jpg'; });
     
     if (empty($files)) {
         // Log but continue - email can be sent without preview grid
+        acp_log_event($order_id, "NO_IMAGES_FOUND: No JPG files in $folder");
         error_log("WARNING: No JPG files found in $folder");
         return null;
     }
+
+    acp_log_event($order_id, "WATERMARK_START: Processing " . count($files) . " images");
 
     // 1. Apply Watermarks (Branding Overlay)
     // Determine which logo path to use
@@ -396,14 +404,24 @@ $spool_path = str_replace('\\', '/', $spool_path);
 if (substr($spool_path, -1) !== '/') $spool_path .= '/';
 
 echo "Watermarking images and generating black background preview for Order $order_id...\n";
+acp_log_event($order_id, "IMAGE_PROCESSING_STARTING: spool_path=$spool_path");
 $brandingLogoPath = __DIR__ . '/public/assets/images/alley_logo.png';
-$preview_img = process_images($spool_path, $brandingLogoPath);
 
-if ($preview_img) {
-    echo "Preview grid created: $preview_img\n";
-    acp_log_event($order_id, "PREVIEW_GRID_CREATED: $preview_img");
-} else {
-    acp_log_event($order_id, "WARNING: No preview grid created (no images found)");
+try {
+    $preview_img = process_images($spool_path, $brandingLogoPath);
+    
+    if ($preview_img) {
+        echo "Preview grid created: $preview_img\n";
+        acp_log_event($order_id, "PREVIEW_GRID_CREATED: $preview_img");
+    } else {
+        acp_log_event($order_id, "WARNING: No preview grid created (no images found)");
+    }
+} catch (Exception $e) {
+    acp_log_event($order_id, "IMAGE_PROCESSING_ERROR: " . $e->getMessage());
+    die("Image processing failed: " . $e->getMessage() . "\n");
+} catch (Throwable $t) {
+    acp_log_event($order_id, "IMAGE_PROCESSING_FATAL: " . $t->getMessage());
+    die("Fatal image processing error: " . $t->getMessage() . "\n");
 }
 
 echo "Uploading to Google Drive...\n";
