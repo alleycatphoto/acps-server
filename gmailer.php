@@ -428,7 +428,7 @@ if (substr($spool_path, -1) !== '/') $spool_path .= '/';
 
 echo "Watermarking images and generating black background preview for Order $order_id...\n";
 acp_log_event($order_id, "IMAGE_PROCESSING_STARTING: spool_path=$spool_path");
-$brandingLogoPath = __DIR__ . '/public/assets/images/alley_logo.png';
+$brandingLogoPath = getenv('LOCATION_LOGO') ?: (__DIR__ . '/public/assets/images/alley_logo.png');
 
 try {
     $preview_img = process_images($spool_path, $brandingLogoPath);
@@ -541,8 +541,8 @@ try {
     $body_mime .= $html . "\r\n";
     acp_log_event($order_id, "EMAIL_HTML_ADDED: " . strlen($html) . " bytes");
 
-    // Attach Header Logo CID (Use alley_logo_wide.png or alley_logo.png as you prefer)
-    $headerLogoPath = __DIR__ . '/public/assets/images/alley_logo_sm.png';
+    // Attach Header Logo CID (Use LOCATION_LOGO from environment or fallback to alley_logo_sm)
+    $headerLogoPath = getenv('LOCATION_LOGO') ?: (__DIR__ . '/public/assets/images/alley_logo_sm.png');
     if (file_exists($headerLogoPath)) {
         acp_log_event($order_id, "EMAIL_LOGO_ATTACHING: $headerLogoPath");
         $logo_data = file_get_contents($headerLogoPath);
