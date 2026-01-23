@@ -27,6 +27,9 @@ ignore_user_abort();
 $order_id = $argv[1] ?? null;
 if (!$order_id) die("No Order ID provided.\n");
 
+// Define lock file location at the start
+$lock_file_extension = '.gmailer_processing';
+
 // --- LOGGING ---
 function acp_log_event($orderID, $event) {
     $log_file = __DIR__ . '/logs/cash_orders_event.log';
@@ -40,6 +43,15 @@ function acp_log_event($orderID, $event) {
     
     // Also write to gmailer_error.log for complete audit trail
     file_put_contents($error_file, $log_entry, FILE_APPEND | LOCK_EX);
+}
+
+// Helper to clean up lock file
+function remove_lock_file($spool_path) {
+    global $lock_file_extension;
+    $lock_file = $spool_path . '/' . $lock_file_extension;
+    if (file_exists($lock_file)) {
+        @unlink($lock_file);
+    }
 }
 
 // Log that gmailer was triggered
@@ -119,6 +131,14 @@ if (!file_exists($info_file)) {
 // Final check - die if still not found
 if (!file_exists($info_file)) {
     acp_log_event($order_id, "GMAILER_FATAL: Order folder not found anywhere for order_id=$order_id");
+    // Try to find the spool path to clean up lock file
+    $spool_candidates = [
+        $base_dir . "/photos/" . date("Y/m/d") . "/spool/mailer/$order_id/",
+        $base_dir . "/photos/" . date("Y/m/d", strtotime('-1 day')) . "/spool/mailer/$order_id/"
+    ];
+    foreach ($spool_candidates as $candidate) {
+        remove_lock_file($candidate);
+    }
     die("ERROR: Order folder not found for Order #$order_id\n");
 }
 
@@ -135,6 +155,7 @@ if (!$info_data || !isset($info_data['email'])) {
 
 if (!$customer_email) {
     acp_log_event($order_id, "GMAILER_FATAL: No customer email found in info.txt");
+    remove_lock_file($spool_path);
     die("ERROR: No customer email found\n");
 }
 
@@ -391,11 +412,13 @@ acp_log_event($order_id, "TOKEN_RETRIEVAL_STARTING");
 $token = get_valid_token($credentialsPath, $tokenPath);
 if (!$token) {
     acp_log_event($order_id, "GMAILER_FATAL: Token authentication failed - get_valid_token returned null");
+    remove_lock_file($spool_path);
     die("Error: Authentication missing. Run auth_setup.php\n");
 }
 acp_log_event($order_id, "TOKEN_RETRIEVAL_SUCCESS: Token obtained");
 if (!is_file($credentialsPath)) {
     acp_log_event($order_id, "GMAILER_FATAL: Credentials file missing at $credentialsPath");
+    remove_lock_file($spool_path);
     die("Error: Credentials file not found\n");
 }
 
@@ -565,17 +588,20 @@ try {
     if ($res['code'] == 200) {
         if (!is_dir(dirname($archive_path))) mkdir(dirname($archive_path), 0777, true);
         rename($spool_path, $archive_path);
+        remove_lock_file($archive_path);  // Clean up lock file from archived location
         acp_log_event($order_id, "GMAIL_SUCCESS: Email sent to $customer_email - moved to archive");
         echo "SUCCESS: Order $order_id sent with branded watermarks and black-background preview.\n";
     } else {
         $error_detail = json_encode($res['body']);
         acp_log_event($order_id, "GMAIL_ERROR: API returned code {$res['code']}, response: $error_detail");
         file_put_contents($spool_path . "error.log", $error_detail);
+        remove_lock_file($spool_path);  // Clean up lock file to allow retry
         echo "ERROR: Check error.log in the order folder. API Response: $error_detail\n";
     }
 } catch (Exception $e) {
     acp_log_event($order_id, "EMAIL_CONSTRUCTION_ERROR: " . $e->getMessage());
     file_put_contents($spool_path . "construction_error.log", $e->getMessage() . "\n" . $e->getTraceAsString());
+    remove_lock_file($spool_path);  // Clean up lock file to allow retry
     die("ERROR: Email construction failed: " . $e->getMessage() . "\n");
 }
 

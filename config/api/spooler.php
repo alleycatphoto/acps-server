@@ -207,22 +207,26 @@ switch ($action) {
         $orders = array_diff(scandir($mailer_spool), array('.', '..'));
         $triggered = [];
         $timeout = 2; // Process items that are at least 2 seconds old (to avoid race conditions during queue creation)
+        $lock_file_extension = '.gmailer_processing';
 
         foreach ($orders as $order_id) {
             $path = $mailer_spool . $order_id;
             if (is_dir($path)) {
+                $lock_file = $path . '/' . $lock_file_extension;
                 $mtime = filemtime($path);
                 $age = time() - $mtime;
                 $info_exists = file_exists($path . '/info.txt');
+                $is_processing = file_exists($lock_file);
                 
-                if (($age > $timeout || $age < 0) && $info_exists) {
-                    // Item is ready (old enough or clock went backwards)
+                if (($age > $timeout || $age < 0) && $info_exists && !$is_processing) {
+                    // Item is ready AND not already being processed
+                    // Create lock file to prevent concurrent execution
+                    touch($lock_file);
+                    
                     // Use absolute path to gmailer.php
                     $gmailer_path = realpath(__DIR__ . '/../../gmailer.php');
                     $cmd = "start /B php \"$gmailer_path\" \"$order_id\"";
                     pclose(popen($cmd, "r"));
-                    // Touch directory to reset timeout so we don't spam it immediately if it takes a bit
-                    touch($path);
                     $triggered[] = $order_id;
                 }
             }
