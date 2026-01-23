@@ -30,13 +30,20 @@ if (!$order_id) die("No Order ID provided.\n");
 // --- LOGGING ---
 function acp_log_event($orderID, $event) {
     $log_file = __DIR__ . '/logs/cash_orders_event.log';
+    $error_file = __DIR__ . '/logs/gmailer_error.log';
     if (!is_dir(dirname($log_file))) @mkdir(dirname($log_file), 0777, true);
     $timestamp = date("Y-m-d H:i:s");
-    file_put_contents($log_file, "{$timestamp} | Order {$orderID} | {$event}\n", FILE_APPEND | LOCK_EX);
+    $log_entry = "{$timestamp} | Order {$orderID} | {$event}\n";
+    
+    // Write to cash_orders_event.log
+    file_put_contents($log_file, $log_entry, FILE_APPEND | LOCK_EX);
+    
+    // Also write to gmailer_error.log for complete audit trail
+    file_put_contents($error_file, $log_entry, FILE_APPEND | LOCK_EX);
 }
 
 // Log that gmailer was triggered
-acp_log_event($order_id, "GMAILER_STARTED: Script invoked with order_id=$order_id");
+acp_log_event($order_id, "GMAILER_INIT: Script started with order_id=$order_id");
 
 $base_dir = __DIR__;
 
