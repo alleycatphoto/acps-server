@@ -433,6 +433,21 @@ header('Content-Type: text/html; charset=utf-8');
                 <div id="spoolerStatus" style="font-size: 11px; color: #aaa; margin-top: 10px;"></div>
             </div>
 
+            <!-- Mail Queue Monitor -->
+            <div class="control-section">
+                <div class="section-title">📬 Mail Queue</div>
+                <div id="mailQueueStatus" style="font-size: 12px; margin-bottom: 10px;">
+                    <span id="queueCount" style="color: #ff8787;">Loading...</span>
+                </div>
+                <div id="mailQueueList" style="max-height: 250px; overflow-y: auto; margin-bottom: 10px; border: 1px solid #333; border-radius: 4px; padding: 8px; background: #0a0a0a;">
+                    <p style="color: #666; text-align: center; padding: 20px 0;">No stuck orders</p>
+                </div>
+                <div class="button-group full">
+                    <button class="btn-primary" onclick="loadMailQueue()">Refresh Queue</button>
+                </div>
+                <div id="queueActionStatus" style="font-size: 11px; color: #aaa; margin-top: 10px;"></div>
+            </div>
+
             <!-- Logs Control -->
             <div class="control-section">
                 <div class="section-title">Log Control</div>
@@ -811,6 +826,105 @@ header('Content-Type: text/html; charset=utf-8');
             }
         }
 
+        // ========== MAIL QUEUE FUNCTIONS ==========
+        
+        // Load and display mail queue
+        async function loadMailQueue() {
+            const listEl = document.getElementById('mailQueueList');
+            const countEl = document.getElementById('queueCount');
+            
+            listEl.innerHTML = '<p style="color: #666; text-align: center; padding: 20px 0;">Loading queue...</p>';
+            
+            try {
+                const resp = await fetch('/config/api/mail_queue.php?action=list');
+                const data = await resp.json();
+                
+                if (data.status !== 'success' || !data.orders || data.orders.length === 0) {
+                    countEl.innerHTML = '<span style="color: #8aff8a;">✓ Queue empty</span>';
+                    listEl.innerHTML = '<p style="color: #666; text-align: center; padding: 20px 0;">No stuck orders</p>';
+                    return;
+                }
+                
+                const lockedOrders = data.orders.filter(o => o.locked);
+                countEl.innerHTML = `<span style="color: #ff8787;">⚠ ${lockedOrders.length} stuck orders</span>`;
+                
+                listEl.innerHTML = '';
+                
+                lockedOrders.forEach(order => {
+                    const div = document.createElement('div');
+                    div.style.cssText = 'padding: 8px; border-bottom: 1px solid #333; font-size: 11px;';
+                    
+                    const ageMin = Math.floor(order.lock_age_seconds / 60);
+                    const ageSec = order.lock_age_seconds % 60;
+                    
+                    div.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="color: #c41e3a; font-weight: bold;">Order #${order.order_id}</div>
+                                <div style="color: #aaa; margin-top: 2px;">${order.email}</div>
+                                <div style="color: #666; margin-top: 2px; font-size: 10px;">
+                                    Stuck: ${ageMin}m ${ageSec}s | ${order.images} images
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 6px;">
+                                <button onclick="retryMailOrder(${order.order_id})" style="padding: 4px 8px; font-size: 10px; background: #c41e3a; border: 1px solid #ff8787; border-radius: 3px; cursor: pointer; color: white;">
+                                    Retry
+                                </button>
+                                <button onclick="unlockMailOrder(${order.order_id})" style="padding: 4px 8px; font-size: 10px; background: #333; border: 1px solid #555; border-radius: 3px; cursor: pointer; color: #aaa;">
+                                    Unlock
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    listEl.appendChild(div);
+                });
+                
+            } catch (err) {
+                countEl.innerHTML = '<span style="color: #ff8787;">Error loading queue</span>';
+                listEl.innerHTML = `<div style="color: #ff8787; padding: 10px; font-size: 11px;">${err.message}</div>`;
+            }
+        }
+        
+        // Retry sending a mail order
+        async function retryMailOrder(orderId) {
+            const statusEl = document.getElementById('queueActionStatus');
+            statusEl.innerHTML = `<span class="status-badge info">⏳ Retrying order ${orderId}...</span>`;
+            
+            try {
+                const resp = await fetch(`/config/api/mail_queue.php?action=retry&order_id=${orderId}`);
+                const data = await resp.json();
+                
+                if (data.status === 'success') {
+                    statusEl.innerHTML = `<span class="status-badge success">✓ Order ${orderId} retry queued - check logs</span>`;
+                    setTimeout(loadMailQueue, 1000);
+                } else {
+                    statusEl.innerHTML = `<span class="status-badge error">✗ ${data.message}</span>`;
+                }
+            } catch (err) {
+                statusEl.innerHTML = `<span class="status-badge error">✗ Error: ${err.message}</span>`;
+            }
+        }
+        
+        // Unlock a stuck mail order
+        async function unlockMailOrder(orderId) {
+            const statusEl = document.getElementById('queueActionStatus');
+            statusEl.innerHTML = `<span class="status-badge info">🔓 Unlocking order ${orderId}...</span>`;
+            
+            try {
+                const resp = await fetch(`/config/api/mail_queue.php?action=unlock&order_id=${orderId}`);
+                const data = await resp.json();
+                
+                if (data.status === 'success') {
+                    statusEl.innerHTML = `<span class="status-badge success">✓ Order ${orderId} unlocked</span>`;
+                    setTimeout(loadMailQueue, 500);
+                } else {
+                    statusEl.innerHTML = `<span class="status-badge error">✗ ${data.message}</span>`;
+                }
+            } catch (err) {
+                statusEl.innerHTML = `<span class="status-badge error">✗ Error: ${err.message}</span>`;
+            }
+        }
+
         // Setup auto refresh
         document.getElementById('autoScrollLog').addEventListener('change', (e) => {
             autoScroll = e.target.checked;
@@ -823,6 +937,7 @@ header('Content-Type: text/html; charset=utf-8');
         });
 
         // Initial load and setup
+        loadMailQueue();  // Load mail queue on startup
         refreshLogs();
         refreshInterval = setInterval(refreshLogs, 1000);
     </script>
