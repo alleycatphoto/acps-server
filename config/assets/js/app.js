@@ -7,7 +7,9 @@ const App = {
         viewMode: 'pending', 
         autoPrint: true,
         countdown: 10,
-        healthCheckInterval: null
+        healthCheckInterval: null,
+        currentActivity: null,  // Track current activity for UI
+        spoolerCounts: { printer: 0, mailer: 0 }
     },
 
     elements: {
@@ -25,7 +27,10 @@ const App = {
         gmailDot: null,
         driveDot: null,
         accountEmail: null,
-        connectBtn: null
+        connectBtn: null,
+        tabActivity: null,
+        activityIndicator: null,
+        activityText: null
     },
 
     init() {
@@ -44,6 +49,9 @@ const App = {
         this.elements.driveDot = document.getElementById('drive-dot');
         this.elements.accountEmail = document.getElementById('account-email');
         this.elements.connectBtn = document.getElementById('connect-btn');
+        this.elements.tabActivity = document.getElementById('tab-activity');
+        this.elements.activityIndicator = document.getElementById('activity-indicator');
+        this.elements.activityText = document.getElementById('activity-text');
 
         this.elements.tabs = document.querySelectorAll('.tab-item');
         this.elements.tabs.forEach(tab => {
@@ -151,6 +159,16 @@ const App = {
             if (t.dataset.tab === tabName) t.classList.add('active');
             else t.classList.remove('active');
         });
+        
+        // Reset activity based on tab
+        if (tabName === 'printer') {
+            this.updateActivity('Checking printer queue...', 'connecting');
+        } else if (tabName === 'mailer') {
+            this.updateActivity('Checking email queue...', 'connecting');
+        } else {
+            this.updateActivity('Ready', 'processing');
+        }
+        
         this.render();
     },
 
@@ -323,9 +341,30 @@ const App = {
         }
     },
 
+    updateActivity(message, type = 'processing') {
+        this.state.currentActivity = message;
+        if (this.elements.activityText) {
+            this.elements.activityText.textContent = message;
+        }
+        if (this.elements.activityIndicator) {
+            // Remove all activity classes
+            this.elements.activityIndicator.classList.remove('connecting', 'sending', 'uploading', 'processing');
+            // Add the appropriate class
+            this.elements.activityIndicator.classList.add(type);
+        }
+    },
+
     renderPrinterQueue(queueItems, historyItems) {
         const container = document.getElementById('orders-list');
         if (!container || this.state.viewMode !== 'printer') return;
+        
+        // Update activity indicator for printer tab
+        if (queueItems && queueItems.length > 0) {
+            this.updateActivity(`Processing ${queueItems.length} print${queueItems.length !== 1 ? 's' : ''}...`, 'uploading');
+        } else {
+            this.updateActivity('Printer ready', 'processing');
+        }
+        
         let html = '<div class="spooler-section">';
         html += '<h3 style="color:#ffab00; border-bottom:1px solid #333; padding-bottom:5px;">Active Print Queue</h3>';
         if (queueItems && queueItems.length > 0) {
@@ -344,7 +383,7 @@ const App = {
                 <div class="history-item" style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #222;">
                     <div>
                         <div style="font-family:monospace; color:#ccc;">${item.file}</div>
-                        <div style="font-size:11px; color:#666;">Order #${item.order_id} • ${new Date(item.timestamp * 1000).toLocaleTimeString()}</div>
+                        <div style="font-size:11px; color:#666;">Order #${item.order_id} ï¿½ ${new Date(item.timestamp * 1000).toLocaleTimeString()}</div>
                     </div>
                     <button onclick="App.handleSpoolAction('retry_print', '${item.file}')" class="btn btn-cash" style="padding:5px 12px; font-size:12px;">Reprint</button>
                 </div>
@@ -359,6 +398,14 @@ const App = {
     renderMailerQueue(queueItems, historyItems) {
         const container = document.getElementById('orders-list');
         if (!container || this.state.viewMode !== 'mailer') return;
+        
+        // Update activity indicator for mailer tab
+        if (queueItems && queueItems.length > 0) {
+            this.updateActivity(`Sending ${queueItems.length} email${queueItems.length !== 1 ? 's' : ''}...`, 'sending');
+        } else {
+            this.updateActivity('Email queue ready', 'processing');
+        }
+        
         let html = '<div class="spooler-section">';
         html += '<h3 style="color:#29b6f6; border-bottom:1px solid #333; padding-bottom:5px;">Sending Queue</h3>';
         if (queueItems && queueItems.length > 0) {

@@ -266,57 +266,113 @@ function debugSwipe() {
     processSwipe(debugData);
 }
 
-// QR Polling
-function startQrPolling(orderId) {
+// QR Polling - Poll Square order status and trigger checkout when paid
+function startQrPolling(squareOrderId) {
+    if (!squareOrderId) {
+        console.error("No Square order ID provided for polling");
+        return;
+    }
+    
     let pollingInterval = null;
     let isProcessing = false;
+    let pollCount = 0;
+    const maxPolls = 600; // 10 minutes at 1-second intervals
 
     async function checkPaymentStatus() {
-        if (isProcessing || !orderId) return;
+        if (isProcessing || !squareOrderId || pollCount >= maxPolls) return;
+        
+        pollCount++;
 
         try {
-          const response = await fetch(`https://alleycatphoto.net/pay/?status=${encodeURIComponent(orderId)}`, {
-            method: 'GET',
-            cache: 'no-cache',
-            mode: 'cors',
-            headers: { 'Accept': 'application/json' }
-          });
-
-          if (!response.ok) return;
-
-          const data = await response.json();
-          if (data && data.result === true) {
-            isProcessing = true;
-            clearInterval(pollingInterval);
-            console.log("Payment confirmed for order " + orderId);   
-            showLoader("Processing QR Payment...");
-
-            // Process via Checkout API
-            const formData = new FormData();
-            formData.append('payment_method', 'qr');
-            formData.append('email', state.email);
-            formData.append('amount', window.acps_base_total); // QR paid full amount? 
-            // Logic in checkout.php for QR doesn't re-calc tax, it just prints receipt.
-            // Assuming base_total is correct for receipt.
-            
-            appendCommonFields(formData);
-
-            fetch('config/api/checkout.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(r => r.json())
-            .then(data => {
-                 window.location.href = `thankyou.php?order=${data.order_id}&status=paid&onsite=${state.onsite}`;
+            // Poll the Square order status via our API
+            const response = await fetch(`config/api/check_square_order.php?order_id=${encodeURIComponent(squareOrderId)}`, {
+                method: 'GET',
+                cache: 'no-cache',
+                headers: { 'Accept': 'application/json' }
             });
-          }
+
+            if (!response.ok) return;
+
+            const data = await response.json();
+            
+            // Check if payment was received
+            if (data.status === 'success' && data.is_paid) {
+                isProcessing = true;
+                clearInterval(pollingInterval);
+                console.log("QR Payment confirmed for Square order " + squareOrderId);
+                showLoader("Processing QR Payment...");
+
+                // Call checkout with square_token to create order number
+                const formData = new FormData();
+                formData.append('payment_method', 'qr');
+                formData.append('email', state.email);
+                formData.append('amount', window.acps_amount_with_tax); // Include tax
+                formData.append('square_token', squareOrderId); // Pass Square order ID for verification
+                
+                appendCommonFields(formData);
+
+                fetch('config/api/checkout.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        // Display big yellow order number
+                        showOrderNumber(data.order_id);
+                        setTimeout(() => {
+                            window.location.href = `thankyou.php?order=${data.order_id}&status=paid&onsite=${state.onsite}`;
+                        }, 3000);
+                    } else {
+                        hideLoader();
+                        showErrorModal(data.message || "Checkout failed");
+                    }
+                })
+                .catch(err => {
+                    hideLoader();
+                    console.error("Checkout error:", err);
+                    showErrorModal("Connection error during checkout");
+                });
+            }
         } catch (error) {
-          console.error("Polling error:", error);
+            console.error("QR polling error:", error);
         }
     }
 
-    pollingInterval = setInterval(checkPaymentStatus, 3000);
+    // Poll every 1 second
+    pollingInterval = setInterval(checkPaymentStatus, 1000);
 }
+
+function showOrderNumber(orderId) {
+    // Display big yellow order number on screen
+    const overlay = document.createElement('div');
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        font-family: Arial, sans-serif;
+    `;
+    
+    const numberDisplay = document.createElement('div');
+    numberDisplay.style.cssText = `
+        font-size: 150px;
+        font-weight: bold;
+        color: #FFD700;
+        text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
+    `;
+    numberDisplay.textContent = orderId;
+    
+    overlay.appendChild(numberDisplay);
+    document.body.appendChild(overlay);
+}
+
 
 // Init Logic
 $(document).ready(function() {

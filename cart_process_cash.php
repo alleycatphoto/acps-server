@@ -280,55 +280,14 @@ if ($txtEmail != '') {
     }
 }
 
-// --- HANDLE AUTO PRINT FOR PAID PAYMENTS ---
-if ($paymentType === 'square' || $paymentType === 'qr') {
-    $shouldAutoPrint = acp_get_autoprint_status();
-    if ($shouldAutoPrint) {
-        $orderOutputDir = ($server_addy == '192.168.2.126') ? "R:/orders" : "C:/orders";
-        if (!is_dir($orderOutputDir)) @mkdir($orderOutputDir, 0777, true);
+// --- IMPORTANT: DO NOT AUTO-PRINT HERE FOR SQUARE/QR PAYMENTS ---
+// Square/QR payments trigger order_action.php 'paid' action from dashboard
+// That centralized logic prevents duplicate files in printer queue
+// Printing and emailing are handled via order_action.php when staff clicks 'Paid' button
+// cart_log("PAID_ORDER_$paymentType: Order $orderID created - handled by dashboard action");
 
-        foreach ($Cart->items as $order_code => $quantity) {
-            [$prod_code, $photo_id] = explode('-', $order_code);
-            if (trim($prod_code) != 'EML' && $quantity > 0) {
-                $sourcefile = "photos/$date_path/raw/$photo_id.jpg";
-                if (file_exists($sourcefile)) {
-                    $imgInfo = @getimagesize($sourcefile);
-                    $orientation = ($imgInfo && $imgInfo[0] > $imgInfo[1]) ? 'H' : 'V';
-
-                    for ($i = 1; $i <= $quantity; $i++) {
-                        $destfile = sprintf("%s/%s-%s-%s%s-%d.jpg", $orderOutputDir, $orderID, $photo_id, $prod_code, $orientation, $i);
-                        @copy($sourcefile, $destfile);
-                    }
-                }
-            }
-        }
-    }
-    // Trigger mailer for digital items immediately if paid
-    if ($txtEmail != '') {
-        $phpPath = 'php'; 
-        
-        // Log the environment state
-        cart_log("Processing order $orderID for $txtEmail. Payment type: $paymentType");
-
-        $cmd = "$phpPath \"" . __DIR__ . "/mailer.php\" " . escapeshellarg($orderID);
-        
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $cmd = "start /B $cmd";
-        } else {
-            $cmd = "$cmd > /dev/null 2>&1 &";
-        }
-
-        cart_log("Triggering mailer for Order $orderID. Command: $cmd");
-        $output = [];
-        $return_var = 0;
-        exec($cmd, $output, $return_var);
-        
-        if ($return_var !== 0) {
-            cart_log("WARNING: exec() returned code $return_var for command: $cmd");
-        }
-    }
-    // For QR/Square payments, also send receipt email directly to customer
-    if (($paymentType === 'square' || $paymentType === 'qr') && !empty($txtEmail)) {
+// For QR/Square payments, also send receipt email directly to customer
+if (($paymentType === 'square' || $paymentType === 'qr') && !empty($txtEmail)) {
         $receiptBody = "Thank you for your order!\n\n" . $message;
         $sent = sendReceiptEmail($orderID, $txtEmail, $receiptBody);
         if (!$sent) {
@@ -342,7 +301,6 @@ if ($paymentType === 'square' || $paymentType === 'qr') {
                 'ts' => time()
             ]));
             error_log("Queued email resend for order $orderID to $txtEmail");
-        }
     }
 }
 

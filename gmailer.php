@@ -27,30 +27,6 @@ ignore_user_abort();
 $order_id = $argv[1] ?? null;
 if (!$order_id) die("No Order ID provided.\n");
 
-$date_path = date("Y/m/d");
-$spool_path = __DIR__ . "/photos/$date_path/spool/mailer/$order_id/";
-$archive_path = __DIR__ . "/photos/$date_path/emails/$order_id/";
-$info_file = $spool_path . "info.txt";
-
-if (!is_dir($spool_path) || !file_exists($info_file)) die("Error: Spool folder missing.\n");
-
-// Parse info.txt
-$info_raw = file_get_contents($info_file);
-$meta = json_decode($info_raw, true);
-
-if (!$meta) {
-    $parts = explode('|', $info_raw);
-    $meta = [
-        'email' => trim($parts[0]),
-        'order_id' => $order_id,
-        'timestamp' => time(),
-        'location' => 'Unknown'
-    ];
-}
-
-$customer_email = $meta['email'] ?? null;
-if (!$customer_email) die("Error: No customer email found.\n");
-
 // --- LOGGING ---
 function acp_log_event($orderID, $event) {
     $log_file = __DIR__ . '/logs/cash_orders_event.log';
@@ -58,6 +34,109 @@ function acp_log_event($orderID, $event) {
     $timestamp = date("Y-m-d H:i:s");
     file_put_contents($log_file, "{$timestamp} | Order {$orderID} | {$event}\n", FILE_APPEND | LOCK_EX);
 }
+
+// Log that gmailer was triggered
+acp_log_event($order_id, "GMAILER_STARTED: Script invoked with order_id=$order_id");
+
+$base_dir = __DIR__;
+
+// --- PATH DETECTION: Handle date rollover ---
+// Try current date first, then yesterday (in case job runs past midnight)
+$spool_path = null;
+$info_file = null;
+
+// Try today's date
+$date_path = date("Y/m/d");
+$candidate_path = $base_dir . "/photos/$date_path/spool/mailer/$order_id/";
+$candidate_info = $candidate_path . "info.txt";
+if (file_exists($candidate_info)) {
+    $spool_path = $candidate_path;
+    $info_file = $candidate_info;
+}
+
+// Try yesterday's date if not found
+if (!$spool_path) {
+    $yesterday = date("Y/m/d", strtotime('-1 day'));
+    $candidate_path = $base_dir . "/photos/$yesterday/spool/mailer/$order_id/";
+    $candidate_info = $candidate_path . "info.txt";
+    if (file_exists($candidate_info)) {
+        $spool_path = $candidate_path;
+        $info_file = $candidate_info;
+        $date_path = $yesterday;
+        acp_log_event($order_id, "PATH_FOUND_YESTERDAY: Using yesterday's date ($yesterday)");
+    }
+}
+
+// Fall back to old cash_email path if new path doesn't exist (legacy orders)
+if (!$spool_path) {
+    $spool_path = $base_dir . "/photos/$date_path/cash_email/$order_id/";
+    $info_file = $spool_path . "info.txt";
+    if (!file_exists($info_file)) {
+        // Try yesterday's cash_email too
+        $yesterday = date("Y/m/d", strtotime('-1 day'));
+        $spool_path = $base_dir . "/photos/$yesterday/cash_email/$order_id/";
+        $info_file = $spool_path . "info.txt";
+        if (file_exists($info_file)) {
+            $date_path = $yesterday;
+            acp_log_event($order_id, "PATH_FALLBACK_YESTERDAY: Using legacy cash_email path from yesterday");
+        } else {
+            acp_log_event($order_id, "PATH_FALLBACK: Using legacy cash_email path");
+        }
+    }
+}
+
+// If still not found, try looking up by email (very old system)
+if (!file_exists($info_file)) {
+    acp_log_event($order_id, "PATH_ERROR: Order folder not found in spooler or cash_email - checking by email");
+    // Try to find it in /emails directory by scanning
+    $emails_dir = $base_dir . "/photos/$date_path/emails/";
+    if (is_dir($emails_dir)) {
+        $dirs = scandir($emails_dir);
+        foreach ($dirs as $d) {
+            if ($d !== '.' && $d !== '..' && is_dir($emails_dir . $d)) {
+                $candidate_info = $emails_dir . $d . "/info.txt";
+                if (file_exists($candidate_info)) {
+                    $info_content = @file_get_contents($candidate_info);
+                    if (stripos($info_content, $order_id) !== false) {
+                        $spool_path = $emails_dir . $d . "/";
+                        $info_file = $spool_path . "info.txt";
+                        acp_log_event($order_id, "PATH_FOUND_IN_EMAILS: Located in $spool_path");
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Final check - die if still not found
+if (!file_exists($info_file)) {
+    acp_log_event($order_id, "GMAILER_FATAL: Order folder not found anywhere for order_id=$order_id");
+    die("ERROR: Order folder not found for Order #$order_id\n");
+}
+
+// Parse info.txt to get customer email
+$info_raw = file_get_contents($info_file);
+$info_data = json_decode($info_raw, true);
+if (!$info_data || !isset($info_data['email'])) {
+    // Try old format: email|status|...
+    $parts = explode('|', $info_raw);
+    $customer_email = trim($parts[0] ?? '');
+} else {
+    $customer_email = $info_data['email'];
+}
+
+if (!$customer_email) {
+    acp_log_event($order_id, "GMAILER_FATAL: No customer email found in info.txt");
+    die("ERROR: No customer email found\n");
+}
+
+acp_log_event($order_id, "PATH_RESOLVED: spool_path=$spool_path, email=$customer_email");
+
+// Archive path always goes to /photos/YYYY/MM/DD/emails/ORDER_ID/
+$archive_path = $base_dir . "/photos/$date_path/emails/$order_id/";
+acp_log_event($order_id, "ARCHIVE_PATH: $archive_path");
+
 
 // --- TOKEN MGMT ---
 function get_valid_token($credPath, $tokenPath) {
@@ -104,8 +183,19 @@ function process_images($folder, $logoPath) {
     if (empty($files)) return null;
 
     // 1. Apply Watermarks (Branding Overlay)
-    if (file_exists($logoPath)) {
-        $logo_to_use = (!empty(getenv('LOCATION_LOGO'))) ? getenv('LOCATION_LOGO') : $logoPath;
+    // Determine which logo path to use
+    $logo_to_use = null;
+    if (!empty(getenv('LOCATION_LOGO'))) {
+        $env_logo = getenv('LOCATION_LOGO');
+        if (is_string($env_logo) && file_exists($env_logo)) {
+            $logo_to_use = $env_logo;
+        }
+    }
+    if (!$logo_to_use && file_exists($logoPath)) {
+        $logo_to_use = $logoPath;
+    }
+    
+    if ($logo_to_use) {
         $stamp = @imagecreatefrompng($logo_to_use);
         if ($stamp) {
             imagealphablending($stamp, true);
@@ -308,14 +398,17 @@ $body_mime .= "--$boundary--";
 $full_raw = "To: $customer_email\r\nSubject: Your Photos from Alley Cat #$order_id\r\n" . $headers . "\r\n" . $body_mime;
 $encoded_msg = strtr(base64_encode($full_raw), ['+' => '-', '/' => '_']);
 
+acp_log_event($order_id, "GMAIL_SENDING: Calling Gmail API for $customer_email");
+
 $res = google_api_call("https://gmail.googleapis.com/gmail/v1/users/me/messages/send", "POST", $token, ['raw' => $encoded_msg]);
 
 if ($res['code'] == 200) {
     if (!is_dir(dirname($archive_path))) mkdir(dirname($archive_path), 0777, true);
     rename($spool_path, $archive_path);
-    acp_log_event($order_id, "GMAIL_SUCCESS_WITH_GRID");
+    acp_log_event($order_id, "GMAIL_SUCCESS: Email sent to $customer_email - moved to archive");
     echo "SUCCESS: Order $order_id sent with branded watermarks and black-background preview.\n";
 } else {
+    acp_log_event($order_id, "GMAIL_ERROR: API returned code {$res['code']}, response: " . json_encode($res['body']));
     file_put_contents($spool_path . "error.log", json_encode($res['body']));
     echo "ERROR: Check error.log in the order folder.\n";
 }

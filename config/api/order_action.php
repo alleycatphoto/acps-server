@@ -69,9 +69,22 @@ function acp_get_autoprint_status(): bool {
 
 function acp_watermark_image($source, $dest) {
     $logoPath = __DIR__ . '/../../public/assets/images/alley_logo.png';
-    $logo_to_use = (!empty(getenv('LOCATION_LOGO'))) ? getenv('LOCATION_LOGO') : $logoPath;
+    $logo_to_use = null;
     
-    if (!file_exists($logo_to_use)) return copy($source, $dest);
+    // Check LOCATION_LOGO env var first
+    if (!empty(getenv('LOCATION_LOGO'))) {
+        $env_logo = getenv('LOCATION_LOGO');
+        if (is_string($env_logo) && file_exists($env_logo)) {
+            $logo_to_use = $env_logo;
+        }
+    }
+    
+    // Fallback to local path
+    if (!$logo_to_use && file_exists($logoPath)) {
+        $logo_to_use = $logoPath;
+    }
+    
+    if (!$logo_to_use) return copy($source, $dest);
     
     $stamp = @imagecreatefrompng($logo_to_use);
     $photo = @imagecreatefromjpeg($source);
@@ -105,6 +118,15 @@ function acp_watermark_image($source, $dest) {
 }
 
 function acp_log_event($orderID, $event) {
+    // Local file logging for visibility
+    $log_file = __DIR__ . '/../../logs/order_action_' . date('Y-m-d') . '.log';
+    if (!is_dir(dirname($log_file))) @mkdir(dirname($log_file), 0777, true);
+    
+    $timestamp = date('Y-m-d H:i:s');
+    $logEntry = "[{$timestamp}] Order {$orderID} | {$event}\n";
+    @file_put_contents($log_file, $logEntry, FILE_APPEND | LOCK_EX);
+    
+    // Also log to legacy system (fsockopen)
     $log_data = [
         'log_message' => "Order {$orderID} | {$event}",
     ];
@@ -346,7 +368,9 @@ if ($action === 'email') {
 }
 
 if ($action === 'paid') {
+    acp_log_event($orderID, "PAID_ACTION_START: method=$paymentMethod, location=$location, trans_id=$transactionId");
     $shouldAutoPrint = acp_get_autoprint_status();
+    acp_log_event($orderID, "AUTO_PRINT_STATUS: " . ($shouldAutoPrint ? 'ENABLED' : 'DISABLED'));
     
     foreach ($items as $item) {
         $prod_code = $item['prod_code'];
@@ -367,6 +391,7 @@ if ($action === 'paid') {
                     $filename = sprintf("%s-%s-%s%s-%d.jpg", $orderID, $photo_id, $prod_code, $orientation, $i);
                     if (acp_watermark_image($sourcefile, $printer_spool . $filename)) {
                         $copiedFiles[] = $filename;
+                        acp_log_event($orderID, "PRINT_QUEUED: $filename (qty=$i/$quantity, code=$prod_code, orient=$orientation)");
                     }
                 }
                 // Log receipt for reference in spool
@@ -380,9 +405,12 @@ if ($action === 'paid') {
             $order_mail_dir = $mailer_spool . $orderID . "/";
             if (!is_dir($order_mail_dir)) mkdir($order_mail_dir, 0777, true);
             
+            acp_log_event($orderID, "EMAIL_QUEUE_START: $user_email");
+            
             $sourcefile = $baseDir . '/' . $date_path . '/raw/' . $photo_id . '.jpg';
             if (file_exists($sourcefile)) {
                 copy($sourcefile, $order_mail_dir . $photo_id . ".jpg");
+                acp_log_event($orderID, "EMAIL_QUEUE_PHOTO: $photo_id.jpg queued for $user_email");
             }
             
             file_put_contents($order_mail_dir . "info.txt", json_encode([
@@ -391,14 +419,16 @@ if ($action === 'paid') {
                 'timestamp' => time(),
                 'location' => $location
             ]));
+            acp_log_event($orderID, "EMAIL_QUEUE_READY: Waiting for spooler.tick_mailer to trigger gmailer.php");
         }
     }
 
-    // Auto-trigger the background mailer if items were spooled
+    // Email will be sent by spooler's tick_mailer when it detects the queued order
+    // This ensures single source of truth and prevents race conditions
     if ($emailAttempted) {
-        pclose(popen("start /B php ../../mailer.php \"$orderID\"", "r"));
-        $emailSuccess = true; // Assumed success for background trigger
-        $emailRaw = "GMailer triggered via spool.";
+        acp_log_event($orderID, "SPOOLER_WILL_SEND_EMAIL: tick_mailer will call gmailer.php");
+        $emailSuccess = true;
+        $emailRaw = "Email queued for spooler processing.";
     }
 
     if (!empty($copiedFiles)) {

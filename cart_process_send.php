@@ -223,51 +223,10 @@ if ($responseMode == "approved") {
         exec('start /B php mailer.php');
     }
     
-// ---------------------------------------------------------------------
-    // --- HANDLE NON-EMAIL PHOTO ITEMS FOR PRINT WATCHER (AUTO PRINT CHECK) ---
-    // ---------------------------------------------------------------------
-    $shouldAutoPrint = acp_get_autoprint_status();
-    
-    if ($shouldAutoPrint) {
-        // --- Handle non-email photo items for print watcher ---
-        $orderOutputDir = ($server_addy == '192.168.2.126') ? "R:/orders" : "C:/orders";
-        //$orderOutputDir = "R:/orders";
-        if (!is_dir($orderOutputDir)) {
-            @mkdir($orderOutputDir, 0777, true);
-        }
-
-        foreach ($Cart->items as $order_code => $quantity) {
-            [$prod_code, $photo_id] = explode('-', $order_code);
-
-            if (trim($prod_code) != 'EML' && $quantity > 0) {
-                $sourcefile = "photos/$date_path/raw/$photo_id.jpg";
-
-                if (file_exists($sourcefile)) {
-                    // Determine orientation
-                    $imgInfo = @getimagesize($sourcefile);
-                    $orientation = 'V';
-                    if ($imgInfo && isset($imgInfo[0], $imgInfo[1])) {
-                        $orientation = ($imgInfo[0] > $imgInfo[1]) ? 'H' : 'V';
-                    }
-
-                    // Copy for each quantity
-                    for ($i = 1; $i <= $quantity; $i++) {
-                        $destfile = sprintf(
-                            "%s/%s-%s-%s%s-%d.jpg",
-                            $orderOutputDir,
-                            $orderID,
-                            $photo_id,
-                            $prod_code,
-                            $orientation,
-                            $i
-                        );
-                        @copy($sourcefile, $destfile);
-                    }
-                }
-            }
-        }
-    }
-        } // End isPending check
+// --- IMPORTANT: DO NOT AUTO-PRINT HERE ---
+// Printing handled via order_action.php when staff clicks 'Paid' button
+// This ensures single source of truth (no duplicate files)
+    } // End isPending check
     $Cart->clearCart();
 }
 ?>

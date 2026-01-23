@@ -56,7 +56,7 @@
             </div>
             <div id="clock" class="clock">00:00:00</div>
             <button id="refreshBtn" class="btn btn-icon" title="Refresh Now">↻</button>
-            <button onclick="window.open('debug.php', '_blank', 'width=1200,height=900')" class="btn btn-icon" title="Debug Console" style="margin-left:5px; color:#666;">⚙�</button>  
+            <button onclick="window.open('debug.php', '_blank', 'width=1200,height=900')" class="btn btn-icon" title="Debug Console" style="margin-left:5px; color:#666;">⚙�</button>  
         </div>
     </header>
 
@@ -79,6 +79,10 @@
 
     <main class="app-shell">
         <div class="orders-panel">
+            <div class="date-header">
+                📅 <?php echo date('F j, Y'); ?>
+            </div>
+
             <div class="panel-header">
                 <div class="tabs">
                     <div class="tab-item tab-pending active" data-tab="pending">Pending <span class="tab-count">(0)</span></div>
@@ -93,8 +97,9 @@
                 </div>
             </div>
 
-            <div class="date-header">
-                📅 <?php echo date('F j, Y'); ?>
+            <div class="tab-activity active" id="tab-activity">
+                <div class="activity-dot" id="activity-indicator"></div>
+                <span id="activity-text">Ready</span>
             </div>
 
             <div class="orders-list" id="orders-list">

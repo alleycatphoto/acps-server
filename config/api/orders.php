@@ -153,6 +153,7 @@ try {
                     'id'       => (string)$orderId,
                     'emoji'    => $emoji,
                     'name'     => $label,
+                    'email'    => $label,  // Email field for dashboard (same as name)
                     'total'    => $amount,
                     'station'  => $station,
                     'cc_totaltaxed' => round($cc_totaltaxed, 2),

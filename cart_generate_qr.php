@@ -54,22 +54,19 @@ $amount_without_tax = $amount_with_tax / 1.0675;
 $cc_total = $amount_without_tax * 1.035;
 $cc_totaltaxed = $cc_total * 1.0675;
 
-// --- 3. Generate Order ID ---
-$dirname = "photos/";
-$date_path = date('Y/m/d');
-$filename = $dirname.$date_path."/orders.txt";
-
-if (file_exists($filename)) {
-    $orderID = (int) trim(file_get_contents($filename)) + 1; // Anticipate next
-} else {
-    $orderID = 1000;
-}
+// --- 3. Generate Reference ID (NOT an order number yet) ---
+// Use hostname-based reference: VS1-12345, MS-54321, etc.
+// The actual order ID will only be created in checkout.php when payment is confirmed
+$hostname = $_SERVER['HTTP_HOST'] ?? 'local';
+$stationPrefix = ($hostname == '192.168.2.126') ? 'FS' : 'MS';
+$referenceNum = str_pad(rand(10000, 99999), 5, '0', STR_PAD_LEFT);
+$referenceId = $stationPrefix . '-' . $referenceNum;
 
 // --- 4. Generate Link ---
 require_once __DIR__ . '/square_link.php';
-$transactionId = uniqid('qr_');
+$transactionId = $referenceId; // Use reference ID as transaction ID for polling
 
-$paymentLink_response = createSquarePaymentLink($cc_totaltaxed, $email, (string)$orderID, $transactionId);
+$paymentLink_response = createSquarePaymentLink($cc_totaltaxed, $email, $referenceId, $transactionId);
 
 if ($paymentLink_response !== false) {
     // Check if it's an object (Success) or error string (Modified return)

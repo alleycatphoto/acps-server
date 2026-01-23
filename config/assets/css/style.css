@@ -114,6 +114,16 @@ input:checked + .slider:before { transform: translateX(14px); }
 }
 .panel-header h2 { font-size: 1rem; color: var(--text-muted); text-transform: uppercase; }
 
+.date-header {
+    padding: 10px 20px;
+    font-size: 0.85rem;
+    color: #888;
+    background: #0f0f0f;
+    border-bottom: 1px solid #333;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
 .status-text { font-size: 1rem; color: var(--success-color); }
 
 /* Orders List */
@@ -194,17 +204,19 @@ input:checked + .slider:before { transform: translateX(14px); }
 .tabs {
     display: flex;
     gap: 2px;
+    flex-wrap: wrap;
 }
 
 .tab-item {
-    padding: 10px 20px;
+    padding: 8px 14px;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     font-weight: 600;
     color: #b4b4b4;
     border-bottom: 3px solid transparent;
     transition: all 0.2s;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .tab-item:hover {
@@ -221,11 +233,52 @@ input:checked + .slider:before { transform: translateX(14px); }
 .tab-paid.active { color: var(--success-color); border-bottom-color: var(--success-color); }
 .tab-void.active { color: var(--danger-color); border-bottom-color: var(--danger-color); }
 .tab-all.active { color: #fff; border-bottom-color: #fff; }
+.tab-printer.active { color: #ffab00; border-bottom-color: #ffab00; }
+.tab-mailer.active { color: #29b6f6; border-bottom-color: #29b6f6; }
+
 /* Tab Colors */
 .tab-pending:hover { color: var(--warning-color); border-bottom-color: var(--warning-color); }
 .tab-paid:hover { color: var(--success-color); border-bottom-color: var(--success-color); }
 .tab-void:hover { color: var(--danger-color); border-bottom-color: var(--danger-color); }
 .tab-all:hover { color: #fff; border-bottom-color: #fff; }
+.tab-printer:hover { color: #ffab00; border-bottom-color: #ffab00; }
+.tab-mailer:hover { color: #29b6f6; border-bottom-color: #29b6f6; }
+
+/* Activity Indicator under active tab */
+.tab-activity {
+    width: 100%;
+    background: #1a1a1a;
+    padding: 8px 15px;
+    font-size: 0.7rem;
+    color: #888;
+    border-bottom: 1px solid #333;
+    display: none;
+    gap: 8px;
+    align-items: center;
+}
+
+.tab-activity.active {
+    display: flex;
+}
+
+.activity-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #666;
+    animation: pulse 1s infinite;
+}
+
+.activity-dot.connecting { background: #ffc107; }
+.activity-dot.sending { background: #29b6f6; }
+.activity-dot.uploading { background: #ff9100; }
+.activity-dot.processing { background: #29b6f6; }
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
 
 
 

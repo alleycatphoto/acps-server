@@ -9,20 +9,21 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 try { $dotenv = Dotenv\Dotenv::createImmutable(realpath(__DIR__ . '/../../')); $dotenv->safeLoad(); } catch (Exception $e) {}
 
 // Paths
-$date_path_rel = "../../photos/" . date("Y/m/d") . "/";
-$spool_base = $date_path_rel . "spool/";
-$email_archive = $date_path_rel . "emails/";
-$printer_spool = $spool_base . "printer/";
-$mailer_spool = $spool_base . "mailer/";
-$completed_spool = $spool_base . "completed/"; 
-$physical_printer_path = "c:/orders/"; 
-$print_log_file = "../../logs/print_history_" . date("Y-m-d") . ".json";
-$credentialsPath = "../../config/google/credentials.json";
-$tokenPath = "../../config/google/token.json";
+$base_dir = realpath(__DIR__ . '/../../');
+$date_path = date("Y/m/d");
+$spool_base = $base_dir . '/photos/' . $date_path . '/spool/';
+$email_archive = $base_dir . '/photos/' . $date_path . '/emails/';
+$printer_spool = $spool_base . 'printer/';
+$mailer_spool = $spool_base . 'mailer/';
+$completed_spool = $spool_base . 'completed/';
+$physical_printer_path = 'c:/orders/';
+$print_log_file = $base_dir . '/logs/print_history_' . date("Y-m-d") . '.json';
+$credentialsPath = $base_dir . '/config/google/credentials.json';
+$tokenPath = $base_dir . '/config/google/token.json';
 
 // Receipt Hot Folders
-$receipt_hot_main = "../../photos/receipts/";
-$receipt_hot_fire = "../../photos/receipts/fire/";
+$receipt_hot_main = $base_dir . '/photos/receipts/';
+$receipt_hot_fire = $base_dir . '/photos/receipts/fire/';
 
 // Ensure directories exist
 if (!is_dir($printer_spool)) mkdir($printer_spool, 0777, true);
@@ -202,18 +203,23 @@ switch ($action) {
         break;
 
     case 'tick_mailer':
-        // Watchdog: Check for stale items in mailer spool
+        // Watchdog: Check for items in mailer spool and process them
         $orders = array_diff(scandir($mailer_spool), array('.', '..'));
         $triggered = [];
-        $timeout = 300; // 5 minutes
+        $timeout = 2; // Process items that are at least 2 seconds old (to avoid race conditions during queue creation)
 
         foreach ($orders as $order_id) {
             $path = $mailer_spool . $order_id;
             if (is_dir($path)) {
                 $mtime = filemtime($path);
-                if ((time() - $mtime) > $timeout) {
-                    // Stale! Kick it.
-                    $cmd = "start /B php ../../gmailer.php \"$order_id\"";
+                $age = time() - $mtime;
+                $info_exists = file_exists($path . '/info.txt');
+                
+                if (($age > $timeout || $age < 0) && $info_exists) {
+                    // Item is ready (old enough or clock went backwards)
+                    // Use absolute path to gmailer.php
+                    $gmailer_path = realpath(__DIR__ . '/../../gmailer.php');
+                    $cmd = "start /B php \"$gmailer_path\" \"$order_id\"";
                     pclose(popen($cmd, "r"));
                     // Touch directory to reset timeout so we don't spam it immediately if it takes a bit
                     touch($path);
