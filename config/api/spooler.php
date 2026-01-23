@@ -225,8 +225,14 @@ switch ($action) {
                     
                     // Use absolute path to gmailer.php
                     $gmailer_path = realpath(__DIR__ . '/../../gmailer.php');
-                    $cmd = "start /B php \"$gmailer_path\" \"$order_id\"";
-                    pclose(popen($cmd, "r"));
+                    
+                    // Use exec() with output redirection for reliable background execution
+                    // Append to spooler execution log for debugging
+                    $log_file = realpath(__DIR__ . '/../../logs') . '/spooler_exec.log';
+                    $cmd = 'php ' . escapeshellarg($gmailer_path) . ' ' . escapeshellarg($order_id) . ' >> ' . escapeshellarg($log_file) . ' 2>&1 &';
+                    
+                    // Execute in background with output capture
+                    exec($cmd);
                     $triggered[] = $order_id;
                 }
             }
