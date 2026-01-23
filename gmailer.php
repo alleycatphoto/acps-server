@@ -177,10 +177,19 @@ function google_api_call($url, $method, $token, $payload = null) {
 
 // --- WATERMARKING & THUMBNAIL GRID ---
 function process_images($folder, $logoPath) {
+    // Normalize path separators for Windows/Linux compatibility
+    $folder = str_replace('\\', '/', $folder);
+    if (substr($folder, -1) !== '/') $folder .= '/';
+    
     $files = glob($folder . "*.jpg");
     // Filter out previous preview if it exists
     $files = array_filter($files, function($f) { return basename($f) !== 'preview_grid.jpg'; });
-    if (empty($files)) return null;
+    
+    if (empty($files)) {
+        // Log but continue - email can be sent without preview grid
+        error_log("WARNING: No JPG files found in $folder");
+        return null;
+    }
 
     // 1. Apply Watermarks (Branding Overlay)
     // Determine which logo path to use
@@ -265,6 +274,10 @@ function process_images($folder, $logoPath) {
 
 // --- DRIVE LOGIC ---
 function process_drive($order_id, $folder_path, $token) {
+    // Normalize path
+    $folder_path = str_replace('\\', '/', $folder_path);
+    if (substr($folder_path, -1) !== '/') $folder_path .= '/';
+    
     $daily_name = 'ACPS_Photos_' . date("Y-m-d");
     $search = google_api_call("https://www.googleapis.com/drive/v3/files?q=" . urlencode("name='$daily_name' and mimeType='application/vnd.google-apps.folder' and trashed=false"), "GET", $token);
     $daily_id = $search['body']['files'][0]['id'] ?? null;
@@ -292,11 +305,22 @@ function process_drive($order_id, $folder_path, $token) {
 
 // --- MAIN EXECUTION ---
 $token = get_valid_token($credentialsPath, $tokenPath);
-if (!$token) die("Error: Authentication missing. Run auth_setup.php\n");
+if (!$token) {
+    acp_log_event($order_id, "GMAILER_FATAL: Token authentication failed");
+    die("Error: Authentication missing. Run auth_setup.php\n");
+}
+
+// Normalize paths
+$spool_path = str_replace('\\', '/', $spool_path);
+if (substr($spool_path, -1) !== '/') $spool_path .= '/';
 
 echo "Watermarking images and generating black background preview for Order $order_id...\n";
 $brandingLogoPath = __DIR__ . '/public/assets/images/alley_logo.png';
 $preview_img = process_images($spool_path, $brandingLogoPath);
+
+if ($preview_img) {
+    echo "Preview grid created: $preview_img\n";
+}
 
 echo "Uploading to Google Drive...\n";
 $folder_link = process_drive($order_id, $spool_path, $token);
