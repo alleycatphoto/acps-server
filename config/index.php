@@ -197,6 +197,23 @@
         </div>
     </main>
 
+    <!-- Receipt Modal -->
+    <div class="modal" id="receipt-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Receipt #</h2>
+                <button class="modal-close" onclick="App.closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <pre id="receipt-content">Loading...</pre>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="document.querySelector('.modal-print-btn').click()">🖨️ Print Receipt</button>
+                <button class="btn btn-secondary modal-print-btn" onclick="App.closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Debug Panel -->
     <div class="debug-panel" id="debugPanel">
         <div class="debug-panel-header">
