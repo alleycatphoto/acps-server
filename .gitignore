@@ -48,6 +48,7 @@ ai/
 config/autoprint_status.txt
 google.php
 *.csv
+/docs/
 
 # Deprecated payment files (archived to C:\UniServerZ\archive)
 # cart_process_send.php.deprecated
