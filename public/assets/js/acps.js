@@ -318,6 +318,12 @@ function startQrPolling(squareOrderId) {
             
             // Check if payment was received
             if (data.status === 'success' && data.is_paid) {
+                // SECONDARY GUARD: Check if another concurrent tick already proceeding
+                if (state.isCheckoutProcessing || isProcessing) {
+                    console.warn("Checkout already in progress, ignoring duplicate payment detection");
+                    return;
+                }
+                
                 // LOCK BOTH GLOBAL AND LOCAL FLAGS BEFORE CLEARING INTERVAL
                 isProcessing = true;
                 state.isCheckoutProcessing = true;
