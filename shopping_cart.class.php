@@ -1,8 +1,8 @@
 <?php
 //*********************************************************************//
-// AlleyCat PhotoStation Cart Engine v3.3.1                            //
+// ACPS90 - AlleyCat PhotoStation Cart Engine v9.0                    //
 // Author: Paul K. Smith                                               //
-// Date: 10/14/2025                                                    //
+// Date: January 23, 2026                                              //
 //*********************************************************************//
 class Shopping_Cart {
 	var $cart_name;

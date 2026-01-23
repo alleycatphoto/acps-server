@@ -1,6 +1,6 @@
 {
-  "name": "AlleyCat PhotoStation",
-  "short_name": "ACPS",
+  "name": "ACPS90 - AlleyCat PhotoStation v9.0",
+  "short_name": "ACPS90",
   "icons": [
     {
       "src": "/public/assets/images/web-app-manifest-192x192.png",

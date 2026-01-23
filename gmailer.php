@@ -7,7 +7,7 @@
 //    \____|__  /____/____/\___  > ____|  \______  (____  /__|         //
 //            \/               \/\/              \/     \/             //
 // *********************** INFORMATION ********************************//
-// AlleyCat PhotoStation v3.3.0 - GMailer Driver                       //
+// ACPS90 - AlleyCat PhotoStation v9.0 - GMailer Driver               //
 // Author: Paul K. Smith (photos@alleycatphoto.net)                    //
 // Date: 01/20/2026                                                     //
 //*********************************************************************//

@@ -1,7 +1,7 @@
 {
-  "name": "acps-v2",
-  "version": "3.5.0",
-  "description": "AlleyCat PhotoStation v2 - Event Photography Kiosk System",
+  "name": "acps90",
+  "version": "9.0.0",
+  "description": "ACPS90 - AlleyCat PhotoStation v9.0 - Event Photography Kiosk System",
   "main": "index.php",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -1,6 +1,6 @@
 <?php
 /**
- * ACPS Google Auth Setup Tool
+ * ACPS90 Google Auth Setup Tool v9.0
  * Run this from CLI: php auth_setup.php
  * This script generates the permanent token.json for GMailer.
  */

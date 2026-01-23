@@ -1,7 +1,7 @@
-# 🦅 AlleyCat PhotoStation V2 (ACPS) 🦅
+# 🦅 ACPS90 - AlleyCat PhotoStation v9.0 🦅
 
-**Version:** 3.6.0
-**Release Date:** January 14, 2026  
+**Version:** 9.0.0
+**Release Date:** January 23, 2026  
 **Status:** Production Ready
 
 ---

@@ -13,7 +13,7 @@
         "backgroundRadius": 0,
         "imageScale": 0.9
       },
-      "appTitle": "AlleyCat PhotoStation"
+      "appTitle": "ACPS90 - AlleyCat PhotoStation v9.0"
     },
     "webAppManifest": {
       "transformation": {
@@ -23,8 +23,8 @@
         "imageScale": 0.8
       },
       "backgroundColor": "#272727",
-      "name": "AlleyCat PhotoStation",
-      "shortName": "ACPS",
+      "name": "ACPS90 - AlleyCat PhotoStation v9.0",
+      "shortName": "ACPS90",
       "themeColor": "#ff0000"
     }
   },

@@ -1,5 +1,5 @@
 <?php
-// ACPS Debug Console - /config/debug.php
+// ACPS90 Debug Console v9.0 - /config/debug.php
 // Slutcore Dark Theme - Developer Utility & Payment Testing
 ?>
 <!DOCTYPE html>
@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACPS DEBUG CONSOLE</title>
+    <title>ACPS90 DEBUG CONSOLE v9.0</title>
     <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>">
     <style>
         .debug-shell {

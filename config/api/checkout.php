@@ -198,8 +198,13 @@ file_put_contents("$firePath/$orderID.txt", $message);
 
 
 // --- 6. PROCESSING (SPOOLING) ---
+// Email should ONLY queue when payment is confirmed:
+// - Square/QR/Credit: payment already approved, queue immediately
+// - Cash: payment pending, DO NOT queue (wait for staff to click "Paid" button)
 $isPaid = ($paymentMethod !== 'cash'); // Square, QR, Credit = Paid. Cash = Pending.
-if (strtolower($txtEmail) === 'photos@alleycatphoto.net') $isPaid = true; // Test Bypass
+
+// NOTE: Removed test bypass for photos@alleycatphoto.net - test orders should follow normal flow
+// If you need to test cash orders that queue email, use order_action.php dashboard button
 
 if ($isPaid) {
     // A. SPOOL EMAIL

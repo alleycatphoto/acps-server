@@ -1,6 +1,6 @@
 <?php
 /**
- * ACPS 9.0 - Check Square Order Status
+ * ACPS90 v9.0 - Check Square Order Status
  * Polls Square API to check if a payment link order has been paid
  * Used by QR polling mechanism to detect payment completion
  */

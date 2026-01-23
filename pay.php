@@ -348,16 +348,18 @@ $savings = $cc_totaltaxed - $amount_without_tax;
 </div>
 
 <!-- Hidden Form for Final Submission -->
-<form id="frmFinal" method="post" action="cart_process_cash.php">
+<!-- FIXED: Changed action to config/api/checkout.php (new centralized API) -->
+<form id="frmFinal" method="post" action="config/api/checkout.php">
     <!-- Variables populated by JS -->
-    <input type="hidden" name="txtEmail" id="final-email">
-    <input type="hidden" name="isOnsite" id="final-onsite" value="yes">
-    <input type="hidden" name="txtAmt" value="<?php echo $thisTotal; ?>">
-    <input type="hidden" name="txtName" id="final-name">
-    <input type="hidden" name="txtAddr" id="final-addr">
-    <input type="hidden" name="txtCity" id="final-city">
-    <input type="hidden" name="txtState" id="final-state">
-    <input type="hidden" name="txtZip" id="final-zip">
+    <input type="hidden" name="email" id="final-email">
+    <input type="hidden" name="delivery_method" id="final-onsite" value="pickup">
+    <input type="hidden" name="amount" value="<?php echo $thisTotal; ?>">
+    <input type="hidden" name="name" id="final-name">
+    <input type="hidden" name="address" id="final-addr">
+    <input type="hidden" name="city" id="final-city">
+    <input type="hidden" name="state" id="final-state">
+    <input type="hidden" name="zip" id="final-zip">
+    <input type="hidden" name="payment_method" value="cash">
     
     <!-- Swipe Data -->
     <input type="hidden" name="txtSwipeData" id="txtSwipeData">

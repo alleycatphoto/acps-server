@@ -7,7 +7,7 @@
 //    \____|__  /____/____/\___  > ____|  \______  (____  /__|         //
 //            \/               \/\/              \/     \/             //
 // *********************** INFORMATION ********************************//
-// AlleyCat PhotoStation v3.0.1                                        //
+// ACPS90 - AlleyCat PhotoStation v9.0 - Admin Dashboard              //
 // Author: Paul K. Smith (photos@alleycatphoto.net)                    //
 // Date: 09/25/2025                                                    //
 // Last Revision 09/25/2025  (PKS)                                     //
