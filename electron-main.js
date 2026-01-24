@@ -9,7 +9,7 @@ let store;
 
 // Default Configuration
 const DEFAULT_URL = 'http://localhost/admin/';
-const ICON_PATH = path.join(__dirname, 'public/assets/icons/favicon.ico');
+const ICON_PATH = path.join(__dirname, 'public/assets/images/ACPS.png');
 
 // Initialize Store (using dynamic import for ESM compatibility)
 async function initStore() {
@@ -61,7 +61,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1400,
     height: 900,
-    title: 'ACPS90 Admin',
+    title: 'AlleyCat PhotoStation : Admin',
     icon: ICON_PATH,
     backgroundColor: '#0a0a0a', // Matches Gemicunt theme
     webPreferences: {
@@ -149,7 +149,7 @@ function createTray() {
   tray = new Tray(icon);
   
   const contextMenu = Menu.buildFromTemplate([
-    { label: 'Show ACPS90', click: () => mainWindow.show() },
+    { label: 'Admin Console', click: () => mainWindow.show() },
     { label: 'Connection Settings...', click: () => createSettingsWindow() },
     { type: 'separator' },
     { label: 'Quit', click: () => {
@@ -159,7 +159,7 @@ function createTray() {
     }
   ]);
 
-  tray.setToolTip('ACPS90 Admin Console');
+  tray.setToolTip('AlleyCat PhotoStation : Admin Console');
   tray.setContextMenu(contextMenu);
 
   tray.on('click', () => {

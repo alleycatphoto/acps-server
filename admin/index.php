@@ -581,7 +581,8 @@ $token = md5('unique_salt' . $timestamp);
   <!-- Custom container style to match user request (80% width) -->
   <style>
     .custom-container {
-      width: 80%;
+      width: 100vw;
+      height: 93vh;
       max-width: 1200px; /* Optional: cap it so it doesn't get absurd on 4k */
       margin: 0 auto;
       padding-right: 15px;
@@ -590,7 +591,7 @@ $token = md5('unique_salt' . $timestamp);
     .admin-iframe {
       width: 100%;
       max-width: 1180px;
-      height: 80vh; /* 80% view height */
+      height: 70vh; /* 80% view height */
       border: none;
       display: block;
     }
