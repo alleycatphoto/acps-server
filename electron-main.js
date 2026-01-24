@@ -59,8 +59,8 @@ function createWindow() {
   const targetUrl = getTargetUrl();
 
   mainWindow = new BrowserWindow({
-    width: 1400,
-    height: 900,
+    width: 800,
+    height: 950,
     title: 'AlleyCat PhotoStation : Admin',
     icon: ICON_PATH,
     backgroundColor: '#0a0a0a', // Matches Gemicunt theme

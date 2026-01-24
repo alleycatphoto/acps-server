@@ -582,7 +582,7 @@ $token = md5('unique_salt' . $timestamp);
   <style>
     .custom-container {
       width: 100vw;
-      height: 93vh;
+      height: 91vh;
       max-width: 1200px; /* Optional: cap it so it doesn't get absurd on 4k */
       margin: 0 auto;
       padding-right: 15px;
@@ -591,7 +591,7 @@ $token = md5('unique_salt' . $timestamp);
     .admin-iframe {
       width: 100%;
       max-width: 1180px;
-      height: 70vh; /* 80% view height */
+      height: 85vh; /* 80% view height */
       border: none;
       display: block;
     }
@@ -600,8 +600,6 @@ $token = md5('unique_salt' . $timestamp);
   <main role="main" class="custom-container">
 
     <div align="center">
-      <p><img src="/public/assets/images/alley_logo_sm.png" width="250" alt="Administration Header"/>
-      </p>
 
 
       <!-- Tab Navigation -->
