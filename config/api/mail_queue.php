@@ -4,16 +4,20 @@
  * Lists stuck mailer orders and allows retry/force send
  */
 
+ini_set('display_errors', 0);
+error_reporting(E_ALL);
 header('Content-Type: application/json');
 
 $action = $_GET['action'] ?? $_POST['action'] ?? 'list';
 $order_id = $_GET['order_id'] ?? $_POST['order_id'] ?? null;
+$date_path = date('Y/m/d');
+$base_path = realpath(__DIR__ . '/../../');
 
 // --- LIST QUEUE ---
 if ($action === 'list') {
-    $spool_base = __DIR__ . '/../../photos/2026/01/23/spool/mailer/';
+    $spool_base = $base_path . "/photos/$date_path/spool/mailer/";
     
-    if (!is_dir($spool_base)) {
+    if (!$spool_base || !is_dir($spool_base)) {
         echo json_encode(['status' => 'error', 'message' => 'Spool directory not found']);
         exit;
     }
@@ -59,7 +63,7 @@ if ($action === 'list') {
 
 // --- REMOVE LOCK ---
 if ($action === 'unlock' && $order_id) {
-    $lock_file = __DIR__ . "/../../photos/2026/01/23/spool/mailer/$order_id/.gmailer_processing";
+    $lock_file = $base_path . "/photos/$date_path/spool/mailer/$order_id/.gmailer_processing";
     
     if (!file_exists($lock_file)) {
         echo json_encode(['status' => 'error', 'message' => 'Order not locked']);
@@ -77,11 +81,11 @@ if ($action === 'unlock' && $order_id) {
 // --- RETRY SEND ---
 if ($action === 'retry' && $order_id) {
     // Remove lock first
-    $lock_file = __DIR__ . "/../../photos/2026/01/23/spool/mailer/$order_id/.gmailer_processing";
+    $lock_file = $base_path . "/photos/$date_path/spool/mailer/$order_id/.gmailer_processing";
     @unlink($lock_file);
     
     // Trigger gmailer for this order
-    $spool_dir = __DIR__ . "/../../photos/2026/01/23/spool/mailer/$order_id/";
+    $spool_dir = $base_path . "/photos/$date_path/spool/mailer/$order_id/";
     
     if (!is_dir($spool_dir)) {
         echo json_encode(['status' => 'error', 'message' => 'Spool directory not found']);
@@ -89,7 +93,7 @@ if ($action === 'retry' && $order_id) {
     }
     
     // Call gmailer.php
-    $cmd = 'php ' . escapeshellarg(__DIR__ . '/../../gmailer.php') . ' ' . escapeshellarg($order_id);
+    $cmd = 'php ' . escapeshellarg($base_path . '/gmailer.php') . ' ' . escapeshellarg($order_id);
     
     // Run in background but capture output
     $output = [];

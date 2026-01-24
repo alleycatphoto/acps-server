@@ -9,7 +9,7 @@
  */
 
 class ACPSTest {
-    private $base_url = 'http://localhost:8080';
+    private $base_url = 'http://localhost';
     private $api_base = '/config/api';
     private $results = [];
     private $total = 0;
@@ -144,7 +144,7 @@ class ACPSTest {
         echo "TEST: Check Square Order API exists...\n";
         $this->total++;
         
-        $resp = $this->http_get($this->api_base . '/check_square_order.php?order_id=test123');
+        $resp = $this->http_get($this->api_base . '/check_square_order.php?order_id=FqRvrBon9QOLFdwbc5lYg7VbDGNZY');
         
         if ($resp['code'] !== 200) {
             echo "  ✗ FAIL: HTTP {$resp['code']}\n";
@@ -216,5 +216,5 @@ class ACPSTest {
     }
 }
 
-$test = new ACPSTest('http://192.168.2.126:8080');
+$test = new ACPSTest('http://localhost');
 $test->run_all();

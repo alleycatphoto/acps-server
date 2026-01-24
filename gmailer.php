@@ -252,8 +252,8 @@ function process_images($folder, $logoPath) {
                 if (!$photo) continue;
                 $pw = imagesx($photo); $ph = imagesy($photo);
                 
-                // Scale logo to ~18% of photo width
-                $target_w = max(120, (int)round($pw * 0.18));
+                // Scale logo to ~10% of photo width
+                $target_w = max(120, (int)round($pw * 0.10));
                 $scale = $target_w / $sw;
                 $target_h = (int)round($sh * $scale);
                 
@@ -542,7 +542,7 @@ try {
     acp_log_event($order_id, "EMAIL_HTML_ADDED: " . strlen($html) . " bytes");
 
     // Attach Header Logo CID (Use LOCATION_LOGO from environment or fallback to alley_logo_sm)
-    $headerLogoPath = getenv('LOCATION_LOGO') ?: (__DIR__ . '/public/assets/images/alley_logo_sm.png');
+    $headerLogoPath = __DIR__ . '/public/assets/images/alley_logo_sm.png';
     if (file_exists($headerLogoPath)) {
         acp_log_event($order_id, "EMAIL_LOGO_ATTACHING: $headerLogoPath");
         $logo_data = file_get_contents($headerLogoPath);

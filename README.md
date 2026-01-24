@@ -1,4 +1,4 @@
-# 🦅 ACPS90 - AlleyCat PhotoStation v9.0 🦅
+# 🦅 ACPS90 - AlleyCat PhotoStation v9.0
 
 **Version:** 9.0.0
 **Release Date:** January 23, 2026  
@@ -8,23 +8,22 @@
 
 ## "The Dude Abides, and so does this Code."
 
-Welcome to **AlleyCat PhotoStation V2**, the digital engine room where we turn pixels into memories and memories into revenue. If you're looking for the "Big Lebowski" of photo station software, you've found it. It's got a rug that really ties the room together (the CSS), and it's got a lot of ins, a lot of outs, and a lot of what-have-yous (the PHP).
+Welcome to **ACPS90**, the completely rebranded and re-architected digital engine room where we turn pixels into memories and memories into revenue. If you're looking for the "Big Lebowski" of photo station software, you've found it. It's got a rug that really ties the room together (the CSS), and it's got a lot of ins, a lot of outs, and a lot of what-have-yous (the PHP).
 
 ---
 
 ## 🚀 What is This?
 
-AlleyCat PhotoStation is a specialized event photography kiosk system designed for high-volume photo sales. Built for touch-screen kiosks, it handles everything from photo gallery browsing to payment processing with minimal friction.
+**ACPS90** (formerly AlleyCat PhotoStation V2) is a specialized event photography kiosk system designed for high-volume photo sales. Built for touch-screen kiosks, it handles everything from photo gallery browsing to payment processing with minimal friction.
 
 ### Key Features
 
-#### 🎨 Modern UI/UX (v3.6.0)
+#### 🎨 Modern UI/UX
 - **Custom AJAX Modal System**: Lightning-fast cart operations without page reloads
 - **Full-Screen Checkout**: Distraction-free payment experience with 100vh black overlay
 - **Smart Keyboard Detection**: Forms automatically shift when on-screen keyboard appears (kiosk optimized)
 - **Touch-Optimized**: Large buttons, clear feedback, minimal text input required
 - **Loading Spinners**: Visual feedback during payment processing and email sending
-- **Enhanced Admin Interface**: Improved order management UI with location-based icons
 
 #### 🛒 Shopping Experience
 - **Real-Time Cart Updates**: Instant add/edit/remove with AJAX reload
@@ -32,24 +31,31 @@ AlleyCat PhotoStation is a specialized event photography kiosk system designed f
 - **Email-Only Orders**: Smart checkout flow skips shipping for digital items
 - **Quantity Validation**: Numeric-only inputs with 3-digit max, real-time sanitization
 
-#### 💳 Payment Processing
-- **Square Integration**: QR code payments with live polling and auto-print functionality
+#### 💳 Payment Processing Engine (v9.0)
+- **Centralized API**: All payments flow through `config/api/checkout.php`
+- **Square Integration**: QR code payments with live polling (FS-##### / MS-##### reference IDs)
 - **Card Reader Support**: Magnetic stripe card processing
-- **Retry Logic**: Failed transactions preserve customer data and return to payment screen
+- **Cash Handling**: "Pending" state until staff confirmation via Dashboard
 - **Tax Calculation**: NC sales tax (6.75%) + transaction fee (3.5%) handling
-- **Background Email**: Asynchronous email delivery for improved performance
-- **Savings Display**: Real-time calculation and display of bundle savings
 
-#### 🚀 Deployment & Automation (v3.6.0)
+#### 📧 Communication & Delivery (v9.0)
+- **GMailer Engine**: OAuth2-powered email delivery (`gmailer.php`)
+- **Google Drive Integration**: Automatic photo upload to daily folders
+- **Queue Management**: `spooler.php` manages separate Print and Email queues
+- **Watermarking**: Automatic branding overlay on preview grids
+- **Resilience**: Auto-retry logic with date-rollover awareness
+
+#### 🚀 Deployment & Automation
 - **GitHub Actions CI/CD**: Automated deployment to multiple production servers
 - **PowerShell Remoting**: Secure remote deployment with SSH key authentication
 - **Environment Management**: Centralized credential handling with .env files
 - **Multi-Location Support**: HAWK, MOON, and ZIP server configurations
 
-#### 📊 Reporting & Analytics
-- **Enhanced Sales Reports**: Comprehensive historical CSV generation with cash transactions
-- **Transaction Logging**: Detailed logging to CSV with pre-tax amounts and savings
-- **Order Action API**: RESTful endpoints for order management and status updates
+#### 📊 Reporting & Analytics (v9.0)
+- **Sales Dashboard**: Dedicated `sales/` interface for tracking daily revenue
+- **CSV Tracking**: Dual local (`sales/transactions.csv`) + remote sync to master server
+- **Master Control**: `config/index.php` for system overview
+- **Debug Console**: `config/debug.php` for real-time log streaming and API testing
 
 #### 📬 Address Validation
 - **USPS API Integration**: Real-time address verification
@@ -73,11 +79,12 @@ AlleyCat PhotoStation is a specialized event photography kiosk system designed f
 - MySQL/MariaDB (optional - cart uses sessions by default)
 - Square Account (for QR code payments)
 - USPS Developer Account (for address validation)
+- Google Cloud Console Project (for OAuth2 GMailer)
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/alleycatphoto/acps_v2.git
-cd acps_v2
+git clone https://github.com/alleycatphoto/acps-server.git
+cd acps-server
 ```
 
 ### 2. Install Dependencies

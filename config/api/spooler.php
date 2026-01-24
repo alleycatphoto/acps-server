@@ -4,8 +4,16 @@
  * Manages printer/mailer queues, history, system health, and SILENT RECEIPT PRINTING.
  */
 
+ini_set('display_errors', 0);
+error_reporting(E_ALL);
 header('Content-Type: application/json');
-require_once __DIR__ . '/../../vendor/autoload.php';
+
+$autoload = __DIR__ . '/../../vendor/autoload.php';
+if (!file_exists($autoload)) {
+    echo json_encode(['status' => 'error', 'message' => 'Vendor autoload missing. Run composer install.']);
+    exit;
+}
+require_once $autoload;
 try { $dotenv = Dotenv\Dotenv::createImmutable(realpath(__DIR__ . '/../../')); $dotenv->safeLoad(); } catch (Exception $e) {}
 
 // Paths
@@ -349,5 +357,3 @@ switch ($action) {
         }
         break;
 }
-
-

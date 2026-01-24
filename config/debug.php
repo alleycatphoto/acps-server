@@ -1,440 +1,967 @@
 <?php
-// ACPS90 Debug Console v9.0 - /config/debug.php
-// Slutcore Dark Theme - Developer Utility & Payment Testing
+//*********************************************************************//
+// ACPS90 - AlleyCat PhotoStation v9.0 - Debug Console                //
+// Real-time log viewer with manual test controls                      //
+// Responsive two-column layout: Controls (Left) | Logs (Right)        //
+//**************************
+ini_set('display_errors', 0);
+error_reporting(E_ALL);
+header('Content-Type: application/json');
+
+$autoload = __DIR__ . '/../vendor/autoload.php';
+if (!file_exists($autoload)) {
+    echo json_encode(['status' => 'error', 'message' => 'Vendor autoload missing. Run composer install.']);
+    exit;
+}
+require_once $autoload;
+try { $dotenv = Dotenv\Dotenv::createImmutable(realpath(__DIR__ . '/../')); $dotenv->safeLoad(); } catch (Exception $e) {}
+
+
+if (isset($_GET['action']) && $_GET['action'] === 'clear_logs') {
+    $logFile = __DIR__ . '/../logs/gmailer_error.log';
+    if (file_exists($logFile)) {
+        file_put_contents($logFile, "");
+    }
+    header('Content-Type: application/json');
+    echo json_encode(['status' => 'success']);
+    exit;
+}
+$admin_email = getenv('ADMIN_EMAIL');
+header('Content-Type: text/html; charset=utf-8');
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACPS90 DEBUG CONSOLE v9.0</title>
-    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>">
+    <title>ACPS90 Debug Console</title>
     <style>
-        .debug-shell {
-            max-width: 1400px;
-            margin: 20px auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            height: calc(100vh - 120px);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        @media (max-width: 1200px) {
-            .debug-shell {
-                grid-template-columns: 1fr;
-                height: auto;
-            }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.5;
         }
-        .control-card {
-            background: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
+
+        .debug-container {
+            display: flex;
+            height: 100vh;
+            flex-direction: row;
+        }
+
+        /* LEFT PANEL: CONTROLS */
+        .debug-controls {
+            flex: 0 0 350px;
+            background: #1a1a1a;
+            border-right: 1px solid #333;
+            overflow-y: auto;
             padding: 20px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            max-height: calc(100vh - 120px);
-            overflow-y: auto;
+            gap: 20px;
         }
-        .terminal-card {
-            background: #000;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            font-family: 'Courier New', monospace;
-            min-height: 500px;
+
+        .debug-controls h2 {
+            font-size: 16px;
+            color: #c41e3a;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #c41e3a;
+            padding-bottom: 8px;
         }
-        .term-header {
-            background: #222;
-            padding: 8px 15px;
-            font-size: 0.8rem;
-            color: #aaa;
-            border-bottom: 1px solid #333;
-            display: flex;
-            justify-content: space-between;
-            flex-shrink: 0;
-        }
-        .term-body {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-            overflow-x: hidden;
-            font-size: 0.85rem;
-            line-height: 1.4;
-            color: #00ff41;
-            min-height: 0; /* Fix flex overflow issue */
-        }
-        .payload-editor {
-            background: #111;
-            color: #ffab00;
+
+        .control-section {
+            background: #0f0f0f;
             border: 1px solid #333;
-            border-radius: 4px;
-            padding: 10px;
-            width: 100%;
-            height: 150px;
-            resize: vertical;
-            font-family: monospace;
-            font-size: 0.8rem;
+            border-radius: 8px;
+            padding: 15px;
         }
-        .btn-group {
+
+        .control-section label {
+            display: block;
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .control-section input,
+        .control-section select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 13px;
+        }
+
+        .control-section input:focus,
+        .control-section select:focus {
+            outline: none;
+            border-color: #4cf;
+            box-shadow: 0 0 0 3px rgba(76, 207, 255, 0.1);
+        }
+
+        .button-group {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
         }
-        @media (max-width: 600px) {
-            .btn-group {
+
+        .button-group.full {
+            grid-template-columns: 1fr;
+        }
+
+        button {
+            padding: 10px 14px;
+            border: 1px solid #444;
+            border-radius: 4px;
+            background: #2a2a2a;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            background: #3a3a3a;
+            border-color: #555;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: #c41e3a;
+            color: #fff;
+            border-color: #c41e3a;
+        }
+
+        .btn-primary:hover {
+            background: #e63946;
+            border-color: #e63946;
+        }
+
+        .btn-success {
+            background: #2a7a4a;
+            border-color: #4aaa6a;
+            color: #aaffaa;
+        }
+
+        .btn-success:hover {
+            background: #3a9a5a;
+            border-color: #5abf7a;
+        }
+
+        .btn-danger {
+            background: #7a2a2a;
+            border-color: #aa4a4a;
+            color: #ffaaaa;
+        }
+
+        .btn-danger:hover {
+            background: #9a3a3a;
+            border-color: #bb5a5a;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge.success {
+            background: #1a4a2a;
+            color: #8aff8a;
+            border: 1px solid #4aaa6a;
+        }
+
+        .status-badge.error {
+            background: #4a1a1a;
+            color: #ffaaaa;
+            border: 1px solid #aa4a4a;
+        }
+
+        .status-badge.info {
+            background: #1a2a4a;
+            color: #aaccff;
+            border: 1px solid #4a6aaa;
+        }
+
+        /* RIGHT PANEL: LOGS */
+        .debug-logs {
+            flex: 1;
+            background: #050505;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .log-header {
+            background: #1a1a1a;
+            border-bottom: 1px solid #333;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .log-header h2 {
+            font-size: 16px;
+            color: #c41e3a;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        .log-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .log-controls button {
+            padding: 8px 12px;
+            font-size: 11px;
+        }
+
+        .log-viewer {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 15px 20px;
+            font-family: "SF Mono", Monaco, "Inconsolata", "Fira Code", monospace;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .log-line {
+            padding: 4px 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+            color: #aaa;
+        }
+
+        .log-line.gmailer_init {
+            color: #79dfff;
+        }
+
+        .log-line.success {
+            color: #8aff8a;
+        }
+
+        .log-line.error {
+            color: #ff8787;
+        }
+
+        .log-line.warning {
+            color: #ffc184;
+        }
+
+        .log-line.timestamp {
+            color: #666;
+        }
+
+        .log-line.order-id {
+            color: #d6ffd6;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .debug-controls {
+                flex: 0 0 300px;
+            }
+
+            .button-group {
                 grid-template-columns: 1fr;
             }
         }
-        .btn {
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            transition: opacity 0.2s;
-        }
-        .btn:hover { opacity: 0.8; }
-        .btn-cash { background: var(--success-color); color: white; }
-        .btn-square { background: var(--accent-color); color: white; }
-        .btn-qr { background: #6f42c1; color: white; }
-        .btn-void { background: var(--danger-color); color: white; }
-        .btn-secondary { background: #444; color: white; }
-        
-        .log-entry { margin-bottom: 8px; border-bottom: 1px solid #111; padding-bottom: 4px; }
-        .log-time { color: #888; font-size: 0.7rem; }
-        .log-type { font-weight: bold; margin-right: 5px; }
-        .type-req { color: #007bff; }
-        .type-res { color: #28a745; }
-        .type-err { color: #dc3545; }
-        
-        .field-group { display: flex; flex-direction: column; gap: 5px; }
-        label { font-size: 0.7rem; color: #888; text-transform: uppercase; }
-        input { 
-            background: #222; 
-            border: 1px solid #333; 
-            color: #fff; 
-            padding: 8px; 
-            border-radius: 4px; 
-            outline: none;
-        }
-        input:focus { border-color: var(--accent-color); }
 
-        .docs-section {
-            max-width: 1000px;
-            margin: 0 auto 40px auto;
-            padding: 0 20px;
+        @media (max-width: 768px) {
+            .debug-container {
+                flex-direction: column;
+            }
+
+            .debug-controls {
+                flex: 0 0 auto;
+                max-height: 40vh;
+                border-right: none;
+                border-bottom: 1px solid #333;
+            }
+
+            .debug-logs {
+                flex: 1;
+                min-height: 60vh;
+            }
         }
-        .docs-section h2 {
-            color: var(--text-muted);
-            font-size: 1rem;
-            margin-bottom: 15px;
+
+        .section-title {
+            font-size: 13px;
+            color: #c41e3a;
+            font-weight: 600;
+            margin-top: 15px;
+            margin-bottom: 10px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
-        .docs-section h3 {
-            color: var(--success-color);
-            border-bottom: 1px solid #333;
-            padding-bottom: 5px;
+
+        .section-title:first-child {
+            margin-top: 0;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
             margin-bottom: 10px;
         }
-        .docs-section p {
-            color: #888;
-            margin-bottom: 10px;
+
+        .input-row input {
+            flex: 1;
+            margin-bottom: 0;
         }
-        .docs-section pre {
-            background: #111;
-            padding: 8px;
-            border-radius: 4px;
-            color: #ccc;
-            margin: 5px 0;
-            overflow-x: auto;
-            font-size: 0.75rem;
-        }
-        .docs-section pre.result {
-            background: #000;
-            color: #28a745;
-            border: 1px solid #222;
-        }
-        .docs-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+
+        .input-row button {
+            flex: 0 0 auto;
+            width: auto;
+            min-width: 60px;
         }
     </style>
 </head>
 <body>
-
-    <header class="app-header">
-        <div class="logo-area">
-            <img src="/public/assets/images/ACPS.png" alt="ACPS Logo" class="app-logo">
-            <h1 class="app-title">Debug Console <span class="badge badge-fire">SYSTEM</span></h1>
-        </div>
-        <div class="header-controls">
-            <div id="clock" class="clock">00:00:00</div>
-            <a href="index.php" class="btn btn-secondary" style="text-decoration: none;">Exit Debug</a>
-        </div>
-    </header>
-
-    <main class="debug-shell">
-        <div class="control-card">
-            <div class="field-group">
-                <label>Target Order ID</label>
-                <input type="text" id="order-id" placeholder="Enter Order Number (e.g. 1012)">
-            </div>
-            
-            <div class="field-group">
-                <label>Transaction ID / Reference</label>
-                <input type="text" id="trans-id" value="DEBUG-<?php echo strtoupper(bin2hex(random_bytes(4))); ?>">
+    <div class="debug-container">
+        <!-- LEFT PANEL: CONTROLS -->
+        <div class="debug-controls">
+            <div>
+                <h2>🛠️ Debug Console</h2>
+                <p style="font-size: 12px; color: #888; margin: 0;">Manual testing & order monitoring</p>
             </div>
 
-            <div class="field-group">
-                <label>Payload Preview (JSON)</label>
-                <textarea id="payload-preview" class="payload-editor"></textarea>
+            <!-- Create Test Order -->
+            <div class="control-section">
+                <div class="section-title">Create Test Order</div>
+                <label>Email</label>
+                <input type="email" id="testEmail" placeholder="test@example.com" value="<?php echo htmlspecialchars($admin_email); ?>">
+                
+                <label>Amount ($)</label>
+                <input type="number" id="testAmount" placeholder="25.00" value="25.00" step="0.01" min="0">
+                
+                <label>Payment Method</label>
+                <select id="testPaymentMethod">
+                    <option value="cash">Cash</option>
+                    <option value="square">Square</option>
+                    <option value="qr">QR Code</option>
+                </select>
+
+                <div class="button-group full">
+                    <button class="btn-primary" onclick="createTestOrder()">Create Order</button>
+                </div>
+                <div id="orderStatus" style="font-size: 11px; color: #aaa; margin-top: 10px;"></div>
             </div>
 
-            <div class="btn-group">
-                <button class="btn btn-cash" onclick="triggerAction('paid', 'cash')">Pay Cash</button>
-                <button class="btn btn-square" onclick="triggerAction('paid', 'square')">Square Success</button>
-                <button class="btn btn-qr" onclick="triggerAction('paid', 'qr')">QR Pay Success</button>
-                <button class="btn btn-void" onclick="triggerAction('void', 'cash')">Void Order</button>
-                <button class="btn btn-secondary" onclick="simulateDecline('square')" style="grid-column: span 2;">Simulate Terminal Decline</button>
+            <!-- Trigger Gmailer -->
+            <div class="control-section">
+                <div class="section-title">Test Email Delivery</div>
+                <label>Order ID</label>
+                <input type="number" id="gmailerOrderId" placeholder="1030" min="1">
+                
+                <div class="button-group full">
+                    <button class="btn-success" onclick="triggerGmailer()">Trigger Gmailer</button>
+                </div>
+                <div id="gmailerStatus" style="font-size: 11px; color: #aaa; margin-top: 10px;"></div>
             </div>
-            
-            <div style="margin-top: auto; font-size: 0.7rem; color: #555;">
-                * This tool directly hits <code>api/order_action.php</code>. It bypasses actual payment gateways.
-            </div>
-        </div>
 
-        <div class="terminal-card">
-            <div class="term-header">
-                <span>SYSTEM LOG</span>
-                <span id="term-status">READY</span>
+            <!-- Manual Actions -->
+            <div class="control-section">
+                <div class="section-title">Manual Actions</div>
+                
+                <label>Order ID for Action</label>
+                <input type="number" id="actionOrderId" placeholder="1030" min="1">
+                
+                <div class="button-group">
+                    <button class="btn-success" onclick="markOrderPaid()">Mark Paid</button>
+                    <button class="btn-danger" onclick="voidOrder()">Void Order</button>
+                </div>
+                <div id="actionStatus" style="font-size: 11px; color: #aaa; margin-top: 10px;"></div>
             </div>
-            <div id="term-body" class="term-body">
-                <div class="log-entry">
-                    <span class="log-time">[<?php echo date('H:i:s'); ?>]</span>
-                    <span class="log-type type-res">INIT</span>
-                    Debug Console Ready. Awaiting trigger...
+
+            <!-- Manual Payments -->
+            <div class="control-section">
+                <div class="section-title">Manual Payments</div>
+                
+                <label>Order ID</label>
+                <input type="number" id="paymentOrderId" placeholder="1031" min="1">
+                
+                <label>Amount ($)</label>
+                <input type="number" id="paymentAmount" placeholder="25.00" step="0.01" min="0">
+                
+                <div class="button-group">
+                    <button onclick="simulateCashPayment()" style="background: #333; border-color: #555;">💵 Cash</button>
+                    <button onclick="simulateQRPayment()" style="background: #333; border-color: #555;">📱 QR</button>
+                </div>
+                
+                <div class="button-group full" style="margin-top: 8px;">
+                    <button onclick="simulateTerminalPayment()" style="background: #333; border-color: #555;">💳 Terminal</button>
+                </div>
+                <div id="paymentStatus" style="font-size: 11px; color: #aaa; margin-top: 10px;"></div>
+            </div>
+
+            <!-- Trigger Mailer Spooler -->
+            <div class="control-section">
+                <div class="section-title">Spooler Control</div>
+                
+                <div class="button-group full">
+                    <button class="btn-primary" onclick="triggerMailerSpooler()">Trigger Mailer Tick</button>
+                </div>
+                <div id="spoolerStatus" style="font-size: 11px; color: #aaa; margin-top: 10px;"></div>
+            </div>
+
+            <!-- Mail Queue Monitor -->
+            <div class="control-section">
+                <div class="section-title">📬 Mail Queue</div>
+                <div id="mailQueueStatus" style="font-size: 12px; margin-bottom: 10px;">
+                    <span id="queueCount" style="color: #ff8787;">Loading...</span>
+                </div>
+                <div id="mailQueueList" style="max-height: 250px; overflow-y: auto; margin-bottom: 10px; border: 1px solid #333; border-radius: 4px; padding: 8px; background: #0a0a0a;">
+                    <p style="color: #666; text-align: center; padding: 20px 0;">No stuck orders</p>
+                </div>
+                <div class="button-group full">
+                    <button class="btn-primary" onclick="loadMailQueue()">Refresh Queue</button>
+                </div>
+                <div id="queueActionStatus" style="font-size: 11px; color: #aaa; margin-top: 10px;"></div>
+            </div>
+
+            <!-- Logs Control -->
+            <div class="control-section">
+                <div class="section-title">Log Control</div>
+                
+                <div class="button-group full">
+                    <button onclick="clearLogs()">Clear All Logs</button>
+                </div>
+
+                <div style="margin-top: 15px;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" id="autoScrollLog" checked style="width: auto; margin: 0;">
+                        <span style="margin: 0;">Auto Scroll</span>
+                    </label>
+                </div>
+
+                <div style="margin-top: 15px;">
+                    <label>Refresh Rate (ms)</label>
+                    <input type="number" id="refreshRate" value="1000" min="500" max="10000" step="100">
                 </div>
             </div>
-            <div class="term-header" style="border-top: 1px solid #333; border-bottom: none;">
-                <button onclick="clearLog()" style="background: none; border: none; color: #888; cursor: pointer; font-size: 0.7rem;">Clear Log</button>
-                <button onclick="toggleMaxLog()" style="background: none; border: none; color: #888; cursor: pointer; font-size: 0.7rem;">⛶ Maximize</button>
+        </div>
+
+        <!-- RIGHT PANEL: LOGS -->
+        <div class="debug-logs">
+            <div class="log-header">
+                <h2>📋 Event Log Stream</h2>
+                <div class="log-controls">
+                    <button onclick="pauseLogs()" id="pauseBtn">Pause</button>
+                    <button onclick="refreshLogs()">Refresh</button>
+                </div>
             </div>
-        </div>
-    </main>
-    
-    <!-- Fullscreen Log Modal -->
-    <div id="fullscreen-log" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:10000; flex-direction:column;">
-        <div style="background:#222; padding:10px 15px; border-bottom:1px solid #333; flex-shrink:0;">
-            <button onclick="toggleMaxLog()" style="background:none; border:none; color:#888; cursor:pointer; font-size:1rem;">✕ Close</button>
-        </div>
-        <div id="fullscreen-log-body" style="flex:1; overflow-y:auto; padding:15px; font-family:'Courier New',monospace; font-size:0.85rem; line-height:1.4; color:#00ff41;">
+            <div class="log-viewer" id="logViewer">
+                <div class="log-line timestamp">Loading logs...</div>
+            </div>
         </div>
     </div>
 
-    <section class="docs-section">
-        <h2>API Usage Reference</h2>
-        
-        <div class="docs-cards">
-            <div class="control-card">
-                <h3>CASH PAYMENT</h3>
-                <p>Standard cash workflow. No fee adjustment.</p>
-                <strong>POST Parameters:</strong>
-                <pre>action: "paid"
-payment_method: "cash"
-order: "1016"</pre>
-                <strong>Receipt Result:</strong>
-                <pre class="result">CASH ORDER: $16.54 PAID</pre>
-            </div>
-
-            <div class="control-card">
-                <h3>QR PAY (VENMO/CASHAPP)</h3>
-                <p>Mobile payment via QR. Uses reference ID.</p>
-                <strong>POST Parameters:</strong>
-                <pre>action: "paid"
-payment_method: "qr"
-order: "1016"
-transaction_id: "VMO-9921X"</pre>
-                <strong>Receipt Result:</strong>
-                <pre class="result">QR PAY: $16.54 PAID
-QR CONFIRMATION: VMO-9921X</pre>
-            </div>
-
-            <div class="control-card">
-                <h3>SQUARE TERMINAL</h3>
-                <p>Terminal transaction. Applies 3.5% fee + 6.75% tax.</p>
-                <strong>POST Parameters:</strong>
-                <pre>action: "paid"
-payment_method: "square"
-order: "1016"
-transaction_id: "7VbMZL..."</pre>
-                <strong>Receipt Result:</strong>
-                <pre class="result">SQUARE ORDER: $18.27 PAID
-SQUARE CONFIRMATION: 7VbMZL...</pre>
-            </div>
-        </div>
-    </section>
-
     <script>
-        const elements = {
-            orderId: document.getElementById('order-id'),
-            transId: document.getElementById('trans-id'),
-            payload: document.getElementById('payload-preview'),
-            term: document.getElementById('term-body'),
-            status: document.getElementById('term-status')
-        };
+        let logsPaused = false;
+        let autoScroll = true;
+        let refreshInterval = null;
 
-        function updateClock() {
-            document.getElementById('clock').textContent = new Date().toLocaleTimeString('en-US', { hour12: false });
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
+        // Format log lines with syntax highlighting
+        function formatLogLine(line) {
+            if (!line.trim()) return { html: '', class: '' };
 
-        function updatePayloadPreview() {
-            const data = {
-                order: elements.orderId.value,
-                action: 'paid',
-                payment_method: 'cash',
-                transaction_id: elements.transId.value,
-                autoprint: '1'
-            };
-            elements.payload.value = JSON.stringify(data, null, 2);
-        }
+            let cls = '';
+            let formattedLine = line;
 
-        elements.orderId.addEventListener('input', updatePayloadPreview);
-        elements.transId.addEventListener('input', updatePayloadPreview);
-        updatePayloadPreview();
+            // Color-code by type
+            if (line.includes('SUCCESS')) cls = 'success';
+            else if (line.includes('ERROR') || line.includes('FATAL')) cls = 'error';
+            else if (line.includes('WARNING')) cls = 'warning';
+            else if (line.includes('GMAILER_INIT')) cls = 'gmailer_init';
 
-        function log(type, msg, raw = null) {
-            const entry = document.createElement('div');
-            entry.className = 'log-entry';
-            const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+            // Highlight timestamps
+            formattedLine = formattedLine.replace(/(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/, '<span class="timestamp">$1</span>');
             
-            let typeClass = 'type-req';
-            if (type === 'RES') typeClass = 'type-res';
-            if (type === 'ERR') typeClass = 'type-err';
+            // Highlight order IDs
+            formattedLine = formattedLine.replace(/Order (\d+)/g, 'Order <span class="order-id">$1</span>');
 
-            let html = `<span class="log-time">[${time}]</span> <span class="log-type ${typeClass}">${type}</span> ${msg}`;
-            if (raw) {
-                html += `<pre style="font-size: 0.7rem; color: #888; margin-top: 5px; white-space: pre-wrap;">${JSON.stringify(raw, null, 2)}</pre>`;
-            }
-            
-            entry.innerHTML = html;
-            elements.term.appendChild(entry);
-            elements.term.scrollTop = elements.term.scrollHeight;
+            return { html: formattedLine, class: cls };
         }
 
-        function clearLog() {
-            elements.term.innerHTML = '';
-            log('INIT', 'Log cleared.');
-        }
-        
-        function toggleMaxLog() {
-            const modal = document.getElementById('fullscreen-log');
-            const modalBody = document.getElementById('fullscreen-log-body');
-            
-            if (modal.style.display === 'none' || !modal.style.display) {
-                // Open fullscreen
-                modalBody.innerHTML = elements.term.innerHTML;
-                modal.style.display = 'flex';
-                modal.style.animation = 'fadeIn 0.3s';
-            } else {
-                // Close fullscreen
-                modal.style.display = 'none';
-            }
-        }
-        
-        // Auto-sync fullscreen log when new entries added
-        const originalLog = log;
-        window.log = function(type, msg, raw) {
-            originalLog(type, msg, raw);
-            const modal = document.getElementById('fullscreen-log');
-            if (modal && modal.style.display === 'flex') {
-                const modalBody = document.getElementById('fullscreen-log-body');
-                modalBody.innerHTML = elements.term.innerHTML;
-                modalBody.scrollTop = modalBody.scrollHeight;
-            }
-        };
+        // Refresh logs from server
+        async function refreshLogs() {
+            if (logsPaused) return;
 
-        function simulateDecline(method) {
-            const orderId = elements.orderId.value || 'UNKNOWN';
-            log('REQ', `Simulating ${method} Decline for Order #${orderId}`);
-            
-            elements.status.textContent = 'DECLINED';
-            elements.status.style.color = 'var(--danger-color)';
-            
-            setTimeout(() => {
-                log('ERR', `Terminal response: FAILED. Transaction for Order #${orderId} was declined by the bank or cancelled.`, {
-                    status: 'error',
-                    terminal_status: 'FAILED',
-                    message: 'Transaction declined'
+            try {
+                const resp = await fetch('/logs/gmailer_error.log');
+                const text = await resp.text();
+                const lines = text.split('\n').filter(l => l.trim());
+                
+                const viewer = document.getElementById('logViewer');
+                viewer.innerHTML = '';
+
+                // Show last 100 lines
+                const displayLines = lines.slice(-100);
+
+                displayLines.forEach(line => {
+                    const formatted = formatLogLine(line);
+                    const div = document.createElement('div');
+                    div.className = 'log-line ' + formatted.class;
+                    div.innerHTML = formatted.html;
+                    viewer.appendChild(div);
                 });
-            }, 800);
+
+                // Auto scroll to bottom
+                if (autoScroll) {
+                    viewer.scrollTop = viewer.scrollHeight;
+                }
+            } catch (err) {
+                console.error('Failed to load logs:', err);
+                document.getElementById('logViewer').innerHTML = '<div class="log-line error">Failed to load logs</div>';
+            }
         }
 
-        async function triggerAction(action, method) {
-            const orderId = elements.orderId.value;
-            if (!orderId) {
-                alert('Please enter an Order ID first.');
+        function pauseLogs() {
+            logsPaused = !logsPaused;
+            const btn = document.getElementById('pauseBtn');
+            btn.textContent = logsPaused ? 'Resume' : 'Pause';
+            btn.style.background = logsPaused ? '#7a2a2a' : '#2a2a2a';
+        }
+
+        function clearLogs() {
+            if (!confirm('Clear all logs?')) return;
+
+            fetch('?action=clear_logs', { method: 'POST' })
+                .then(() => {
+                    document.getElementById('logViewer').innerHTML = '<div class="log-line success">Logs cleared</div>';
+                    refreshLogs();
+                })
+                .catch(err => console.error('Failed to clear logs:', err));
+        }
+
+        // Create test order
+        async function createTestOrder() {
+            const email = document.getElementById('testEmail').value;
+            const amount = document.getElementById('testAmount').value;
+            const method = document.getElementById('testPaymentMethod').value;
+            const statusEl = document.getElementById('orderStatus');
+
+            if (!email || !amount) {
+                statusEl.innerHTML = '<span class="status-badge error">Missing required fields</span>';
                 return;
             }
 
-            let data;
-            try {
-                data = JSON.parse(elements.payload.value);
-                data.action = action;
-                data.payment_method = method;
-                if (!data.transaction_id) data.transaction_id = elements.transId.value;
-            } catch (e) {
-                log('ERR', 'Invalid JSON in payload editor. Reverting to defaults.');
-                data = {
-                    order: orderId,
-                    action: action,
-                    payment_method: method,
-                    transaction_id: elements.transId.value,
-                    autoprint: '1'
-                };
-            }
-
-            elements.status.textContent = 'PENDING...';
-            elements.status.style.color = 'var(--warning-color)';
-            
-            log('REQ', `Sending ${action} via ${method} for Order #${orderId}`, data);
+            statusEl.innerHTML = '<span class="status-badge info">Creating...</span>';
 
             try {
-                const formData = new FormData();
-                for (const key in data) {
-                    formData.append(key, data[key]);
-                }
-
-                const response = await fetch('api/order_action.php', {
+                const resp = await fetch('/config/api/checkout.php', {
                     method: 'POST',
-                    body: formData
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        payment_method: method,
+                        email: email,
+                        amount: amount
+                    }).toString()
                 });
-                
-                const result = await response.json();
-                
-                if (result.status === 'success') {
-                    log('RES', `Success: ${result.message}`, result);
-                    elements.status.textContent = 'SUCCESS';
-                    elements.status.style.color = 'var(--success-color)';
+
+                const data = await resp.json();
+                if (data.order_id) {
+                    statusEl.innerHTML = `<span class="status-badge success">Order ${data.order_id} created</span>`;
+                    document.getElementById('gmailerOrderId').value = data.order_id;
                 } else {
-                    log('ERR', `Failed: ${result.message}`, result);
-                    elements.status.textContent = 'FAILED';
-                    elements.status.style.color = 'var(--danger-color)';
+                    statusEl.innerHTML = `<span class="status-badge error">Failed: ${data.message || 'Unknown error'}</span>`;
                 }
             } catch (err) {
-                log('ERR', 'Network or system error occurred.', err);
-                elements.status.textContent = 'NET ERROR';
-                elements.status.style.color = 'var(--danger-color)';
+                statusEl.innerHTML = `<span class="status-badge error">Error: ${err.message}</span>`;
             }
         }
+
+        // Trigger gmailer
+        async function triggerGmailer() {
+            const orderId = document.getElementById('gmailerOrderId').value;
+            const statusEl = document.getElementById('gmailerStatus');
+
+            if (!orderId) {
+                statusEl.innerHTML = '<span class="status-badge error">Enter order ID</span>';
+                return;
+            }
+
+            statusEl.innerHTML = '<span class="status-badge info">Processing...</span>';
+
+            try {
+                const resp = await fetch(`/gmailer.php?order=${orderId}`, { method: 'POST' });
+                const text = await resp.text();
+                
+                if (text.includes('SUCCESS')) {
+                    statusEl.innerHTML = '<span class="status-badge success">Gmailer executed</span>';
+                } else {
+                    statusEl.innerHTML = '<span class="status-badge warning">Check logs for details</span>';
+                }
+                refreshLogs();
+            } catch (err) {
+                statusEl.innerHTML = `<span class="status-badge error">Error: ${err.message}</span>`;
+            }
+        }
+
+        // Mark order paid
+        async function markOrderPaid() {
+            const orderId = document.getElementById('actionOrderId').value;
+            const statusEl = document.getElementById('actionStatus');
+
+            if (!orderId) {
+                statusEl.innerHTML = '<span class="status-badge error">Enter order ID</span>';
+                return;
+            }
+
+            statusEl.innerHTML = '<span class="status-badge info">Processing...</span>';
+
+            try {
+                const resp = await fetch('/admin/admin_cash_order_action.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        order: orderId,
+                        action: 'paid',
+                        autoprint: '1'
+                    }).toString()
+                });
+
+                const data = await resp.json();
+                if (data.status === 'success') {
+                    statusEl.innerHTML = '<span class="status-badge success">Order marked paid</span>';
+                } else {
+                    statusEl.innerHTML = `<span class="status-badge error">${data.message || 'Failed'}</span>`;
+                }
+                refreshLogs();
+            } catch (err) {
+                statusEl.innerHTML = `<span class="status-badge error">Error: ${err.message}</span>`;
+            }
+        }
+
+        // Void order
+        async function voidOrder() {
+            const orderId = document.getElementById('actionOrderId').value;
+            const statusEl = document.getElementById('actionStatus');
+
+            if (!orderId || !confirm('Void this order?')) return;
+
+            statusEl.innerHTML = '<span class="status-badge info">Processing...</span>';
+
+            try {
+                const resp = await fetch('/admin/admin_cash_order_action.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        order: orderId,
+                        action: 'void'
+                    }).toString()
+                });
+
+                const data = await resp.json();
+                if (data.status === 'success') {
+                    statusEl.innerHTML = '<span class="status-badge success">Order voided</span>';
+                } else {
+                    statusEl.innerHTML = `<span class="status-badge error">${data.message || 'Failed'}</span>`;
+                }
+                refreshLogs();
+            } catch (err) {
+                statusEl.innerHTML = `<span class="status-badge error">Error: ${err.message}</span>`;
+            }
+        }
+
+        // Trigger mailer spooler
+        async function triggerMailerSpooler() {
+            const statusEl = document.getElementById('spoolerStatus');
+            statusEl.innerHTML = '<span class="status-badge info">Processing...</span>';
+
+            try {
+                const resp = await fetch('/trigger_mailer_v2.php');
+                const data = await resp.json();
+                if (data.triggered && data.triggered.length > 0) {
+                    statusEl.innerHTML = `<span class="status-badge success">Triggered: ${data.triggered.join(', ')}</span>`;
+                } else {
+                    statusEl.innerHTML = '<span class="status-badge info">No orders in queue</span>';
+                }
+                refreshLogs();
+            } catch (err) {
+                statusEl.innerHTML = `<span class="status-badge error">Error: ${err.message}</span>`;
+            }
+        }
+
+        // Simulate Cash Payment
+        async function simulateCashPayment() {
+            const orderId = document.getElementById('paymentOrderId').value;
+            const amount = document.getElementById('paymentAmount').value;
+            const statusEl = document.getElementById('paymentStatus');
+
+            if (!orderId || !amount) {
+                statusEl.innerHTML = '<span class="status-badge error">Enter Order ID and Amount</span>';
+                return;
+            }
+
+            statusEl.innerHTML = '<span class="status-badge info">Processing cash payment...</span>';
+
+            try {
+                const resp = await fetch('/admin/admin_cash_order_action.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        order: orderId,
+                        action: 'paid',
+                        payment_type: 'cash',
+                        amount: amount,
+                        autoprint: '1'
+                    }).toString()
+                });
+
+                const data = await resp.json();
+                if (data.status === 'success') {
+                    statusEl.innerHTML = '<span class="status-badge success">💵 Cash payment processed</span>';
+                } else {
+                    statusEl.innerHTML = `<span class="status-badge error">${data.message || 'Failed'}</span>`;
+                }
+                refreshLogs();
+            } catch (err) {
+                statusEl.innerHTML = `<span class="status-badge error">Error: ${err.message}</span>`;
+            }
+        }
+
+        // Simulate QR Payment
+        async function simulateQRPayment() {
+            const orderId = document.getElementById('paymentOrderId').value;
+            const amount = document.getElementById('paymentAmount').value;
+            const statusEl = document.getElementById('paymentStatus');
+
+            if (!orderId || !amount) {
+                statusEl.innerHTML = '<span class="status-badge error">Enter Order ID and Amount</span>';
+                return;
+            }
+
+            statusEl.innerHTML = '<span class="status-badge info">Processing QR payment...</span>';
+
+            try {
+                const resp = await fetch('/admin/admin_cash_order_action.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        order: orderId,
+                        action: 'paid',
+                        payment_type: 'qr',
+                        amount: amount,
+                        autoprint: '1'
+                    }).toString()
+                });
+
+                const data = await resp.json();
+                if (data.status === 'success') {
+                    statusEl.innerHTML = '<span class="status-badge success">📱 QR payment processed</span>';
+                } else {
+                    statusEl.innerHTML = `<span class="status-badge error">${data.message || 'Failed'}</span>`;
+                }
+                refreshLogs();
+            } catch (err) {
+                statusEl.innerHTML = `<span class="status-badge error">Error: ${err.message}</span>`;
+            }
+        }
+
+        // Simulate Terminal Payment
+        async function simulateTerminalPayment() {
+            const orderId = document.getElementById('paymentOrderId').value;
+            const amount = document.getElementById('paymentAmount').value;
+            const statusEl = document.getElementById('paymentStatus');
+
+            if (!orderId || !amount) {
+                statusEl.innerHTML = '<span class="status-badge error">Enter Order ID and Amount</span>';
+                return;
+            }
+
+            statusEl.innerHTML = '<span class="status-badge info">Processing terminal payment...</span>';
+
+            try {
+                const resp = await fetch('/admin/admin_cash_order_action.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        order: orderId,
+                        action: 'paid',
+                        payment_type: 'terminal',
+                        amount: amount,
+                        autoprint: '1'
+                    }).toString()
+                });
+
+                const data = await resp.json();
+                if (data.status === 'success') {
+                    statusEl.innerHTML = '<span class="status-badge success">💳 Terminal payment processed</span>';
+                } else {
+                    statusEl.innerHTML = `<span class="status-badge error">${data.message || 'Failed'}</span>`;
+                }
+                refreshLogs();
+            } catch (err) {
+                statusEl.innerHTML = `<span class="status-badge error">Error: ${err.message}</span>`;
+            }
+        }
+
+        // ========== MAIL QUEUE FUNCTIONS ==========
+        
+        // Load and display mail queue
+        async function loadMailQueue() {
+            const listEl = document.getElementById('mailQueueList');
+            const countEl = document.getElementById('queueCount');
+            
+            listEl.innerHTML = '<p style="color: #666; text-align: center; padding: 20px 0;">Loading queue...</p>';
+            
+            try {
+                const resp = await fetch('/config/api/mail_queue.php?action=list');
+                const data = await resp.json();
+                
+                if (data.status !== 'success' || !data.orders || data.orders.length === 0) {
+                    countEl.innerHTML = '<span style="color: #8aff8a;">✓ Queue empty</span>';
+                    listEl.innerHTML = '<p style="color: #666; text-align: center; padding: 20px 0;">No stuck orders</p>';
+                    return;
+                }
+                
+                const lockedOrders = data.orders.filter(o => o.locked);
+                countEl.innerHTML = `<span style="color: #ff8787;">⚠ ${lockedOrders.length} stuck orders</span>`;
+                
+                listEl.innerHTML = '';
+                
+                lockedOrders.forEach(order => {
+                    const div = document.createElement('div');
+                    div.style.cssText = 'padding: 8px; border-bottom: 1px solid #333; font-size: 11px;';
+                    
+                    const ageMin = Math.floor(order.lock_age_seconds / 60);
+                    const ageSec = order.lock_age_seconds % 60;
+                    
+                    div.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="color: #c41e3a; font-weight: bold;">Order #${order.order_id}</div>
+                                <div style="color: #aaa; margin-top: 2px;">${order.email}</div>
+                                <div style="color: #666; margin-top: 2px; font-size: 10px;">
+                                    Stuck: ${ageMin}m ${ageSec}s | ${order.images} images
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 6px;">
+                                <button onclick="retryMailOrder(${order.order_id})" style="padding: 4px 8px; font-size: 10px; background: #c41e3a; border: 1px solid #ff8787; border-radius: 3px; cursor: pointer; color: white;">
+                                    Retry
+                                </button>
+                                <button onclick="unlockMailOrder(${order.order_id})" style="padding: 4px 8px; font-size: 10px; background: #333; border: 1px solid #555; border-radius: 3px; cursor: pointer; color: #aaa;">
+                                    Unlock
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    listEl.appendChild(div);
+                });
+                
+            } catch (err) {
+                countEl.innerHTML = '<span style="color: #ff8787;">Error loading queue</span>';
+                listEl.innerHTML = `<div style="color: #ff8787; padding: 10px; font-size: 11px;">${err.message}</div>`;
+            }
+        }
+        
+        // Retry sending a mail order
+        async function retryMailOrder(orderId) {
+            const statusEl = document.getElementById('queueActionStatus');
+            statusEl.innerHTML = `<span class="status-badge info">⏳ Retrying order ${orderId}...</span>`;
+            
+            try {
+                const resp = await fetch(`/config/api/mail_queue.php?action=retry&order_id=${orderId}`);
+                const data = await resp.json();
+                
+                if (data.status === 'success') {
+                    statusEl.innerHTML = `<span class="status-badge success">✓ Order ${orderId} retry queued - check logs</span>`;
+                    setTimeout(loadMailQueue, 1000);
+                } else {
+                    statusEl.innerHTML = `<span class="status-badge error">✗ ${data.message}</span>`;
+                }
+            } catch (err) {
+                statusEl.innerHTML = `<span class="status-badge error">✗ Error: ${err.message}</span>`;
+            }
+        }
+        
+        // Unlock a stuck mail order
+        async function unlockMailOrder(orderId) {
+            const statusEl = document.getElementById('queueActionStatus');
+            statusEl.innerHTML = `<span class="status-badge info">🔓 Unlocking order ${orderId}...</span>`;
+            
+            try {
+                const resp = await fetch(`/config/api/mail_queue.php?action=unlock&order_id=${orderId}`);
+                const data = await resp.json();
+                
+                if (data.status === 'success') {
+                    statusEl.innerHTML = `<span class="status-badge success">✓ Order ${orderId} unlocked</span>`;
+                    setTimeout(loadMailQueue, 500);
+                } else {
+                    statusEl.innerHTML = `<span class="status-badge error">✗ ${data.message}</span>`;
+                }
+            } catch (err) {
+                statusEl.innerHTML = `<span class="status-badge error">✗ Error: ${err.message}</span>`;
+            }
+        }
+
+        // Setup auto refresh
+        document.getElementById('autoScrollLog').addEventListener('change', (e) => {
+            autoScroll = e.target.checked;
+        });
+
+        document.getElementById('refreshRate').addEventListener('change', (e) => {
+            const rate = parseInt(e.target.value);
+            if (refreshInterval) clearInterval(refreshInterval);
+            refreshInterval = setInterval(refreshLogs, rate);
+        });
+
+        // Initial load and setup
+        loadMailQueue();  // Load mail queue on startup
+        refreshLogs();
+        refreshInterval = setInterval(refreshLogs, 1000);
     </script>
 </body>
 </html>
