@@ -69,7 +69,7 @@ function createWindow() {
       contextIsolation: true,
       // preload: path.join(__dirname, 'preload.js') // Optional
     },
-    autoHideMenuBar: false, // Show menu for access to settings
+    autoHideMenuBar: true, // Show menu for access to settings
     show: false // Don't show until ready-to-show to avoid white flash
   });
 

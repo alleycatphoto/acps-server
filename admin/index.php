@@ -637,37 +637,36 @@ $token = md5('unique_salt' . $timestamp);
             </div>
             <form action="/admin/admin_import_proc.php" method="post" name="frmImport" id="frmImport">
               <input type="hidden" name="token" id="token" value="<?php echo htmlspecialchars($token); ?>" />
-              <table border="0">
-                <tr>
-                  <td align="center">
-                    <div id="chooser_group"><b>CHOOSE DESTINATION:</b><br />
-                      <select class="chooser" name="custom_target">
-                        <?php foreach ($cat as $key => $value): ?>
-                          <?php if (trim($value) !== ''): ?>
-                            <option value="<?php echo htmlspecialchars($key); ?>">
-                              <?php echo htmlspecialchars($value); ?>
-                            </option>
-                          <?php endif; ?>
-                        <?php endforeach; ?>
-                      </select>
-                    </div>
-                  </td>
-                  <td width="50%" align="center">
-                    <div id="chooser_time">
-                      <strong>CHOOSE TIME:</strong><br />
-                      <select class="chooser" name="selTime" id="selTime">
-                        <option value="8:00:01"  <?php if (date('H:i') >= '08:00' && date('H:i') <= '09:59') echo 'selected'; ?>>08:00AM - 10:00AM</option>
-                        <option value="10:00:01" <?php if (date('H:i') >= '10:00' && date('H:i') <= '11:59') echo 'selected'; ?>>10:00AM - 12:00PM</option>
-                        <option value="12:00:01" <?php if (date('H:i') >= '12:00' && date('H:i') <= '13:59') echo 'selected'; ?>>12:00PM - 02:00PM</option>
-                        <option value="14:00:01" <?php if (date('H:i') >= '14:00' && date('H:i') <= '15:59') echo 'selected'; ?>>02:00PM - 04:00PM</option>
-                        <option value="16:00:01" <?php if (date('H:i') >= '16:00' && date('H:i') <= '17:59') echo 'selected'; ?>>04:00PM - 06:00PM</option>
-                        <option value="18:00:01" <?php if (date('H:i') >= '18:00' && date('H:i') <= '19:59') echo 'selected'; ?>>06:00PM - 08:00PM</option>
-                        <option value="20:00:01" <?php if (date('H:i') >= '20:00' && date('H:i') <= '21:59') echo 'selected'; ?>>08:00PM - 10:00PM</option>
-                      </select>
-                    </div>
-                  </td>
-                </tr>
-              </table>
+            <div class="row justify-content-center">
+              <div class="col-md-5 col-sm-12 text-center mb-1">
+                <div id="chooser_group" class="form-group">
+                  <label for="custom_target" class="text-white font-weight-bold mb-1 text-uppercase" style="letter-spacing:1px; font-size: 0.9rem;">Choose Destination</label>
+                  <select class="form-control chooser custom-dark-select" name="custom_target" id="custom_target" style="height: auto; padding: 10px;">
+                    <?php foreach ($cat as $key => $value): ?>
+                      <?php if (trim($value) !== ''): ?>
+                        <option value="<?php echo htmlspecialchars($key); ?>">
+                          <?php echo htmlspecialchars($value); ?>
+                        </option>
+                      <?php endif; ?>
+                    <?php endforeach; ?>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-5 col-sm-12 text-center mb-1">
+                <div id="chooser_time" class="form-group">
+                  <label for="selTime" class="text-white font-weight-bold mb-1 text-uppercase" style="letter-spacing:1px; font-size: 0.9rem;">Choose Time</label>
+                  <select class="form-control chooser custom-dark-select" name="selTime" id="selTime" style="height: auto; padding: 10px;">
+                    <option value="8:00:01"  <?php if (date('H:i') >= '08:00' && date('H:i') <= '09:59') echo 'selected'; ?>>08:00AM - 10:00AM</option>
+                    <option value="10:00:01" <?php if (date('H:i') >= '10:00' && date('H:i') <= '11:59') echo 'selected'; ?>>10:00AM - 12:00PM</option>
+                    <option value="12:00:01" <?php if (date('H:i') >= '12:00' && date('H:i') <= '13:59') echo 'selected'; ?>>12:00PM - 02:00PM</option>
+                    <option value="14:00:01" <?php if (date('H:i') >= '14:00' && date('H:i') <= '15:59') echo 'selected'; ?>>02:00PM - 04:00PM</option>
+                    <option value="16:00:01" <?php if (date('H:i') >= '16:00' && date('H:i') <= '17:59') echo 'selected'; ?>>04:00PM - 06:00PM</option>
+                    <option value="18:00:01" <?php if (date('H:i') >= '18:00' && date('H:i') <= '19:59') echo 'selected'; ?>>06:00PM - 08:00PM</option>
+                    <option value="20:00:01" <?php if (date('H:i') >= '20:00' && date('H:i') <= '21:59') echo 'selected'; ?>>08:00PM - 10:00PM</option>
+                  </select>
+                </div>
+              </div>
+            </div>
             </form>
             <!-- Drag & Drop Zone and File List -->
             <div class="row">
@@ -692,7 +691,7 @@ $token = md5('unique_salt' . $timestamp);
                 </div>
               </div>
             </div>
-            <div class="row">
+            <div class="row" style="margin-top:20px;">
               <div class="col-12">
                 <div class="card h-100">
                   <div class="card-header">Debug Messages</div>
