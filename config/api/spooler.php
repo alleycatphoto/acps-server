@@ -17,6 +17,7 @@ $printer_spool = $spool_base . 'printer/';
 $mailer_spool = $spool_base . 'mailer/';
 $completed_spool = $spool_base . 'completed/';
 $physical_printer_path = 'c:/orders/';
+$physical_printer_path_fire = 'c:/orders_fire/';
 $print_log_file = $base_dir . '/logs/print_history_' . date("Y-m-d") . '.json';
 $credentialsPath = $base_dir . '/config/google/credentials.json';
 $tokenPath = $base_dir . '/config/google/token.json';
@@ -32,6 +33,7 @@ if (!is_dir($completed_spool)) mkdir($completed_spool, 0777, true);
 if (!is_dir(dirname($print_log_file))) mkdir(dirname($print_log_file), 0777, true);
 if (!is_dir($receipt_hot_main)) mkdir($receipt_hot_main, 0777, true);
 if (!is_dir($receipt_hot_fire)) mkdir($receipt_hot_fire, 0777, true);
+if (!is_dir($physical_printer_path_fire)) mkdir($physical_printer_path_fire, 0777, true);
 
 $action = $_GET['action'] ?? 'status';
 
@@ -163,42 +165,78 @@ switch ($action) {
         break;
 
     case 'tick_printer':
-        $current_printer_files = array_diff(scandir($physical_printer_path), array('.', '..', 'Archive', 'archive', 'Thumbs.db'));
-        if (count($current_printer_files) === 0) {
-            $queued_files = array_diff(scandir($printer_spool), array('.', '..'));
-            sort($queued_files);
-            
-            $jpgs = array_filter($queued_files, function($f) { return stripos($f, '.jpg') !== false; });
-            
-            if (count($jpgs) > 0) {
-                // Move one JPG
-                $file_to_move = reset($jpgs);
-                $source = $printer_spool . $file_to_move;
-                $dest = $physical_printer_path . $file_to_move;
-                if (@rename($source, $dest)) {
-                    log_print($print_log_file, $file_to_move);
-                    echo json_encode(['status' => 'success', 'moved' => $file_to_move]);
-                } else {
-                    echo json_encode(['status' => 'error', 'message' => 'Failed to move file']);
-                }
-            } else {
-                // Cleanup TXT files only if all JPGs for that order are gone
-                $txts = array_filter($queued_files, function($f) { return stripos($f, '.txt') !== false; });
-                foreach ($txts as $txt) {
-                    $order_id = pathinfo($txt, PATHINFO_FILENAME);
-                    // Check if any JPGs remain for this order
-                    $remaining_jpgs = array_filter($queued_files, function($f) use ($order_id) {
-                        return stripos($f, $order_id . '-') === 0 && stripos($f, '.jpg') !== false;
-                    });
-                    
-                    if (count($remaining_jpgs) === 0) {
-                        @rename($printer_spool . $txt, $completed_spool . $txt);
+        // Check both hot folders
+        $current_printer_files_main = file_exists($physical_printer_path) ? array_diff(scandir($physical_printer_path), array('.', '..', 'Archive', 'archive', 'Thumbs.db')) : [];
+        $current_printer_files_fire = file_exists($physical_printer_path_fire) ? array_diff(scandir($physical_printer_path_fire), array('.', '..', 'Archive', 'archive', 'Thumbs.db')) : [];
+
+        $main_busy = count($current_printer_files_main) > 0;
+        $fire_busy = count($current_printer_files_fire) > 0;
+
+        // Queue processing
+        $queued_files = array_diff(scandir($printer_spool), array('.', '..'));
+        sort($queued_files);
+        
+        $jpgs = array_filter($queued_files, function($f) { return stripos($f, '.jpg') !== false; });
+        
+        $moved_file = null;
+
+        if (count($jpgs) > 0) {
+            foreach ($jpgs as $file_to_move) {
+                // Determine destination based on TXT file content
+                $parts = explode('-', $file_to_move);
+                $order_id = $parts[0];
+                $txt_file = $printer_spool . $order_id . ".txt";
+                
+                $is_fire = false;
+                if (file_exists($txt_file)) {
+                    $content = file_get_contents($txt_file);
+                    if (strpos($content, '- FS') !== false || strpos($content, 'Fire Station') !== false) {
+                        $is_fire = true;
                     }
                 }
-                echo json_encode(['status' => 'idle', 'message' => 'No JPGs']);
+
+                if ($is_fire) {
+                    if (!$fire_busy) {
+                        $dest = $physical_printer_path_fire . $file_to_move;
+                        if (@rename($printer_spool . $file_to_move, $dest)) {
+                            log_print($print_log_file, $file_to_move);
+                            $moved_file = $file_to_move;
+                            echo json_encode(['status' => 'success', 'moved' => $file_to_move, 'station' => 'Fire']);
+                            break; // Process one at a time
+                        }
+                    }
+                } else {
+                    if (!$main_busy) {
+                        $dest = $physical_printer_path . $file_to_move;
+                        if (@rename($printer_spool . $file_to_move, $dest)) {
+                            log_print($print_log_file, $file_to_move);
+                            $moved_file = $file_to_move;
+                            echo json_encode(['status' => 'success', 'moved' => $file_to_move, 'station' => 'Main']);
+                            break; // Process one at a time
+                        }
+                    }
+                }
             }
+            
+            if (!$moved_file) {
+                 echo json_encode(['status' => 'busy', 'main_count' => count($current_printer_files_main), 'fire_count' => count($current_printer_files_fire)]);
+            }
+
         } else {
-            echo json_encode(['status' => 'busy', 'count' => count($current_printer_files)]);
+            // Cleanup TXT files only if all JPGs for that order are gone
+            $txts = array_filter($queued_files, function($f) { return stripos($f, '.txt') !== false; });
+            foreach ($txts as $txt) {
+                $order_id = pathinfo($txt, PATHINFO_FILENAME);
+                // Check if any JPGs remain for this order
+                $remaining_jpgs = array_filter($queued_files, function($f) use ($order_id) {
+                    return stripos($f, $order_id . '-') === 0 && stripos($f, '.jpg') !== false;
+                });
+                
+                if (count($remaining_jpgs) === 0) {
+                    @rename($printer_spool . $txt, $completed_spool . $txt);
+                }
+            }
+            echo json_encode(['status' => 'idle', 'message' => 'No JPGs']);
         }
         break;
 
