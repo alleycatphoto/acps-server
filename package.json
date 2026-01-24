@@ -12,6 +12,13 @@
   "build": {
     "appId": "com.alleycatphoto.acps90",
     "productName": "AlleyCat PhotoStation : Admin",
+    "files": [
+      "electron-main.js",
+      "electron-settings.html",
+      "electron-theme.css",
+      "logo.png",
+      "node_modules/**/*"
+    ],
     "win": {
       "target": "nsis",
       "icon": "logo.png"

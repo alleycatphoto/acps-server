@@ -35,6 +35,7 @@ function acp_log_event($orderID, $event) {
     $log_file = __DIR__ . '/logs/cash_orders_event.log';
     $error_file = __DIR__ . '/logs/gmailer_error.log';
     if (!is_dir(dirname($log_file))) @mkdir(dirname($log_file), 0777, true);
+    if (!is_dir(dirname($error_file))) @mkdir(dirname($error_file), 0777, true);
     $timestamp = date("Y-m-d H:i:s");
     $log_entry = "{$timestamp} | Order {$orderID} | {$event}\n";
     
