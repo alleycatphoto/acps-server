@@ -124,7 +124,7 @@
 
     <header class="app-header">
         <div class="logo-area">
-            <img src="/public/assets/images/ACPS.png" alt="ACPS Logo" class="app-logo">
+            <img src="/logo.png" alt="ACPS Logo" class="app-logo">
             <h1 class="app-title">Master Control <span class="badge badge-live">LIVE</span></h1>
         </div>
         <div class="header-controls">

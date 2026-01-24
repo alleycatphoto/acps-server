@@ -14,7 +14,7 @@
     "productName": "AlleyCat PhotoStation : Admin",
     "win": {
       "target": "nsis",
-      "icon": "public/assets/images/favicon-96x96.png"
+      "icon": "logo.png"
     }
   },
   "keywords": [

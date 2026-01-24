@@ -9,7 +9,7 @@ let store;
 
 // Default Configuration
 const DEFAULT_URL = 'http://localhost/admin/';
-const ICON_PATH = path.join(__dirname, 'public/assets/images/ACPS.png');
+const ICON_PATH = path.join(__dirname, 'logo.png');
 
 // Initialize Store (using dynamic import for ESM compatibility)
 async function initStore() {
